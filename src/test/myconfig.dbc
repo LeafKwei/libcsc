@@ -14,10 +14,11 @@ custom::                  ; I'm a comment, and this is a domain.
     ; The first space after ':' will be ignored, then, subsequent characters will be considered to string util encounter new-line.
     school: The university for cat and mouse
 
-    ; For multiple lines, only the content between next line to 'comment:' and last line to ':comment' will be considered to string.
+    ; For multiple lines, only the contents between next line below 'comment:' and last line above ':comment' will be considered to string.
     comment:
 Hello, my name is tom, and he is my friend jerry.
 Today, We come here to meet you our friends.
+We can use '\' to escape '\:' to avoid it to be recognized.
     :comment
 
 ::custom
