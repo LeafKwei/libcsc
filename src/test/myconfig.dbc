@@ -10,17 +10,16 @@ custom::                  ; I'm a comment, and this is a domain.
         friend = jerry,jimi,cherry  ; string, but can be explained to an array.
     ::tom
     
-    ; You can place a text section into a 'name: text' structure.
-    ; The first space after ':' will be ignored, then, subsequent characters will be considered to a string util encounter new-line.
-    school: The university for cat and mouse
+    ; You can place a text section into a 'name = {text}' structure.
+    ; Anything in '{}' will be considered a string.
+    school = {The university for cat and mouse}
 
-	; As you see, we use the same syntax as domain to storage contents for multiple lines. 
-    ; For multiple lines, only the contents between next line below 'comment::' and last line above '::comment' will be considered to a string.
-    comment::
+    ; For multiple lines, only the contents between next line below 'comment = {{' and last line above '}}comment' will be considered a string.
+    ; We can use '\' to escape symbol to avoid it to be recognized.
+    comment = {{
 Hello, my name is tom, and he is my friend jerry.
 Today, We come here to meet you our friends.
-We can use '\' to escape '\:' and '\=' to avoid it to be recognized.
-    ::comment
+    }}comment
 
 ::custom
 
