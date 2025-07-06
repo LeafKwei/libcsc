@@ -1,7 +1,7 @@
 #ifndef DBC_EFLAG_HPP
 #define DBC_EFLAG_HPP
 
-#include "dbc.hpp"
+#include "dbc/dbc.hpp"
 
 DBC_BEGIN
 

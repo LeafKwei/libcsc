@@ -1,7 +1,7 @@
 #ifndef DBC_RESULT_HPP
 #define DBC_RESULT_HPP
 
-#include "dbc.hpp"
+#include "dbc/dbc.hpp"
 
 DBC_BEGIN
 

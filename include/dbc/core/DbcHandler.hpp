@@ -2,10 +2,10 @@
 #define DBC_HANDLER_HPP
 
 #include <string>
-#include "dbc.hpp"
-#include "alias.hpp"
-#include "DbcEflag.hpp"
-#include "DbcEditor.hpp"
+#include "dbc/dbc.hpp"
+#include "dbc/alias.hpp"
+#include "dbc/core/DbcEflag.hpp"
+#include "dbc/core/DbcEditor.hpp"
 
 DBC_BEGIN
 

@@ -1,7 +1,7 @@
 #ifndef DBC_EDITOR_HPP
 #define DBC_EDITOR_HPP
 
-#include "dbc.hpp"
+#include "dbc/dbc.hpp"
 
 DBC_BEGIN
 
