@@ -1,35 +1,37 @@
-#ifndef DBC_LEXER_HPP
-#define DBC_LEXER_HPP
+#ifndef DBC_LEXHELPER_HPP
+#define DBC_LEXHELPER_HPP
 
+#include <vector>
 #include <functional>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
+#include "dbc/lex/lex.hpp"
+#include "dbc/lex/structs.hpp"
 
 DBC_BEGIN
 
-enum class CharType{Empty, Operator, Blank, Other};
-const char *operatorAssign = "=";
-const char *operatorDomain = "::";
-const char *operatorDescribe = ";";
-const char *operatorQuota = "\"";
-const char *operatorQuotas = "\"\"\"";
+using TokenTypeBranches = std::vector<TokenTypeBranch>;
+using OptionBranches =  std::vector<OptionBranch>;
 
 class LexHelper{
 public:
-    LexHelper() noexcept;
+    LexHelper();
     ~LexHelper();
 
    DbcString readToken(const DbcString &raw);
-   DbcString readToken(const DbcString &raw, std::function<bool(DbcChar)> decider);
-
+   DbcString readToken(const DbcString &raw, std::function<Option(DbcChar, TokenType, TokenType, const DbcString&)> decider);
 
 private:
-    int m_nextIndex;
+    int m_index;
     int m_rowCounter;
     int m_colCounter;
-    CharType m_lastCharType;
+    OptionBranches m_optionBranches;
+    TokenTypeBranches m_tokenTypeBranches;
 
-    CharType recognizeChar(DbcChar ch);
+    TokenType tokenTypeOf(DbcChar ch);
+    void switchToHandler(Option option, DbcChar ch, DbcString &buffer, UpdatePack &pack, TokenType charType, TokenType lastCharType);
+    void store(UpdatePack &pack) noexcept;
+    void update(const UpdatePack &pack) noexcept;
 };
 
 DBC_END

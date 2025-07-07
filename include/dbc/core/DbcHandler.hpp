@@ -17,10 +17,10 @@ public:
     DbcHandler(DbcHandler &&oth) noexcept;
     ~DbcHandler();
 
-    DbcEflag   decode(const DbcString &raw) noexcept;
-    DbcValue  find(DbcKey key) noexcept;
-    DbcEditor editor() noexcept;
-    DbcEflag   clear() noexcept;
+    DbcString  decode(const DbcString &raw) noexcept;  //An empty string indicate no error, otherwise the error message store into string
+    DbcValue   find(DbcKey key) noexcept;
+    DbcEditor  editor() noexcept;
+    DbcString  clear() noexcept;                                          //An empty string indicate no error, otherwise the error message store into string
     DbcString  encode() noexcept;
 
 private:

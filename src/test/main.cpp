@@ -1,3 +1,4 @@
+#include "dbc/lex/LexHelper.hpp"
 #include <iostream>
 #include <string>
 
@@ -6,10 +7,11 @@ using std::cout;
 using std::endl;
 
 int main(void){
-    string str{"Hello"};
-    str = str + " World";
 
-    std::cout << str << std::endl;
+    const string raw = "a b c";
+    dbc::LexHelper helper;
+
+    helper.readToken(raw);
 
     return 0;
 }
