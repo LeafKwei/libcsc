@@ -6,7 +6,6 @@
 #include "dbc/alias.hpp"
 #include "dbc/core/DbcEflag.hpp"
 #include "dbc/core/DbcEditor.hpp"
-
 DBC_BEGIN
 
 class DbcHandler{

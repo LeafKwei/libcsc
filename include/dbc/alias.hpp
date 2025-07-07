@@ -4,7 +4,6 @@
 #include "dbc/dbc.hpp"
 #include "dbc/core/DbcResult.hpp"
 #include <string>
-
 DBC_BEGIN
 
 //===================== Alias ===================

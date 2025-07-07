@@ -2,7 +2,6 @@
 #define DBC_EDITOR_HPP
 
 #include "dbc/dbc.hpp"
-
 DBC_BEGIN
 
 class DbcEditor{

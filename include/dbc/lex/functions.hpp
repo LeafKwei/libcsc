@@ -3,11 +3,9 @@
 
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
-#include "dbc/lex/lex.hpp"
-
+#include "dbc/lex/structs.hpp"
 DBC_BEGIN
 
-Option decide(DbcChar ch, TokenType charType, TokenType lastCharType, const DbcString &buffer) noexcept;
 
 
 DBC_END

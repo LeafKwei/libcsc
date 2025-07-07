@@ -2,7 +2,6 @@
 #define DBC_EFLAG_HPP
 
 #include "dbc/dbc.hpp"
-
 DBC_BEGIN
 
 class DbcEflag{
