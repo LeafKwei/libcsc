@@ -1,3 +1,4 @@
+#include <iostream>
 #include "dbc/lex/readers.hpp"
 #include "dbc/lex/LexHelper.hpp"
 DBC_BEGIN
@@ -18,10 +19,13 @@ bool LexHelper::hasMore(const DbcString &raw) const noexcept{
 Token LexHelper::readToken(const DbcString &raw) {
     Token token;
 
-    for(auto &reader : m_readerBranches){
-        if(reader -> isThisType(raw.at(m_locator.index))){
-            reader -> readToken(raw, token.buffer, m_locator);
-            break;
+    if(m_locator.index < raw.length()){
+        for(auto &reader : m_readerBranches){
+            if(reader -> isThisType(raw.at(m_locator.index))){
+                reader -> readToken(raw, token.buffer, m_locator);
+                token.type = reader -> type();
+                break;
+            }
         }
     }
 
@@ -31,10 +35,13 @@ Token LexHelper::readToken(const DbcString &raw) {
 Token LexHelper::readToken(const DbcString &raw, TokenType type){
     Token token;
 
-    for(auto &reader : m_readerBranches){
-        if(reader -> type() == type){
-            reader -> readToken(raw, token.buffer, m_locator);
-            break;
+    if(m_locator.index < raw.length()){
+        for(auto &reader : m_readerBranches){
+            if(reader -> type() == type){
+                reader -> readToken(raw, token.buffer, m_locator);
+                token.type = reader -> type();
+                break;
+            }
         }
     }
 
@@ -44,7 +51,11 @@ Token LexHelper::readToken(const DbcString &raw, TokenType type){
 Token LexHelper::readToken(const DbcString &raw, TokenReader &reader){
     Token token;
 
-    reader.readToken(raw, token.buffer, m_locator);
+    if(m_locator.index < raw.length()){
+        reader.readToken(raw, token.buffer, m_locator);
+        token.type = reader.type();
+    }
+    
     return token;
 }
 
@@ -64,6 +75,8 @@ void LexHelper::reset() noexcept{
 
 void LexHelper::installReaders(){
     m_readerBranches.push_back(std::make_shared<BlankReader>());
+    m_readerBranches.push_back(std::make_shared<StringReader>());
+    m_readerBranches.push_back(std::make_shared<OperatorReader>());
 }
 
 DBC_END

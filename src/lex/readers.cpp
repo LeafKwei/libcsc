@@ -11,9 +11,7 @@ bool BlankReader::isThisType(DbcChar ch) const noexcept{
 }
 
 void BlankReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
-    int index = locator.index;
-
-    for(int i = index; i < raw.length(); i++){
+    for(int i = locator.index; i < raw.length(); i++){
         DbcChar ch = raw.at(i);
 
         if(!isThisType(ch)){
@@ -25,20 +23,70 @@ void BlankReader::readToken(const DbcString &raw, DbcString &buffer, Locator &lo
     }
 }
 
-inline void BlankReader::updateLocator(DbcChar ch, Locator &locator) const noexcept{
-    locator.index++;
-    locator.col++;
+//=================== StringReader ===================
+TokenType StringReader::type() const noexcept{
+    return TokenType::String;
+}
 
-    if(ch == '\n'){
-        locator.row++;
-        locator.col = 0;
+bool StringReader::isThisType(DbcChar ch) const noexcept{
+    if(!(BlankReader().isThisType(ch)) && !(OperatorReader().isThisType(ch))){
+        return true;
+    }
+
+    return false;
+}
+
+void StringReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+    bool isEscaped = false;
+
+    for(int i = locator.index; i < raw.length(); i++){
+        DbcChar ch = raw.at(i);
+
+        if(ch == '\\'){
+            isEscaped = true;
+            updateLocator(ch, locator);
+            continue;
+        }
+
+        if(isEscaped || isThisType(ch)){
+            isEscaped = false;
+            buffer.push_back(ch);
+            updateLocator(ch, locator);
+            continue;
+        }
+
+        break;
     }
 }
 
-//=================== StringReader ===================
-
-
 //=================== OperatorReader ===================
+TokenType OperatorReader::type() const noexcept{
+    return TokenType::Operator;
+}
 
+bool OperatorReader::isThisType(DbcChar ch) const noexcept{
+    switch(ch){
+        case '\"':
+        case '=':
+        case ':':
+        case ';':
+            return true;
+        default:
+            return false;
+    }
+}
+
+void OperatorReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+    for(int i = locator.index; i < raw.length(); i++){
+        DbcChar ch = raw.at(i);
+
+        if(!isThisType(ch)){
+            break;
+        }
+
+        buffer.push_back(ch);
+        updateLocator(ch, locator);
+    }
+}
 
 DBC_END

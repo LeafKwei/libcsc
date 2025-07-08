@@ -12,6 +12,17 @@ public:
     virtual TokenType type() const noexcept =0;
     virtual bool isThisType(DbcChar ch) const noexcept =0;
     virtual void readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept =0;
+
+protected:
+    virtual inline void updateLocator(DbcChar ch, Locator &locator) const noexcept{
+        locator.index++;
+        locator.col++;
+
+        if(ch == '\n'){
+            locator.row++;
+            locator.col = 0;
+    }
+    }
 };
 
 

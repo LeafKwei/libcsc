@@ -10,9 +10,20 @@ public:
     TokenType type() const noexcept override;
     bool isThisType(DbcChar ch) const noexcept override;
     void readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept override;
+};
 
-private:
-    inline void updateLocator(DbcChar ch, Locator &locator) const noexcept;
+class StringReader : public TokenReader{
+public:
+    TokenType type() const noexcept override;
+    bool isThisType(DbcChar ch) const noexcept override;
+    void readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept override;
+};
+
+class OperatorReader : public TokenReader{
+public:
+    TokenType type() const noexcept override;
+    bool isThisType(DbcChar ch) const noexcept override;
+    void readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept override;
 };
 
 DBC_END
