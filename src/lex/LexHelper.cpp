@@ -1,0 +1,69 @@
+#include "dbc/lex/readers.hpp"
+#include "dbc/lex/LexHelper.hpp"
+DBC_BEGIN
+
+LexHelper::LexHelper(){
+    installReaders();
+    reset();
+}
+
+LexHelper::~LexHelper(){
+
+}
+
+bool LexHelper::hasMore(const DbcString &raw) const noexcept{
+    return m_locator.index < raw.length();
+}
+
+Token LexHelper::readToken(const DbcString &raw) {
+    Token token;
+
+    for(auto &reader : m_readerBranches){
+        if(reader -> isThisType(raw.at(m_locator.index))){
+            reader -> readToken(raw, token.buffer, m_locator);
+            break;
+        }
+    }
+
+    return token;
+}
+
+Token LexHelper::readToken(const DbcString &raw, TokenType type){
+    Token token;
+
+    for(auto &reader : m_readerBranches){
+        if(reader -> type() == type){
+            reader -> readToken(raw, token.buffer, m_locator);
+            break;
+        }
+    }
+
+    return token;
+}
+
+Token LexHelper::readToken(const DbcString &raw, TokenReader &reader){
+    Token token;
+
+    reader.readToken(raw, token.buffer, m_locator);
+    return token;
+}
+
+int LexHelper::numberOfRow() const noexcept{
+    return m_locator.row;
+}
+
+int LexHelper::numberOfCol() const noexcept{
+    return m_locator.col;
+}
+
+void LexHelper::reset() noexcept{
+    m_locator.index = 0;
+    m_locator.row = 0;
+    m_locator.col = 0;
+}
+
+void LexHelper::installReaders(){
+    m_readerBranches.push_back(std::make_shared<BlankReader>());
+}
+
+DBC_END

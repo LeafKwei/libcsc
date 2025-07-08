@@ -1,12 +1,20 @@
 #ifndef DBC_STRUCTS_HPP
 #define DBC_STRUCTS_HPP
 
-#include <functional>
 #include "dbc/dbc.hpp"
-#include "dbc/alias.hpp"
+#include "dbc/lex/types.hpp"
 DBC_BEGIN
 
+struct Locator{
+    int index;
+    int row;
+    int col;
+};
 
+struct Token{
+    TokenType type;
+    DbcString buffer;
+};
 
 DBC_END
 #endif

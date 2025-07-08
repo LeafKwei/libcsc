@@ -8,10 +8,14 @@ using std::endl;
 
 int main(void){
 
-    const string raw = "a b c";
+    const string raw = "    \n     \n         \n           \n        ";
     dbc::LexHelper helper;
 
-    helper.readToken(raw);
-
+    if(helper.hasMore(raw)){
+        dbc::Token token = helper.readToken(raw);
+        std::cout << ">>>" << token.buffer << "<<<" << std::endl;
+        std::cout << "row: " << helper.numberOfRow() << ", col: " << helper.numberOfCol() << std::endl;
+    }
+    
     return 0;
 }
