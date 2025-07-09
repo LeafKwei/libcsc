@@ -9,9 +9,10 @@ DBC_BEGIN
 
 class TokenReader{
 public:
-    virtual TokenType type() const noexcept =0;
-    virtual bool isThisType(DbcChar ch) const noexcept =0;
-    virtual void readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept =0;
+    virtual TokenType type() const noexcept =0;                    //Get TokenType of this reader
+    virtual bool isThisType(DbcChar ch) const noexcept =0; //Check whether ch matches this reader. Use this one when match reader
+    virtual bool canRead(DbcChar ch) const noexcept =0;    //Check whether ch can be read by this reader. Use this one when read character
+    virtual void readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept =0; //Read matched character
 
 protected:
     virtual inline void updateLocator(DbcChar ch, Locator &locator) const noexcept{

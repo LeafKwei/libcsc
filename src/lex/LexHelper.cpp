@@ -77,6 +77,10 @@ void LexHelper::installReaders(){
     m_readerBranches.push_back(std::make_shared<BlankReader>());
     m_readerBranches.push_back(std::make_shared<StringReader>());
     m_readerBranches.push_back(std::make_shared<OperatorReader>());
+
+    //Keep these two at end
+    m_readerBranches.push_back(std::make_shared<EmptyReader>());
+    m_readerBranches.push_back(std::make_shared<UnknownReader>());
 }
 
 DBC_END

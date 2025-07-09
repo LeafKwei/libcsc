@@ -4,7 +4,7 @@
 #include "dbc/dbc.hpp"
 DBC_BEGIN
 
-enum class TokenType{Empty, Blank, String, Operator, LongString};
+enum class TokenType{Empty, Unknown, Blank, String, Operator};
 
 DBC_END
 #endif

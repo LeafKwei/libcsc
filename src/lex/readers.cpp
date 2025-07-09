@@ -1,13 +1,51 @@
 #include "dbc/lex/readers.hpp"
 DBC_BEGIN
 
+//=================== EmptyReader ===================
+TokenType EmptyReader::type() const noexcept{
+    return TokenType::Empty;
+}
+
+bool EmptyReader::canRead(DbcChar ch) const noexcept{
+    return false;
+}
+
+bool EmptyReader::isThisType(DbcChar ch) const noexcept{
+    return canRead(ch);
+}
+
+void EmptyReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+    return;
+}
+
+//=================== UnknownReader ===================
+TokenType UnknownReader::type() const noexcept{
+    return TokenType::Empty;
+}
+
+bool UnknownReader::canRead(DbcChar ch) const noexcept{
+    return false;
+}
+
+bool UnknownReader::isThisType(DbcChar ch) const noexcept{
+    return canRead(ch);
+}
+
+void UnknownReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+    return;
+}
+
 //=================== BlankReader ===================
 TokenType BlankReader::type() const noexcept{
     return TokenType::Blank;
 }
 
-bool BlankReader::isThisType(DbcChar ch) const noexcept{
+bool BlankReader::canRead(DbcChar ch) const noexcept{
     return ch <=32 ? true : false;
+}
+
+bool BlankReader::isThisType(DbcChar ch) const noexcept{
+    return canRead(ch);
 }
 
 void BlankReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
@@ -28,12 +66,16 @@ TokenType StringReader::type() const noexcept{
     return TokenType::String;
 }
 
-bool StringReader::isThisType(DbcChar ch) const noexcept{
-    if(!(BlankReader().isThisType(ch)) && !(OperatorReader().isThisType(ch))){
+bool StringReader::canRead(DbcChar ch) const noexcept{
+     if(!(BlankReader().isThisType(ch)) && !(OperatorReader().isThisType(ch))){
         return true;
     }
 
     return false;
+}
+
+bool StringReader::isThisType(DbcChar ch) const noexcept{
+    return canRead(ch);
 }
 
 void StringReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
@@ -64,8 +106,8 @@ TokenType OperatorReader::type() const noexcept{
     return TokenType::Operator;
 }
 
-bool OperatorReader::isThisType(DbcChar ch) const noexcept{
-    switch(ch){
+bool OperatorReader::canRead(DbcChar ch) const noexcept{
+        switch(ch){
         case '\"':
         case '=':
         case ':':
@@ -74,6 +116,10 @@ bool OperatorReader::isThisType(DbcChar ch) const noexcept{
         default:
             return false;
     }
+}
+
+bool OperatorReader::isThisType(DbcChar ch) const noexcept{
+    return canRead(ch);
 }
 
 void OperatorReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
