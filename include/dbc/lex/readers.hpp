@@ -35,6 +35,9 @@ public:
     bool isThisType(DbcChar ch) const noexcept override;
     bool canRead(DbcChar ch) const noexcept override;
     void readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept override;
+
+protected:
+    virtual DbcChar escape(DbcChar ch) const noexcept;
 };
 
 class OperatorReader : public TokenReader{

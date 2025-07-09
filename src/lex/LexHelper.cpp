@@ -18,6 +18,7 @@ bool LexHelper::hasMore(const DbcString &raw) const noexcept{
 
 Token LexHelper::readToken(const DbcString &raw) {
     Token token;
+    token.type = TokenType::Unknown;
 
     if(m_locator.index < raw.length()){
         for(auto &reader : m_readerBranches){
@@ -34,6 +35,7 @@ Token LexHelper::readToken(const DbcString &raw) {
 
 Token LexHelper::readToken(const DbcString &raw, TokenType type){
     Token token;
+    token.type = TokenType::Unknown;
 
     if(m_locator.index < raw.length()){
         for(auto &reader : m_readerBranches){
@@ -48,8 +50,9 @@ Token LexHelper::readToken(const DbcString &raw, TokenType type){
     return token;
 }
 
-Token LexHelper::readToken(const DbcString &raw, TokenReader &reader){
+Token LexHelper::readToken(const DbcString &raw, const TokenReader &reader){
     Token token;
+    token.type = TokenType::Unknown;
 
     if(m_locator.index < raw.length()){
         reader.readToken(raw, token.buffer, m_locator);

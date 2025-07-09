@@ -90,14 +90,37 @@ void StringReader::readToken(const DbcString &raw, DbcString &buffer, Locator &l
             continue;
         }
 
-        if(isEscaped || canRead(ch)){
+        if(isEscaped){
             isEscaped = false;
+            buffer.push_back(escape(ch));
+            updateLocator(ch, locator);
+            continue;
+        }
+
+        if(canRead(ch)){
             buffer.push_back(ch);
             updateLocator(ch, locator);
             continue;
         }
 
         break;
+    }
+}
+
+DbcChar StringReader::escape(DbcChar ch) const noexcept{
+    switch(ch){
+        case '0':
+            return '\0';
+        case 't':
+            return '\t';
+        case 'n':
+            return '\n';
+        case 'r':
+            return '\r';
+        case 'b':
+            return '\b';
+        default:
+            return ch;
     }
 }
 

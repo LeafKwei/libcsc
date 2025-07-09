@@ -19,9 +19,9 @@ public:
     ~LexHelper();
 
     bool hasMore(const DbcString &raw) const noexcept;
-    Token readToken(const DbcString &raw);                                      //Read token by reader which is automatically selected by 'raw.at[index]'
-    Token readToken(const DbcString &raw, TokenType type);           //Read token by reader of specific type
-    Token readToken(const DbcString &raw, TokenReader &reader); //Rread token by specific reader
+    Token readToken(const DbcString &raw);                                                //Read token by reader which is automatically selected by 'raw.at[index]'
+    Token readToken(const DbcString &raw, TokenType type);                     //Read token by reader of specific type
+    Token readToken(const DbcString &raw, const TokenReader &reader); //Rread token by specific reader
     int numberOfRow() const noexcept;
     int numberOfCol() const noexcept;
     void reset() noexcept;
