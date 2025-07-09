@@ -52,7 +52,7 @@ void BlankReader::readToken(const DbcString &raw, DbcString &buffer, Locator &lo
     for(int i = locator.index; i < raw.length(); i++){
         DbcChar ch = raw.at(i);
 
-        if(!isThisType(ch)){
+        if(!canRead(ch)){
             break;
         }
 
@@ -90,7 +90,7 @@ void StringReader::readToken(const DbcString &raw, DbcString &buffer, Locator &l
             continue;
         }
 
-        if(isEscaped || isThisType(ch)){
+        if(isEscaped || canRead(ch)){
             isEscaped = false;
             buffer.push_back(ch);
             updateLocator(ch, locator);
@@ -126,7 +126,7 @@ void OperatorReader::readToken(const DbcString &raw, DbcString &buffer, Locator 
     for(int i = locator.index; i < raw.length(); i++){
         DbcChar ch = raw.at(i);
 
-        if(!isThisType(ch)){
+        if(!canRead(ch)){
             break;
         }
 
