@@ -2,16 +2,18 @@
 #define DBC_LEXHELPER_HPP
 
 #include <vector>
+#include <stack>
 #include <memory>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
-#include "dbc/lex/types.hpp"
+#include "dbc/types.hpp"
 #include "dbc/lex/structs.hpp"
 #include "dbc/lex/readers.hpp"
 DBC_BEGIN
 
 using TokenReaderPtr = std::shared_ptr<TokenReader>;
 using ReaderBranches = std::vector<TokenReaderPtr>;
+using LocatorStack = std::stack<Locator>;
 
 class LexHelper{
 public:
@@ -24,11 +26,15 @@ public:
     Token readToken(const DbcString &raw, const TokenReader &reader); //Rread token by specific reader
     int numberOfRow() const noexcept;
     int numberOfCol() const noexcept;
-    void reset() noexcept;
+    int numberOfLocation()const noexcept;
+    void pushLocation() noexcept;
+    void popLocation() noexcept;
+    void resetLocation() noexcept;
 
 private:
     Locator m_locator;
     ReaderBranches m_readerBranches;
+    LocatorStack m_locatorStack;
 
     void installReaders();
 };

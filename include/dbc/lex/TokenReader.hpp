@@ -3,7 +3,7 @@
 
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
-#include "dbc/lex/types.hpp"
+#include "dbc/types.hpp"
 #include "dbc/lex/structs.hpp"
 DBC_BEGIN
 

@@ -2,7 +2,7 @@
 #define DBC_STRUCTS_HPP
 
 #include "dbc/dbc.hpp"
-#include "dbc/lex/types.hpp"
+#include "dbc/types.hpp"
 DBC_BEGIN
 
 struct Locator{

@@ -5,7 +5,7 @@ DBC_BEGIN
 
 LexHelper::LexHelper(){
     installReaders();
-    reset();
+    resetLocation();
 }
 
 LexHelper::~LexHelper(){
@@ -70,7 +70,20 @@ int LexHelper::numberOfCol() const noexcept{
     return m_locator.col;
 }
 
-void LexHelper::reset() noexcept{
+int LexHelper::numberOfLocation() const noexcept{
+    return m_locatorStack.size();
+}
+
+void LexHelper::pushLocation() noexcept{
+    m_locatorStack.push(m_locator);
+}
+
+void LexHelper::popLocation() noexcept{
+    m_locator =  m_locatorStack.top();
+    m_locatorStack.pop();
+}
+
+void LexHelper::resetLocation() noexcept{
     m_locator.index = 0;
     m_locator.row = 0;
     m_locator.col = 0;
