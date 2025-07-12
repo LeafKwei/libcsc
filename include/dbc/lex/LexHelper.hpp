@@ -13,7 +13,6 @@ DBC_BEGIN
 
 using TokenReaderPtr = std::shared_ptr<TokenReader>;
 using ReaderBranches = std::vector<TokenReaderPtr>;
-using LocatorStack = std::stack<Locator>;
 
 class LexHelper{
 public:
@@ -27,14 +26,13 @@ public:
     int numberOfRow() const noexcept;
     int numberOfCol() const noexcept;
     int numberOfLocation()const noexcept;
-    void pushLocation() noexcept;
-    void popLocation() noexcept;
-    void resetLocation() noexcept;
+    const Locator& locator() const noexcept;
+    void setLocator(const Locator &locator) noexcept;
+    void resetLocator() noexcept;
 
 private:
     Locator m_locator;
     ReaderBranches m_readerBranches;
-    LocatorStack m_locatorStack;
 
     void installReaders();
 };
