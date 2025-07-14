@@ -25,7 +25,6 @@ public:
     Token readToken(const DbcString &raw, const TokenReader &reader); //Rread token by specific reader
     int numberOfRow() const noexcept;
     int numberOfCol() const noexcept;
-    int numberOfLocation()const noexcept;
     const Locator& locator() const noexcept;
     void setLocator(const Locator &locator) noexcept;
     void resetLocator() noexcept;

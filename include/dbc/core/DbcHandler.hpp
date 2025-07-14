@@ -5,7 +5,6 @@
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
-#include "dbc/core/DbcEditor.hpp"
 DBC_BEGIN
 
 class DbcHandler{
@@ -17,10 +16,10 @@ public:
     ~DbcHandler();
 
     DbcError  decode(const DbcString &raw) noexcept;  //An empty string indicate no error, otherwise the error message store into string
-    DbcValue   find(DbcKey key) noexcept;
-    DbcEditor  editor() noexcept;
+    void   find(DbcKey key) noexcept;
+    void  editor() noexcept;
     DbcError  clear() noexcept;                                          //An empty string indicate no error, otherwise the error message store into string
-    DbcError  encode() noexcept;
+    DbcString  encode() noexcept;
 
 private:
 };

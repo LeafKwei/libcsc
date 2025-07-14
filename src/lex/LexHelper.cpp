@@ -70,10 +70,6 @@ int LexHelper::numberOfCol() const noexcept{
     return m_locator.col;
 }
 
-int LexHelper::numberOfLocation() const noexcept{
-    return m_locatorStack.size();
-}
-
 const Locator& LexHelper::locator() const noexcept{
     return m_locator;
 }

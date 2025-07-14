@@ -2,15 +2,16 @@
 #define DBC_ALIAS_HPP
 
 #include "dbc/dbc.hpp"
-#include "dbc/core/DbcResult.hpp"
 #include <string>
+#include <map>
 DBC_BEGIN
 
 //===================== Alias ===================
 using DbcChar = char;
 using DbcString = std::string;
-using DbcKey = const std::string&;
-using DbcValue = DbcResult;
+using DbcKey = const DbcString;
+using DbcPair = std::pair<DbcString,DbcString>;
+
 
 DBC_END
 #endif
