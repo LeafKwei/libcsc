@@ -8,9 +8,9 @@ DBC_BEGIN
 enum class TokenType{Empty, Unknown, Blank, String, Operator};
 enum class ErrorType{None, Unexcepted};
 
-struct DbcError{
+struct Derror{
     ErrorType type;
-    DbcString message;
+    Dstring message;
 };
 
 DBC_END

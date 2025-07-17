@@ -6,15 +6,15 @@ TokenType EmptyReader::type() const noexcept{
     return TokenType::Empty;
 }
 
-bool EmptyReader::canRead(DbcChar ch) const noexcept{
+bool EmptyReader::canRead(Dchar ch) const noexcept{
     return false;
 }
 
-bool EmptyReader::isThisType(DbcChar ch) const noexcept{
+bool EmptyReader::isThisType(Dchar ch) const noexcept{
     return canRead(ch);
 }
 
-void EmptyReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+void EmptyReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
     return;
 }
 
@@ -23,15 +23,15 @@ TokenType UnknownReader::type() const noexcept{
     return TokenType::Empty;
 }
 
-bool UnknownReader::canRead(DbcChar ch) const noexcept{
+bool UnknownReader::canRead(Dchar ch) const noexcept{
     return false;
 }
 
-bool UnknownReader::isThisType(DbcChar ch) const noexcept{
+bool UnknownReader::isThisType(Dchar ch) const noexcept{
     return canRead(ch);
 }
 
-void UnknownReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+void UnknownReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
     return;
 }
 
@@ -40,17 +40,17 @@ TokenType BlankReader::type() const noexcept{
     return TokenType::Blank;
 }
 
-bool BlankReader::canRead(DbcChar ch) const noexcept{
+bool BlankReader::canRead(Dchar ch) const noexcept{
     return ch <=32 ? true : false;
 }
 
-bool BlankReader::isThisType(DbcChar ch) const noexcept{
+bool BlankReader::isThisType(Dchar ch) const noexcept{
     return canRead(ch);
 }
 
-void BlankReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+void BlankReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
     for(int i = locator.index; i < raw.length(); i++){
-        DbcChar ch = raw.at(i);
+        Dchar ch = raw.at(i);
 
         if(!canRead(ch)){
             break;
@@ -66,7 +66,7 @@ TokenType StringReader::type() const noexcept{
     return TokenType::String;
 }
 
-bool StringReader::canRead(DbcChar ch) const noexcept{
+bool StringReader::canRead(Dchar ch) const noexcept{
      if(!(BlankReader().isThisType(ch)) && !(OperatorReader().isThisType(ch))){
         return true;
     }
@@ -74,15 +74,15 @@ bool StringReader::canRead(DbcChar ch) const noexcept{
     return false;
 }
 
-bool StringReader::isThisType(DbcChar ch) const noexcept{
+bool StringReader::isThisType(Dchar ch) const noexcept{
     return canRead(ch);
 }
 
-void StringReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+void StringReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
     bool isEscaped = false;
 
     for(int i = locator.index; i < raw.length(); i++){
-        DbcChar ch = raw.at(i);
+        Dchar ch = raw.at(i);
 
         if(ch == '\\'){
             isEscaped = true;
@@ -107,7 +107,7 @@ void StringReader::readToken(const DbcString &raw, DbcString &buffer, Locator &l
     }
 }
 
-DbcChar StringReader::escape(DbcChar ch) const noexcept{
+Dchar StringReader::escape(Dchar ch) const noexcept{
     switch(ch){
         case '0':
             return '\0';
@@ -129,7 +129,7 @@ TokenType OperatorReader::type() const noexcept{
     return TokenType::Operator;
 }
 
-bool OperatorReader::canRead(DbcChar ch) const noexcept{
+bool OperatorReader::canRead(Dchar ch) const noexcept{
         switch(ch){
         case '\"':
         case '=':
@@ -141,13 +141,13 @@ bool OperatorReader::canRead(DbcChar ch) const noexcept{
     }
 }
 
-bool OperatorReader::isThisType(DbcChar ch) const noexcept{
+bool OperatorReader::isThisType(Dchar ch) const noexcept{
     return canRead(ch);
 }
 
-void OperatorReader::readToken(const DbcString &raw, DbcString &buffer, Locator &locator) const noexcept{
+void OperatorReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
     for(int i = locator.index; i < raw.length(); i++){
-        DbcChar ch = raw.at(i);
+        Dchar ch = raw.at(i);
 
         if(!canRead(ch)){
             break;

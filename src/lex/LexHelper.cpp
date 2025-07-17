@@ -12,11 +12,11 @@ LexHelper::~LexHelper(){
 
 }
 
-bool LexHelper::hasMore(const DbcString &raw) const noexcept{
+bool LexHelper::hasMore(const Dstring &raw) const noexcept{
     return m_locator.index < raw.length();
 }
 
-Token LexHelper::readToken(const DbcString &raw) {
+Token LexHelper::readToken(const Dstring &raw) {
     Token token;
     token.type = TokenType::Unknown;
 
@@ -33,7 +33,7 @@ Token LexHelper::readToken(const DbcString &raw) {
     return token;
 }
 
-Token LexHelper::readToken(const DbcString &raw, TokenType type){
+Token LexHelper::readToken(const Dstring &raw, TokenType type){
     Token token;
     token.type = TokenType::Unknown;
 
@@ -50,7 +50,7 @@ Token LexHelper::readToken(const DbcString &raw, TokenType type){
     return token;
 }
 
-Token LexHelper::readToken(const DbcString &raw, const TokenReader &reader){
+Token LexHelper::readToken(const Dstring &raw, const TokenReader &reader){
     Token token;
     token.type = TokenType::Unknown;
 

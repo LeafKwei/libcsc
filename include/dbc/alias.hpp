@@ -7,10 +7,10 @@
 DBC_BEGIN
 
 //===================== Alias ===================
-using DbcChar = char;
-using DbcString = std::string;
-using DbcKey = const DbcString;
-using DbcPair = std::pair<DbcString,DbcString>;
+using Dchar = char;
+using Dstring = std::string;
+using Dkey = const Dstring;
+using Dpair = std::pair<Dstring,Dstring>;
 
 
 DBC_END

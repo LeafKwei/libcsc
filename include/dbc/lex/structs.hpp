@@ -13,7 +13,7 @@ struct Locator{
 
 struct Token{
     TokenType type;
-    DbcString buffer;
+    Dstring buffer;
 };
 
 DBC_END

@@ -7,7 +7,7 @@ DBC_BEGIN
 
 class LongStringReader : public StringReader{
 public:
-    bool canRead(DbcChar ch) const noexcept override;
+    bool canRead(Dchar ch) const noexcept override;
 };
 
 DBC_END

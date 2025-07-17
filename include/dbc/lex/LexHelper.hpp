@@ -19,10 +19,10 @@ public:
     LexHelper();
     ~LexHelper();
 
-    bool hasMore(const DbcString &raw) const noexcept;
-    Token readToken(const DbcString &raw);                                                //Read token by reader which is automatically selected by 'raw.at[index]'
-    Token readToken(const DbcString &raw, TokenType type);                     //Read token by reader of specific type
-    Token readToken(const DbcString &raw, const TokenReader &reader); //Rread token by specific reader
+    bool hasMore(const Dstring &raw) const noexcept;
+    Token readToken(const Dstring &raw);                                                //Read token by reader which is automatically selected by 'raw.at[index]'
+    Token readToken(const Dstring &raw, TokenType type);                     //Read token by reader of specific type
+    Token readToken(const Dstring &raw, const TokenReader &reader); //Rread token by specific reader
     int numberOfRow() const noexcept;
     int numberOfCol() const noexcept;
     const Locator& locator() const noexcept;

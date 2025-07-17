@@ -2,7 +2,7 @@
 DBC_BEGIN
 
 //=================== StringReader ===================
-bool LongStringReader::canRead(DbcChar ch) const noexcept{
+bool LongStringReader::canRead(Dchar ch) const noexcept{
     if(ch == '\"') return false;
     return true;
 }
