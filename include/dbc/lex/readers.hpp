@@ -1,5 +1,5 @@
-#ifndef DBC_READERS_HPP
-#define DBC_READERS_HPP
+#ifndef DBC_LEX_READERS_HPP
+#define DBC_LEX_READERS_HPP
 
 #include "dbc/dbc.hpp"
 #include "dbc/lex/TokenReader.hpp"

@@ -10,7 +10,6 @@ DBC_BEGIN
 using Dchar = char;
 using Dstring = std::string;
 using Dkey = const Dstring;
-using Dpair = std::pair<Dstring,Dstring>;
 
 
 DBC_END

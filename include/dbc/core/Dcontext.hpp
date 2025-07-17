@@ -1,12 +1,11 @@
 #ifndef DBC_CONTEXT_HPP
 #define DBC_CONTEXT_HPP
 
+#include <vector>
 #include <memory>
 #include "dbc/alias.hpp"
-#include "dbc/core/Dscope.hpp"
+#include "dbc/core/structs.hpp"
 DBC_BEGIN
-
-using DscopePtr = std::shared_ptr<Dscope>;
 
 class Dcontext{
 public:
@@ -28,9 +27,13 @@ public:
     Dcontext& operator=(Dcontext &&oth);
 
 private:
-    Dscope m_rootScope;
     DscopePtr m_rootPtr;
     DscopePtr m_currentPtr;
+
+    std::vector<Dstring> splitPath(const Dstring &path) const noexcept;
+    DscopePtr findScopeFromRoot(const std::vector<Dstring> &names) const noexcept;
+    DscopePtr findScopeFromCurrent(const std::vector<Dstring> &names) const noexcept;
+    DscopePtr findScopeFrom(const DscopePtr &begin, const std::vector<Dstring> &names, std::size_t pos) const noexcept;
 };
 
 
