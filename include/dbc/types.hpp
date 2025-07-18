@@ -6,7 +6,7 @@
 DBC_BEGIN
 
 enum class TokenType{Empty, Unknown, Blank, String, Operator};
-enum class ErrorType{None, Unexcepted};
+enum class ErrorType{OK, Unexcepted, NoSuch, Denied};
 
 struct Derror{
     ErrorType type;

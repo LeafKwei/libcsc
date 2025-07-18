@@ -7,22 +7,24 @@
 DBC_BEGIN
 
 struct Dpair;
-struct Dscope;
+struct Ddomain;
 using DpairPtr = std::shared_ptr<Dpair>;
-using DscopePtr = std::shared_ptr<Dscope>;
+using DdomainPtr = std::shared_ptr<Ddomain>;
 
 struct Dpair{
     Dstring name;
     Dstring value;
     DpairPtr next;
+    DpairPtr prev;
 };
 
-struct Dscope{
+struct Ddomain{
     Dstring name;
-    DpairPtr pairHead;
-    DscopePtr parent;
-    DscopePtr child;
-    DscopePtr next;
+    DpairPtr pairs;
+    DdomainPtr parent;
+    DdomainPtr child;
+    DdomainPtr next;
+    DdomainPtr prev;
 };
 
 DBC_END
