@@ -20,7 +20,9 @@ public:
     Derror enterDomain(const Dstring &path) noexcept;                     /* Enter a existing domain. */
     Derror makeDomain(const Dstring &path) noexcept;                     /* Create a domain then enter it. */
     Derror dropDomain(const Dstring &path) noexcept;                      /* Remove an existing domain. */
-    Derror exitDomain() noexcept;                                                           /* Exit current domain and back to its parent domain. */
+    Derror exitDomain() noexcept;                                                         /* Exit current domain and back to its parent domain. */
+    Dstring path() const noexcept;                                                         /* Get current domain name. */
+    Dstring absolutePath() const noexcept;                                           /* Get absolute path which begins from root domain to current domain*/
     bool exists(const Dstring &name) const noexcept;                         /* For current domain, test whether a pair is existing.*/
     void set(const Dstring &name, const Dstring &value) noexcept;   /* In current domain, set a pair. */
     void unset(const Dstring &name) noexcept;                                   /* For current domain, unset a pair. */
@@ -33,10 +35,9 @@ private:
     DdomainPtr m_rootPtr;
     DdomainPtr m_currentPtr;
 
-    inline void assignPrev(DdomainPtr &lhs, DdomainPtr &rhs) const noexcept;
-    std::tuple<Dstring,Dstring> separate(const Dstring &path) const noexcept;
-    std::vector<Dstring> splitPath(const Dstring &path) const noexcept;
-    DdomainPtr findTailDomain(const DdomainPtr &domain) const noexcept;
+    inline void assignPairPrev(DpairPtr &lhs, DpairPtr &rhs);
+    inline void assignDomainPrev(DdomainPtr &lhs, DdomainPtr &rhs) const noexcept;
+    DpairPtr findPair(const Dstring &name) const noexcept;
     DdomainPtr findDomain(const Dstring &path) const noexcept;
     DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const noexcept;
 };

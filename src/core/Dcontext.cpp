@@ -1,4 +1,5 @@
 #include "dbc/core/Dcontext.hpp"
+#include "dbc/utility/utility.hpp"
 
 DBC_BEGIN
 
@@ -27,6 +28,7 @@ Derror Dcontext::enterDomain(const Dstring &path) noexcept{
     
 Derror Dcontext::makeDomain(const Dstring &path) noexcept{
     auto [prefix, name] = separate(path);
+    auto backup = m_currentPtr;
 
     if(prefix.size() != 0){
         if(enterDomain(prefix).type != ErrorType::OK){
@@ -34,9 +36,18 @@ Derror Dcontext::makeDomain(const Dstring &path) noexcept{
         }
     }
 
+    //>>>>>>>>>>>>>>>>>>>>>>>>>> >>>>>>
+    /* Let we trusts user. OwO
+    if(findDomain(name) != nullptr){                                       //If you try to make a repeated domain.
+        return Derror{ErrorType::Denied, "Domain exists."};
+    }
+    */
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
     auto &head = m_currentPtr -> child;
     auto newDomain = std::make_shared<Ddomain>();
     newDomain -> name = name;
+    newDomain -> parent = m_currentPtr;
     
     if(head == nullptr){  /* If current domain has no child yet. */
         head = newDomain; 
@@ -49,6 +60,7 @@ Derror Dcontext::makeDomain(const Dstring &path) noexcept{
         head -> prev = newDomain; /* <- head ... tailn <- */
     }
 
+    m_currentPtr = backup;
     return Derror{ErrorType::OK};
 }
 
@@ -67,15 +79,16 @@ Derror Dcontext::dropDomain(const Dstring &path) noexcept{
 
     if(head == domain){  /* If 'domain' is the head of child list. */
         head = domain -> next;
-        assignPrev(head, domain -> prev);
+        assignDomainPrev(head, domain -> prev);
     }
     else{
         auto &before = domain -> prev;
         auto &after = domain -> next;
         before -> next = after;
-        assignPrev(after, before);
+        assignDomainPrev(after, before);
     }
 
+    m_currentPtr = parent;           /* back to parent domain. */
     return Derror{ErrorType::OK};
 }
 
@@ -85,73 +98,96 @@ Derror Dcontext::exitDomain() noexcept{
     return Derror{ErrorType::OK};
 }
 
-bool Dcontext::exists(const Dstring &name) const noexcept{
+Dstring Dcontext::path() const noexcept{
+    return "";
+}
 
+Dstring Dcontext::absolutePath() const noexcept{
+    return "";
+}
+
+bool Dcontext::exists(const Dstring &name) const noexcept{
+    return findPair(name) != nullptr;
 }
 
 void Dcontext::set(const Dstring &name, const Dstring &value) noexcept{
+    auto pair = findPair(name);
+    if(pair != nullptr){
+        pair -> value = value;
+        return;
+    }
 
+    auto newPair = std::make_shared<Dpair>();
+    newPair -> name = name;
+    newPair -> value = value;
+
+    if(m_currentPtr -> pairs != nullptr){
+        auto tail = m_currentPtr -> pairs -> prev;
+        tail -> next = newPair;
+        newPair -> prev = tail;
+        return;
+    }
+
+    m_currentPtr -> pairs = newPair;
+    newPair -> prev = newPair;
 }
 
 void Dcontext::unset(const Dstring &name) noexcept{
+    auto pair = findPair(name);
+    if(pair == nullptr){
+        return;
+    }
 
+    auto &head = m_currentPtr -> pairs;
+
+    if(head == pair){
+        head = pair -> next;
+        assignPairPrev(head, pair -> prev);
+    }
+    else{
+        auto &before = pair -> prev;
+        auto &after = pair -> next;
+
+        before -> next = after;
+        assignPairPrev(after, before);
+    }
 }
 
 Dstring Dcontext::get(const Dstring &name) noexcept{
+    auto pair = findPair(name);
+    if(pair != nullptr){
+        return pair -> value;
+    }
 
+    return Dstring("");
 }
 
 //=============== Private ===============
 
-inline void Dcontext::assignPrev(DdomainPtr &lhs, DdomainPtr &rhs) const noexcept{
+inline void Dcontext::assignPairPrev(DpairPtr &lhs, DpairPtr &rhs){
+    if(lhs != nullptr){
+        lhs -> prev = rhs -> prev;
+    }
+}
+
+inline void Dcontext::assignDomainPrev(DdomainPtr &lhs, DdomainPtr &rhs) const noexcept{
     if(lhs != nullptr){
         lhs -> prev = rhs;
     }
 }
 
-std::tuple<Dstring,Dstring> Dcontext::separate(const Dstring &path) const noexcept{
-    Dstring prefix;
-    Dstring name;
+DpairPtr Dcontext::findPair(const Dstring &name) const noexcept{
+    auto nextptr = m_currentPtr -> pairs;
 
-    auto pos = path.find_last_of('/');
-    if(pos >= path.size()){
-        name = path;
-        return std::make_tuple(prefix, name);
+    while(nextptr != nullptr){
+        if(nextptr -> name == name){
+            return nextptr;
+        }
+
+        nextptr = nextptr -> next;
     }
 
-    prefix = path.substr(0, pos);
-    return std::make_tuple(prefix, name);
-}
-
-std::vector<Dstring> Dcontext::splitPath(const Dstring &path) const noexcept{
-    std::vector<Dstring> names;
-    decltype(path.size()) pos = 0;
-    decltype(path.size()) size = path.size();
-    
-    while(pos < path.size()){
-        auto nextPos = path.find('/', pos);
-       
-        if(nextPos == 0){
-            names.push_back("/");
-            pos = nextPos + 1;
-        }
-        else if(nextPos > 0 && nextPos < size){
-            if(nextPos == pos){
-                names.push_back("");
-                pos = nextPos + 1;
-            }
-            else{
-                names.push_back(path.substr(pos, nextPos - pos));
-                pos = nextPos + 1;
-            }
-        }
-        else{
-            names.push_back(path.substr(pos));
-            pos = size;
-        }
-    }
-
-    return names;
+    return DpairPtr(nullptr);
 }
 
 DdomainPtr Dcontext::findDomain(const Dstring &path) const noexcept{
@@ -159,16 +195,16 @@ DdomainPtr Dcontext::findDomain(const Dstring &path) const noexcept{
 
     if(names.at(0) == "/"){
         if(names.size() == 1) return m_rootPtr;              /* 'names' contains '/' only. */
-        return findDomainFrom(m_rootPtr -> child, names, 0);
+        return findDomainFrom(m_rootPtr -> child, names, 1);
     }
     else{
-        return findDomainFrom(m_currentPtr -> child, names, 0);
+        return findDomainFrom(m_currentPtr -> child, names, 1);
     }
 }
 
 DdomainPtr Dcontext::findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const noexcept{
     auto nextptr = begin;
-
+    
     if(pos < names.size()){
         while(nextptr != nullptr){
             if(nextptr -> name == names.at(pos)){
