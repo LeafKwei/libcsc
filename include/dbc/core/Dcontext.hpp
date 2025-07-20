@@ -12,13 +12,14 @@ DBC_BEGIN
 class Dcontext{
 public:
     Dcontext();
-    // Dcontext(const Dcontext &oth) =delete;
-    // Dcontext(Dcontext &&oth);
-    // ~Dcontext();
+    Dcontext(const Dcontext &oth);
+    Dcontext(Dcontext &&oth);
+    ~Dcontext();
 
     bool existsDomain(const Dstring &path) const noexcept;              /* Test whether a domain is existing. */
     Derror enterDomain(const Dstring &path) noexcept;                     /* Enter a existing domain. */
-    Derror makeDomain(const Dstring &path) noexcept;                     /* Create a domain then enter it. */
+    Derror makeDomain(const Dstring &path) noexcept;                     /* Create a domain. */
+    Derror makeDomains(const Dstring &path) noexcept;                   /* Create a domain. Make its parents if they don't exists.*/
     Derror dropDomain(const Dstring &path) noexcept;                      /* Remove an existing domain. */
     Derror exitDomain() noexcept;                                                         /* Exit current domain and back to its parent domain. */
     Dstring path() const noexcept;                                                         /* Get current domain name. */
@@ -28,8 +29,8 @@ public:
     void unset(const Dstring &name) noexcept;                                   /* For current domain, unset a pair. */
     Dstring get(const Dstring &name) noexcept;                                 /* From current domain, get the value for name.*/
 
-    // Dcontext& operator=(const Dcontext &oth) =delete;
-    // Dcontext& operator=(Dcontext &&oth);
+    Dcontext& operator=(const Dcontext &oth);
+    Dcontext& operator=(Dcontext &&oth);
 
 private:
     DdomainPtr m_rootPtr;

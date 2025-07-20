@@ -1,13 +1,28 @@
 #include "dbc/utility/utility.hpp"
+#include <algorithm>
 
 DBC_BEGIN
+
+Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::initializer_list<Dstring> &filters){
+    Dstring result;
+
+    for(int idx = 0; idx < elements.size(); idx++){
+        auto &e = elements.at(idx);
+        result = result + e;
+        if(idx + 1 >= elements.size()) continue;                                             //Don't put '/' if 'e' is last element.
+        if(std::find(filters.begin(), filters.end(), e) != filters.end()) continue;  //Don't put '/' if 'e' is root.
+        result.push_back('/');
+    }
+
+    return result;
+}
 
 std::tuple<Dstring,Dstring> separate(const Dstring &path) noexcept{
     Dstring prefix;
     Dstring name;
 
     auto pos = path.find_last_of('/');
-    if(pos >= path.size()){
+    if(pos == std::string::npos){
         name = path;
         return std::make_tuple(prefix, name);
     }

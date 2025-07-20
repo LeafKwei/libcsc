@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "dbc/core/Dcontext.hpp"
 #include "dbc/utility/utility.hpp"
 
@@ -11,12 +12,36 @@ Dcontext::Dcontext(){
     m_currentPtr = m_rootPtr;
 }
 
+Dcontext::Dcontext(const Dcontext &oth){
+
+}
+
+Dcontext::Dcontext(Dcontext &&oth){
+
+}
+
+Dcontext::~Dcontext(){
+
+}
+
+//=============== Operator ===============
+Dcontext& Dcontext::operator=(const Dcontext &oth){
+
+}
+
+Dcontext& Dcontext::operator=(Dcontext &&oth){
+
+}
+
 //=============== Public ===============
  bool Dcontext::existsDomain(const Dstring &path) const noexcept{
+    if(isEmptyPath(path)) return false;
     return findDomain(path) != nullptr;
  }
 
 Derror Dcontext::enterDomain(const Dstring &path) noexcept{
+    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
+
     DdomainPtr ptr = findDomain(path);
     if(ptr != nullptr){
         m_currentPtr = ptr;
@@ -25,8 +50,10 @@ Derror Dcontext::enterDomain(const Dstring &path) noexcept{
 
     return Derror{ErrorType::NoSuch, "No such domain."};
 }
-    
+
 Derror Dcontext::makeDomain(const Dstring &path) noexcept{
+    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
+
     auto [prefix, name] = separate(path);
     auto backup = m_currentPtr;
 
@@ -64,7 +91,27 @@ Derror Dcontext::makeDomain(const Dstring &path) noexcept{
     return Derror{ErrorType::OK};
 }
 
+Derror Dcontext::makeDomains(const Dstring &path) noexcept{
+    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
+
+    auto backup = m_currentPtr;
+    auto names = splitPath(path);
+
+    for(auto &name : names){
+        auto err = enterDomain(name);
+        if(err.type == ErrorType::NoSuch){
+            makeDomain(name);
+            enterDomain(name);
+        }
+    }
+
+    m_currentPtr = backup;
+    return Derror{ErrorType::OK};
+}
+
 Derror Dcontext::dropDomain(const Dstring &path) noexcept{
+    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
+
     auto domain = findDomain(path);
     if(domain == nullptr){
         return Derror{ErrorType::NoSuch, "No such path."};
@@ -99,11 +146,20 @@ Derror Dcontext::exitDomain() noexcept{
 }
 
 Dstring Dcontext::path() const noexcept{
-    return "";
+    return m_currentPtr -> name;
 }
 
 Dstring Dcontext::absolutePath() const noexcept{
-    return "";
+    std::vector<Dstring> names;
+
+    auto domain = m_currentPtr;
+    while(domain != nullptr){
+        names.push_back(domain -> name);
+        domain = domain -> parent;
+    }
+
+    std::reverse(names.begin(), names.end());
+    return join("/", names, {"/"});    
 }
 
 bool Dcontext::exists(const Dstring &name) const noexcept{
@@ -191,14 +247,14 @@ DpairPtr Dcontext::findPair(const Dstring &name) const noexcept{
 }
 
 DdomainPtr Dcontext::findDomain(const Dstring &path) const noexcept{
-    std::vector<Dstring> names = splitPath(path);
+    auto names = splitPath(path);
 
     if(names.at(0) == "/"){
         if(names.size() == 1) return m_rootPtr;              /* 'names' contains '/' only. */
         return findDomainFrom(m_rootPtr -> child, names, 1);
     }
     else{
-        return findDomainFrom(m_currentPtr -> child, names, 1);
+        return findDomainFrom(m_currentPtr -> child, names, 0);
     }
 }
 
