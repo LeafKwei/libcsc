@@ -3,14 +3,18 @@
 #include <algorithm>
 #include <string>
 
-int main(void){
-    std::shared_ptr<int> sp;
-    if(sp == nullptr){
-        std::cout << "Nullptr" << std::endl;
+struct What{
+    What(){
+        std::cout << "Ctor" << std::endl;
     }
 
-    std::initializer_list<std::string> il{"A", "B", "C"};
-    std::string target = "/";
+    ~What(){
+        std::cout << "Dctor" << std::endl;
+    }
+};
 
-    if(std::find(il.begin(), il.end(), target));
+int main(void){
+    std::shared_ptr<What> sp = std::make_shared<What>();
+    sp = nullptr;
+    std::cout << "Done..." << std::endl;
 }

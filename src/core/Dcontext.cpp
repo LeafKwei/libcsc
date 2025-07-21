@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 #include "dbc/core/Dcontext.hpp"
 #include "dbc/utility/utility.hpp"
 
@@ -9,15 +10,23 @@ Dcontext::Dcontext(){
     m_rootPtr = std::make_shared<Ddomain>();
     m_rootPtr -> prev = m_rootPtr;
     m_rootPtr -> name = "/";
-    m_currentPtr = m_rootPtr;
+    m_crntPtr = m_rootPtr;
+    m_lastPtr = m_rootPtr;
 }
 
 Dcontext::Dcontext(const Dcontext &oth){
-
+    m_rootPtr = oth.m_rootPtr;
+    m_crntPtr = oth.m_crntPtr;
+    m_lastPtr = oth.m_lastPtr;
 }
 
-Dcontext::Dcontext(Dcontext &&oth){
-
+Dcontext::Dcontext(Dcontext &&oth) noexcept{
+    m_rootPtr = oth.m_rootPtr;
+    m_crntPtr = oth.m_crntPtr;
+    m_lastPtr = oth.m_lastPtr;
+    oth.m_rootPtr = nullptr;
+    oth.m_crntPtr = nullptr;
+    oth.m_lastPtr = nullptr;
 }
 
 Dcontext::~Dcontext(){
@@ -26,11 +35,22 @@ Dcontext::~Dcontext(){
 
 //=============== Operator ===============
 Dcontext& Dcontext::operator=(const Dcontext &oth){
+    assert(this != &oth);
 
+    m_rootPtr = oth.m_rootPtr;
+    m_crntPtr = oth.m_crntPtr;
+    m_lastPtr = oth.m_lastPtr;
 }
 
-Dcontext& Dcontext::operator=(Dcontext &&oth){
+Dcontext& Dcontext::operator=(Dcontext &&oth) noexcept{
+    assert(this != &oth);
 
+    m_rootPtr = oth.m_rootPtr;
+    m_crntPtr = oth.m_crntPtr;
+    m_lastPtr = oth.m_lastPtr;
+    oth.m_rootPtr = nullptr;
+    oth.m_crntPtr = nullptr;
+    oth.m_lastPtr = nullptr;
 }
 
 //=============== Public ===============
@@ -44,18 +64,24 @@ Derror Dcontext::enterDomain(const Dstring &path) noexcept{
 
     DdomainPtr ptr = findDomain(path);
     if(ptr != nullptr){
-        m_currentPtr = ptr;
+        m_lastPtr = m_crntPtr;
+        m_crntPtr = ptr;
         return Derror{ErrorType::OK};
     }
 
     return Derror{ErrorType::NoSuch, "No such domain."};
 }
 
+Derror Dcontext::backDomain() noexcept{
+    auto tmp = m_crntPtr;
+    m_crntPtr = m_lastPtr;
+    m_lastPtr = tmp;
+}
+
 Derror Dcontext::makeDomain(const Dstring &path) noexcept{
     if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
 
     auto [prefix, name] = separate(path);
-    auto backup = m_currentPtr;
 
     if(prefix.size() != 0){
         if(enterDomain(prefix).type != ErrorType::OK){
@@ -71,10 +97,10 @@ Derror Dcontext::makeDomain(const Dstring &path) noexcept{
     */
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    auto &head = m_currentPtr -> child;
+    auto &head = m_crntPtr -> child;
     auto newDomain = std::make_shared<Ddomain>();
     newDomain -> name = name;
-    newDomain -> parent = m_currentPtr;
+    newDomain -> parent = m_crntPtr;
     
     if(head == nullptr){  /* If current domain has no child yet. */
         head = newDomain; 
@@ -87,14 +113,14 @@ Derror Dcontext::makeDomain(const Dstring &path) noexcept{
         head -> prev = newDomain; /* <- head ... tailn <- */
     }
 
-    m_currentPtr = backup;
+    backDomain();
     return Derror{ErrorType::OK};
 }
 
 Derror Dcontext::makeDomains(const Dstring &path) noexcept{
     if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
 
-    auto backup = m_currentPtr;
+    auto backup = m_crntPtr;
     auto names = splitPath(path);
 
     for(auto &name : names){
@@ -105,7 +131,7 @@ Derror Dcontext::makeDomains(const Dstring &path) noexcept{
         }
     }
 
-    m_currentPtr = backup;
+    m_crntPtr = backup;
     return Derror{ErrorType::OK};
 }
 
@@ -135,24 +161,42 @@ Derror Dcontext::dropDomain(const Dstring &path) noexcept{
         assignDomainPrev(after, before);
     }
 
-    m_currentPtr = parent;           /* back to parent domain. */
+    m_crntPtr = parent;           /* back to parent domain. */
     return Derror{ErrorType::OK};
 }
 
 Derror Dcontext::exitDomain() noexcept{
-    if(m_currentPtr -> parent == nullptr) return Derror{ErrorType::Denied, "Root reached."};
-    m_currentPtr = m_currentPtr -> parent;
+    if(m_crntPtr -> parent == nullptr) return Derror{ErrorType::Denied, "Root reached."};
+    m_crntPtr = m_crntPtr -> parent;
     return Derror{ErrorType::OK};
 }
 
+Derror Dcontext::attachDomain(const Dstring &path, Dcontext &&context) noexcept{
+    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
+
+    auto [prefix, name] = separate(path);
+    if(prefix.size() != 0){
+        if(enterDomain(prefix).type != ErrorType::OK){
+            return Derror{ErrorType::NoSuch, "No such path."};
+        }
+    }
+
+    
+
+}
+
+Dcontext Dcontext::detachDomain(const Dstring &path) noexcept{
+    if(isEmptyPath(path)) return Dcontext();
+}
+
 Dstring Dcontext::path() const noexcept{
-    return m_currentPtr -> name;
+    return m_crntPtr -> name;
 }
 
 Dstring Dcontext::absolutePath() const noexcept{
     std::vector<Dstring> names;
 
-    auto domain = m_currentPtr;
+    auto domain = m_crntPtr;
     while(domain != nullptr){
         names.push_back(domain -> name);
         domain = domain -> parent;
@@ -177,14 +221,14 @@ void Dcontext::set(const Dstring &name, const Dstring &value) noexcept{
     newPair -> name = name;
     newPair -> value = value;
 
-    if(m_currentPtr -> pairs != nullptr){
-        auto tail = m_currentPtr -> pairs -> prev;
+    if(m_crntPtr -> pairs != nullptr){
+        auto tail = m_crntPtr -> pairs -> prev;
         tail -> next = newPair;
         newPair -> prev = tail;
         return;
     }
 
-    m_currentPtr -> pairs = newPair;
+    m_crntPtr -> pairs = newPair;
     newPair -> prev = newPair;
 }
 
@@ -194,7 +238,7 @@ void Dcontext::unset(const Dstring &name) noexcept{
         return;
     }
 
-    auto &head = m_currentPtr -> pairs;
+    auto &head = m_crntPtr -> pairs;
 
     if(head == pair){
         head = pair -> next;
@@ -233,7 +277,7 @@ inline void Dcontext::assignDomainPrev(DdomainPtr &lhs, DdomainPtr &rhs) const n
 }
 
 DpairPtr Dcontext::findPair(const Dstring &name) const noexcept{
-    auto nextptr = m_currentPtr -> pairs;
+    auto nextptr = m_crntPtr -> pairs;
 
     while(nextptr != nullptr){
         if(nextptr -> name == name){
@@ -254,7 +298,7 @@ DdomainPtr Dcontext::findDomain(const Dstring &path) const noexcept{
         return findDomainFrom(m_rootPtr -> child, names, 1);
     }
     else{
-        return findDomainFrom(m_currentPtr -> child, names, 0);
+        return findDomainFrom(m_crntPtr -> child, names, 0);
     }
 }
 
