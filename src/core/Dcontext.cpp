@@ -40,6 +40,8 @@ Dcontext& Dcontext::operator=(const Dcontext &oth){
     m_rootPtr = oth.m_rootPtr;
     m_crntPtr = oth.m_crntPtr;
     m_lastPtr = oth.m_lastPtr;
+
+    return *this;
 }
 
 Dcontext& Dcontext::operator=(Dcontext &&oth) noexcept{
@@ -51,6 +53,8 @@ Dcontext& Dcontext::operator=(Dcontext &&oth) noexcept{
     oth.m_rootPtr = nullptr;
     oth.m_crntPtr = nullptr;
     oth.m_lastPtr = nullptr;
+
+    return *this;
 }
 
 //=============== Public ===============
@@ -76,6 +80,7 @@ Derror Dcontext::backDomain() noexcept{
     auto tmp = m_crntPtr;
     m_crntPtr = m_lastPtr;
     m_lastPtr = tmp;
+    return Derror{ErrorType::OK};
 }
 
 Derror Dcontext::makeDomain(const Dstring &path) noexcept{
@@ -97,21 +102,9 @@ Derror Dcontext::makeDomain(const Dstring &path) noexcept{
     */
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    auto &head = m_crntPtr -> child;
     auto newDomain = std::make_shared<Ddomain>();
     newDomain -> name = name;
-    newDomain -> parent = m_crntPtr;
-    
-    if(head == nullptr){  /* If current domain has no child yet. */
-        head = newDomain; 
-        head -> prev = newDomain;
-    }
-    else{
-        auto &tail = head -> prev;
-        tail -> next = newDomain;     /* tail0 -> tail1 */
-        newDomain -> prev = tail;     /* tail0 <- tail1 */
-        head -> prev = newDomain; /* <- head ... tailn <- */
-    }
+    appendChildDomain(m_crntPtr, newDomain);
 
     backDomain();
     return Derror{ErrorType::OK};
@@ -148,18 +141,7 @@ Derror Dcontext::dropDomain(const Dstring &path) noexcept{
         return Derror{ErrorType::Denied, "Can't drop root domain."};
     }
 
-    auto &head = parent -> child;
-
-    if(head == domain){  /* If 'domain' is the head of child list. */
-        head = domain -> next;
-        assignDomainPrev(head, domain -> prev);
-    }
-    else{
-        auto &before = domain -> prev;
-        auto &after = domain -> next;
-        before -> next = after;
-        assignDomainPrev(after, before);
-    }
+    removeChildDomain(domain);
 
     m_crntPtr = parent;           /* back to parent domain. */
     return Derror{ErrorType::OK};
@@ -181,12 +163,34 @@ Derror Dcontext::attachDomain(const Dstring &path, Dcontext &&context) noexcept{
         }
     }
 
-    
+    auto domain = context.m_rootPtr;
+    context.m_rootPtr = nullptr;
+    context.m_crntPtr = nullptr;
+    context.m_lastPtr = nullptr;
 
+    domain -> name = name;
+    appendChildDomain(m_crntPtr, domain);
+    backDomain();
+    return Derror{ErrorType::OK};
 }
 
 Dcontext Dcontext::detachDomain(const Dstring &path) noexcept{
     if(isEmptyPath(path)) return Dcontext();
+
+    auto domain = findDomain(path);
+    if(domain == nullptr){
+        return Dcontext();
+    }
+
+    removeChildDomain(domain);
+
+    Dcontext context;
+    domain -> name = "/";
+    context.m_rootPtr = domain;
+    context.m_crntPtr = context.m_rootPtr;
+    context.m_lastPtr = context.m_rootPtr;
+
+    return context;
 }
 
 Dstring Dcontext::path() const noexcept{
@@ -238,19 +242,7 @@ void Dcontext::unset(const Dstring &name) noexcept{
         return;
     }
 
-    auto &head = m_crntPtr -> pairs;
-
-    if(head == pair){
-        head = pair -> next;
-        assignPairPrev(head, pair -> prev);
-    }
-    else{
-        auto &before = pair -> prev;
-        auto &after = pair -> next;
-
-        before -> next = after;
-        assignPairPrev(after, before);
-    }
+    removePair(m_crntPtr, pair);
 }
 
 Dstring Dcontext::get(const Dstring &name) noexcept{
@@ -263,16 +255,69 @@ Dstring Dcontext::get(const Dstring &name) noexcept{
 }
 
 //=============== Private ===============
+void Dcontext::appendPair(DdomainPtr &domain, DpairPtr &pair) noexcept{
+    if(domain -> pairs == nullptr){
+        domain -> pairs = pair;
+        domain -> pairs -> prev = pair;
+        pair -> prev = domain -> pairs;
+        return;
+    }
 
-inline void Dcontext::assignPairPrev(DpairPtr &lhs, DpairPtr &rhs){
-    if(lhs != nullptr){
-        lhs -> prev = rhs -> prev;
+    auto &tail = domain -> pairs -> prev;
+    tail -> next = pair;
+    pair -> prev = tail;
+    domain -> pairs -> prev = pair;
+}
+
+void Dcontext::removePair(DdomainPtr &parent, DpairPtr &pair) noexcept{
+    if(parent -> pairs == pair){
+        parent -> pairs = pair -> next;
+        if(parent -> pairs != nullptr){
+            parent -> pairs -> prev = pair -> prev;
+        }
+    }
+    else{
+        auto &before = pair -> prev;
+        auto &after = pair -> next;
+        before -> next = after;
+        if(after != nullptr){
+            after -> prev = before;
+        }
     }
 }
 
-inline void Dcontext::assignDomainPrev(DdomainPtr &lhs, DdomainPtr &rhs) const noexcept{
-    if(lhs != nullptr){
-        lhs -> prev = rhs;
+void Dcontext::appendChildDomain(DdomainPtr &parent, DdomainPtr &child) noexcept{
+    child -> parent = parent;
+
+    if(parent -> child == nullptr){
+        parent -> child = child;
+        parent -> child -> prev = child;
+        child -> prev = parent -> child;
+        return;
+    }
+
+    auto &tail = parent -> child -> prev;
+    tail -> next = child;
+    child -> prev = tail;
+    parent -> child -> prev = child;
+}
+
+void Dcontext::removeChildDomain(DdomainPtr &child) noexcept{
+    auto &parent = child -> parent;
+
+    if(parent -> child == child){         //If 'child' is the head of list of child in parent.
+        parent -> child = child -> next;
+        if(parent -> child != nullptr){
+            parent -> child -> prev = child -> prev;
+        }
+    }
+    else{
+        auto &before = child -> prev;
+        auto &after = child -> next;
+        before -> next = after;
+        if(after != nullptr){
+            after -> prev = before;
+        }
     }
 }
 

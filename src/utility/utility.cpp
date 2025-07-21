@@ -9,9 +9,9 @@ Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::i
     for(int idx = 0; idx < elements.size(); idx++){
         auto &e = elements.at(idx);
         result = result + e;
-        if(idx + 1 >= elements.size()) continue;                                             //Don't put '/' if 'e' is last element.
-        if(std::find(filters.begin(), filters.end(), e) != filters.end()) continue;  //Don't put '/' if 'e' is root.
-        result.push_back('/');
+        if(idx + 1 >= elements.size()) continue;                                             //Don't put splitor if 'e' is last element.
+        if(std::find(filters.begin(), filters.end(), e) != filters.end()) continue;  //Don't put splitor if 'e' is in filter.
+        result = result + splitor;
     }
 
     return result;
