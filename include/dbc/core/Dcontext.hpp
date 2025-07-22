@@ -44,8 +44,10 @@ private:
     void removePair(DdomainPtr &parent, DpairPtr &pair) noexcept;
     void appendChildDomain(DdomainPtr &parent, DdomainPtr &child) noexcept;
     void removeChildDomain(DdomainPtr &child) noexcept;
+    void updateRelativeDomain(DdomainPtr &domain) noexcept;
     DpairPtr findPair(const Dstring &name) const noexcept;
     DdomainPtr findDomain(const Dstring &path) const noexcept;
+    DdomainPtr findBuiltinDomain(const Dstring &path) const noexcept;
     DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const noexcept;
 };
 

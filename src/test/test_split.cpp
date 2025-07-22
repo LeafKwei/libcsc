@@ -1,54 +1,45 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "dbc/utility/utility.hpp"
 
 using Dstring =std::string;
+using namespace dbc;
 
-std::vector<Dstring> splitPath(const Dstring &path){
-    std::vector<Dstring> names;
-    decltype(path.size()) pos = 0;
-    decltype(path.size()) size = path.size();
-    
-    while(pos < path.size()){
-        auto nextPos = path.find('/', pos);
-       
-        if(nextPos == 0){
-            names.push_back("/");
-            pos = nextPos + 1;
-        }
-        else if(nextPos > 0 && nextPos < size){
-            if(nextPos == pos){
-                names.push_back("");
-                pos = nextPos + 1;
-            }
-            else{
-                names.push_back(path.substr(pos, nextPos - pos));
-                pos = nextPos + 1;
-            }
-        }
-        else{
-            names.push_back(path.substr(pos));
-            pos = size;
-        }
+void show(const decltype(splitPath("")) &names){
+    std::cout << std::endl << ">>>>>>>>>>>>>>>>>>" << std::endl;
+    for(auto &name : names){
+        std::cout << name << std::endl;
     }
+    std::cout << "<<<<<<<<<<<<<<<<<<" << std::endl; 
+}
 
-    return names;
+void show(const decltype(separate("")) &pair){
+    std::cout << std::endl << ">>>>>>>>>>>>>>>>>>" << std::endl;
+    std::cout << "prefix: " << std::get<0>(pair) << ", name: " << std::get<1>(pair) << std::endl;
+    std::cout << "<<<<<<<<<<<<<<<<<<" << std::endl; 
 }
 
 int main(void){
-    for(auto &p : splitPath("/custom/class")){
-        std::cout << "`" << p << "`" << std::endl;
-    }
+    /*
+    auto names = splitPath("/");
+    show(names);
+    names = splitPath("");
+    show(names);
+    names = splitPath("/a/b/c/");
+    show(names);
+    names = splitPath("/a/b/c");
+    show(names);
+    */
 
-    std::cout << "---------------" << std::endl;
-
-    for(auto &p : splitPath("custom/class")){
-        std::cout << "`" << p << "`" << std::endl;
-    }
-
-    std::cout << "---------------" << std::endl;
-
-    for(auto &p : splitPath("////")){
-        std::cout << "`" << p << "`" << std::endl;
-    }
+    auto pair = separate("/a/b/c/");
+    show(pair);
+    pair = separate("/a/b");
+    show(pair);
+    pair =separate("/a");
+    show(pair);
+    pair = separate("/");
+    show(pair);
+    pair = separate("");
+    show(pair);
 }

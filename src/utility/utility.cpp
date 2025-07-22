@@ -20,15 +20,32 @@ Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::i
 std::tuple<Dstring,Dstring> separate(const Dstring &path) noexcept{
     Dstring prefix;
     Dstring name;
+    auto lastCharPos = path.size() - 1;
+    auto size = path.size();
 
-    auto pos = path.find_last_of('/');
+    /* Avoid '/foo/bar/' */
+    if(path.find_last_of('/') == lastCharPos){
+        --lastCharPos;
+        --size;
+    }
+
+    /* For 'bar' */
+    auto pos = path.find_last_of('/', lastCharPos);
     if(pos == std::string::npos){
         name = path;
         return std::make_tuple(prefix, name);
     }
 
+    /* For '/bar' */
+    if(path.find('/') == pos){
+        prefix = "/";
+        name = (pos + 1) < size ? path.substr(pos + 1, size - pos - 1) : Dstring("");
+        return std::make_tuple(prefix, name);
+    }
+
+    /* For '/bar/foo' */
     prefix = path.substr(0, pos);
-    name = (pos + 1) < path.size() ? path.substr(pos + 1) : Dstring("");
+    name = (pos + 1) < path.size() ? path.substr(pos + 1, size - pos -1) : Dstring("");
     return std::make_tuple(prefix, name);
 }
 
