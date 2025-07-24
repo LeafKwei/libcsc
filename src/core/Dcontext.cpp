@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cassert>
 #include "dbc/core/Dcontext.hpp"
+#include "dbc/core/path.hpp"
 #include "dbc/utility/utility.hpp"
 
 DBC_BEGIN
@@ -98,7 +99,7 @@ Derror Dcontext::makeDomain(const Dstring &path) noexcept{
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     auto parent = m_crntPtr;
-    auto [prefix, name] = separate(path);
+    auto [prefix, name] = separatePath(path);
 
     if(prefix.size() != 0){
         parent = findDomain(prefix);
@@ -120,7 +121,7 @@ Derror Dcontext::makeDomains(const Dstring &path) noexcept{
         return Derror{ErrorType::OK};
     }
 
-    auto [prefix, name] = separate(path);
+    auto [prefix, name] = separatePath(path);
     auto err = makeDomains(prefix);
     
     if(err.type != ErrorType::OK){
@@ -161,7 +162,7 @@ Derror Dcontext::attachDomain(const Dstring &path, Dcontext &&context) noexcept{
     if(isBuiltinPath(path)) return Derror{ErrorType::Denied, "Can't attach domain on a built-in path."};
 
     auto parent = m_crntPtr;                   //Relative path is default.
-    auto [prefix, name] = separate(path);
+    auto [prefix, name] = separatePath(path);
 
     if(prefix.size() != 0){                            //If path contains multiple domain
         parent = findDomain(prefix);
@@ -367,7 +368,12 @@ DdomainPtr Dcontext::findDomain(const Dstring &path) const noexcept{
 }
 
 DdomainPtr Dcontext::findBuiltinDomain(const Dstring &path) const noexcept{
-    return m_rootPtr;
+    switch(indexOfBuiltinPath(path)){
+        case 0:  //root
+            return m_rootPtr;
+        default:
+            return DdomainPtr(nullptr);
+    }
 }
 
 DdomainPtr Dcontext::findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const noexcept{

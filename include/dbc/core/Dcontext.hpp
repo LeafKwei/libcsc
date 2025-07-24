@@ -7,6 +7,7 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/core/structs.hpp"
+#include "dbc/core/Dseeker.hpp"
 DBC_BEGIN
 
 class Dcontext{
@@ -49,8 +50,17 @@ private:
     DdomainPtr findDomain(const Dstring &path) const noexcept;
     DdomainPtr findBuiltinDomain(const Dstring &path) const noexcept;
     DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const noexcept;
+
+public:
+    template<typename Rt>
+    void seekContext(const Dseeker<Rt> &seeker);
 };
 
+//=================== Template ==================
+template <typename Rt>
+void Dcontext::seekContext(const Dseeker<Rt> &seeker){
+        
+}
 
 DBC_END
 #endif
