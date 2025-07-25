@@ -15,7 +15,7 @@ public:
     Dhandler(Dhandler &&oth) noexcept;
     ~Dhandler();
 
-    Derror  decode(const Dstring &raw) noexcept;  //An empty string indicate no error, otherwise the error message store into string
+    Derror  decode(const Dstring &raw) noexcept;
     Dstring  encode() noexcept;
 
 private:

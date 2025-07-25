@@ -8,9 +8,12 @@ test_context.exe.src=test_context.cpp ../core/Dcontext.cpp ../utility/utility.cp
 test_ctor.exe.src=test_ctor.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
 test_attach.exe.src=test_attach.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
 test_builtin.exe.src=test_builtin.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
+test_reset.exe.src=test_reset.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
 
+test_reset.exe: $(test_reset.exe.src)
+	g++ $(extra) -o test_reset -I $(incl) $(test_reset.exe.src)
 test_builtin.exe: $(test_builtin.exe.src)
-	g++ -o $(extra) -o test_builtin -I $(incl) $(test_builtin.exe.src)
+	g++ $(extra) -o test_builtin -I $(incl) $(test_builtin.exe.src)
 test_ctor.exe: $(test_ctor.exe.src)
 	g++ $(extra) -o test_ctor -I $(incl) $(test_ctor.exe.src)
 test_attach.exe: $(test_attach.exe.src)
@@ -27,6 +30,7 @@ test_split.exe: $(test_split.exe.src)
 	g++ $(extra)  -o test_split.exe -I $(incl) $(test_split.exe.src)
 
 clean:
+	del test_reset.exe
 	del test_builtin.exe
 	del test_ctor.exe
 	del test_attach.exe

@@ -265,6 +265,18 @@ Dstring Dcontext::get(const Dstring &name) noexcept{
     return Dstring("");
 }
 
+void Dcontext::resetContext() noexcept{
+    m_rootPtr = nullptr;
+    m_crntPtr = nullptr;
+    m_lastPtr = nullptr;
+
+    m_rootPtr = std::make_shared<Ddomain>();
+    m_rootPtr -> prev = m_rootPtr;
+    m_rootPtr -> name = "/";
+    m_crntPtr = m_rootPtr;
+    m_lastPtr = m_rootPtr;
+}
+
 //=============== Private ===============
 void Dcontext::appendPair(DdomainPtr &domain, DpairPtr &pair) noexcept{
     if(domain -> pairs == nullptr){

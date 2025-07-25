@@ -46,6 +46,7 @@
         "map": "cpp",
         "fstream": "cpp",
         "cstdarg": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "cstring": "cpp"
     }
 }

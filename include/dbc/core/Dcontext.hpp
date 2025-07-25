@@ -32,6 +32,7 @@ public:
     void set(const Dstring &name, const Dstring &value) noexcept;   /* In current domain, set a pair. */
     void unset(const Dstring &name) noexcept;                                   /* For current domain, unset a pair. */
     Dstring get(const Dstring &name) noexcept;                                 /* From current domain, get the value for name.*/
+    void resetContext() noexcept;
 
     Dcontext& operator=(const Dcontext &oth);
     Dcontext& operator=(Dcontext &&oth) noexcept;
