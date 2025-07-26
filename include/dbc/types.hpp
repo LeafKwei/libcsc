@@ -5,7 +5,7 @@
 #include "dbc/alias.hpp"
 DBC_BEGIN
 
-enum class TokenType{Empty, Unknown, Blank, String, Operator};
+enum class TokenType{Empty, Unknown, Blank, String, Identifer, Number, Operator};
 enum class ErrorType{OK, Unexcepted, NoSuch, Denied};
 
 struct Derror{

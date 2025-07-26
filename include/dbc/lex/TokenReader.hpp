@@ -5,25 +5,12 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/lex/structs.hpp"
+#include "dbc/lex/CharPicker.hpp"
 DBC_BEGIN
 
 class TokenReader{
 public:
-    virtual TokenType type() const noexcept =0;                    //Get TokenType of this reader
-    virtual bool isThisType(Dchar ch) const noexcept =0; //Check whether ch matches this reader. Use this one when match reader
-    virtual bool canRead(Dchar ch) const noexcept =0;    //Check whether ch can be read by this reader. Use this one when read character
-    virtual void readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept =0; //Read matched character
-
-protected:
-    virtual inline void updateLocator(Dchar ch, Locator &locator) const noexcept{
-        locator.index++;
-        locator.col++;
-
-        if(ch == '\n'){
-            locator.row++;
-            locator.col = 0;
-    }
-    }
+    virtual Token readToken(CharPicker &picker) const noexcept =0;       //Read matched character. No token was read if token.type == Unknown
 };
 
 

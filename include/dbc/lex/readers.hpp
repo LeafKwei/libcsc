@@ -5,47 +5,24 @@
 #include "dbc/lex/TokenReader.hpp"
 DBC_BEGIN
 
-class EmptyReader : public TokenReader{
+class EmptyReader : TokenReader{
 public:
-    TokenType type() const noexcept override;
-    bool isThisType(Dchar ch) const noexcept override;
-    bool canRead(Dchar ch) const noexcept override;
-    void readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept override;
-};
-
-class UnknownReader : public TokenReader{
-public:
-    TokenType type() const noexcept override;
-    bool isThisType(Dchar ch) const noexcept override;
-    bool canRead(Dchar ch) const noexcept override;
-    void readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept override;
-};
-
-class BlankReader : public TokenReader{
-public:
-    TokenType type() const noexcept override;
-    bool isThisType(Dchar ch) const noexcept override;
-    bool canRead(Dchar ch) const noexcept override;
-    void readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept override;
-};
-
-class StringReader : public TokenReader{
-public:
-    TokenType type() const noexcept override;
-    bool isThisType(Dchar ch) const noexcept override;
-    bool canRead(Dchar ch) const noexcept override;
-    void readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept override;
-
+    Token readToken(CharPicker &picker) const noexcept override;
 protected:
-    virtual Dchar escape(Dchar ch) const noexcept;
+    virtual inline bool canRead(Dchar ch) const noexcept;
+    virtual inline bool isThisReader(CharPicker &picker) const noexcept;
 };
 
-class OperatorReader : public TokenReader{
+class UnknownReader : EmptyReader{
 public:
-    TokenType type() const noexcept override;
-    bool isThisType(Dchar ch) const noexcept override;
-    bool canRead(Dchar ch) const noexcept override;
-    void readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept override;
+    Token readToken(CharPicker &picker) const noexcept override;
+};
+
+class BlankReader : EmptyReader{
+public:
+    Token readToken(CharPicker &picker) const noexcept override; 
+protected:
+    inline bool isThisReader(CharPicker &picker) const noexcept override;
 };
 
 DBC_END

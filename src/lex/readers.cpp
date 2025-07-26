@@ -1,83 +1,56 @@
 #include "dbc/lex/readers.hpp"
+#include "dbc/lex/functions.hpp"
 DBC_BEGIN
 
 //=================== EmptyReader ===================
-TokenType EmptyReader::type() const noexcept{
-    return TokenType::Empty;
-}
 
-bool EmptyReader::canRead(Dchar ch) const noexcept{
+ Token EmptyReader::readToken(CharPicker &picker) const noexcept{
+    return {TokenType::Empty};
+ }
+
+inline bool EmptyReader::canRead(Dchar ch) const noexcept{
     return false;
 }
 
-bool EmptyReader::isThisType(Dchar ch) const noexcept{
-    return canRead(ch);
-}
-
-void EmptyReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
-    return;
-}
+ inline bool EmptyReader::isThisReader(CharPicker &picker) const noexcept{
+    return false;
+ }
 
 //=================== UnknownReader ===================
-TokenType UnknownReader::type() const noexcept{
-    return TokenType::Empty;
-}
-
-bool UnknownReader::canRead(Dchar ch) const noexcept{
-    return false;
-}
-
-bool UnknownReader::isThisType(Dchar ch) const noexcept{
-    return canRead(ch);
-}
-
-void UnknownReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
-    return;
-}
+ Token UnknownReader::readToken(CharPicker &picker) const noexcept{
+    return {TokenType::Unknown};
+ }
 
 //=================== BlankReader ===================
-TokenType BlankReader::type() const noexcept{
-    return TokenType::Blank;
-}
+ Token BlankReader::readToken(CharPicker &picker) const noexcept{
+    if(!isThisReader(picker)) return {TokenType::Unknown};
 
-bool BlankReader::canRead(Dchar ch) const noexcept{
-    return ch <=32 ? true : false;
-}
-
-bool BlankReader::isThisType(Dchar ch) const noexcept{
-    return canRead(ch);
-}
-
-void BlankReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
-    for(int i = locator.index; i < raw.length(); i++){
-        Dchar ch = raw.at(i);
-
+    Token token{TokenType::Blank};
+    while(picker.hasMore()){
+        Dchar ch = picker.pick();
         if(!canRead(ch)){
+            picker.backward();
             break;
         }
 
-        buffer.push_back(ch);
-        updateLocator(ch, locator);
-    }
-}
-
-//=================== StringReader ===================
-TokenType StringReader::type() const noexcept{
-    return TokenType::String;
-}
-
-bool StringReader::canRead(Dchar ch) const noexcept{
-     if(!(BlankReader().isThisType(ch)) && !(OperatorReader().isThisType(ch))){
-        return true;
+        token.buffer.push_back(ch);
     }
 
-    return false;
+    return token;
+ }
+
+inline bool EmptyReader::canRead(Dchar ch) const noexcept{
+    return isBlank(ch);
 }
 
-bool StringReader::isThisType(Dchar ch) const noexcept{
-    return canRead(ch);
-}
+ inline bool BlankReader::isThisReader(CharPicker &picker) const noexcept{
+    return canRead(picker.tryPick());
+ }
 
+ //=================== BlankReader ===================
+ 
+
+/*
 void StringReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
     bool isEscaped = false;
 
@@ -124,38 +97,4 @@ Dchar StringReader::escape(Dchar ch) const noexcept{
     }
 }
 
-//=================== OperatorReader ===================
-TokenType OperatorReader::type() const noexcept{
-    return TokenType::Operator;
-}
-
-bool OperatorReader::canRead(Dchar ch) const noexcept{
-        switch(ch){
-        case '\"':
-        case '=':
-        case ':':
-        case ';':
-            return true;
-        default:
-            return false;
-    }
-}
-
-bool OperatorReader::isThisType(Dchar ch) const noexcept{
-    return canRead(ch);
-}
-
-void OperatorReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
-    for(int i = locator.index; i < raw.length(); i++){
-        Dchar ch = raw.at(i);
-
-        if(!canRead(ch)){
-            break;
-        }
-
-        buffer.push_back(ch);
-        updateLocator(ch, locator);
-    }
-}
-
-DBC_END
+*/

@@ -9,6 +9,7 @@
 #include "dbc/types.hpp"
 #include "dbc/lex/structs.hpp"
 #include "dbc/lex/readers.hpp"
+#include "dbc/lex/CharReceiver.hpp"
 DBC_BEGIN
 
 using TokenReaderPtr = std::shared_ptr<TokenReader>;
@@ -16,21 +17,17 @@ using ReaderBranches = std::vector<TokenReaderPtr>;
 
 class LexHelper{
 public:
-    LexHelper();
+    LexHelper(const Dstring &raw);
     ~LexHelper();
 
     bool hasMore(const Dstring &raw) const noexcept;
     Token readToken(const Dstring &raw);                                                //Read token by reader which is automatically selected by 'raw.at[index]'
     Token readToken(const Dstring &raw, TokenType type);                     //Read token by reader of specific type
-    Token readToken(const Dstring &raw, const TokenReader &reader); //Rread token by specific reader
     int numberOfRow() const noexcept;
     int numberOfCol() const noexcept;
-    const Locator& locator() const noexcept;
-    void setLocator(const Locator &locator) noexcept;
-    void resetLocator() noexcept;
 
 private:
-    Locator m_locator;
+    
     ReaderBranches m_readerBranches;
 
     void installReaders();

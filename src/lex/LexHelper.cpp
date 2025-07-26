@@ -20,15 +20,7 @@ Token LexHelper::readToken(const Dstring &raw) {
     Token token;
     token.type = TokenType::Unknown;
 
-    if(m_locator.index < raw.length()){
-        for(auto &reader : m_readerBranches){
-            if(reader -> isThisType(raw.at(m_locator.index))){
-                reader -> readToken(raw, token.buffer, m_locator);
-                token.type = reader -> type();
-                break;
-            }
-        }
-    }
+
 
     return token;
 }
@@ -37,28 +29,8 @@ Token LexHelper::readToken(const Dstring &raw, TokenType type){
     Token token;
     token.type = TokenType::Unknown;
 
-    if(m_locator.index < raw.length()){
-        for(auto &reader : m_readerBranches){
-            if(reader -> type() == type){
-                reader -> readToken(raw, token.buffer, m_locator);
-                token.type = reader -> type();
-                break;
-            }
-        }
-    }
-
-    return token;
-}
-
-Token LexHelper::readToken(const Dstring &raw, const TokenReader &reader){
-    Token token;
-    token.type = TokenType::Unknown;
-
-    if(m_locator.index < raw.length()){
-        reader.readToken(raw, token.buffer, m_locator);
-        token.type = reader.type();
-    }
     
+
     return token;
 }
 
@@ -85,13 +57,7 @@ void LexHelper::resetLocator() noexcept{
 }
 
 void LexHelper::installReaders(){
-    m_readerBranches.push_back(std::make_shared<BlankReader>());
-    m_readerBranches.push_back(std::make_shared<StringReader>());
-    m_readerBranches.push_back(std::make_shared<OperatorReader>());
-
-    //Keep these two at end
-    m_readerBranches.push_back(std::make_shared<EmptyReader>());
-    m_readerBranches.push_back(std::make_shared<UnknownReader>());
+    
 }
 
 DBC_END
