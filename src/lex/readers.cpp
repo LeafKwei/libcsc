@@ -27,13 +27,11 @@ inline bool EmptyReader::canRead(Dchar ch) const noexcept{
 
     Token token{TokenType::Blank};
     while(picker.hasMore()){
-        Dchar ch = picker.pick();
-        if(!canRead(ch)){
-            picker.backward();
+        if(!canRead(picker.tryPick())){
             break;
         }
 
-        token.buffer.push_back(ch);
+        token.buffer.push_back(picker.pick());
     }
 
     return token;
@@ -47,54 +45,89 @@ inline bool EmptyReader::canRead(Dchar ch) const noexcept{
     return canRead(picker.tryPick());
  }
 
- //=================== BlankReader ===================
- 
+ //=================== GeneralReader ===================
+ Token GeneralReader::readToken(CharPicker &picker) const noexcept{
+    if(!isThisReader(picker)) return {TokenType::Unknown};
 
-/*
-void StringReader::readToken(const Dstring &raw, Dstring &buffer, Locator &locator) const noexcept{
-    bool isEscaped = false;
+    bool escape = false;
+    Token token{TokenType::General};
 
-    for(int i = locator.index; i < raw.length(); i++){
-        Dchar ch = raw.at(i);
-
-        if(ch == '\\'){
-            isEscaped = true;
-            updateLocator(ch, locator);
+    while(picker.hasMore()){
+        if(!isEscape(picker.tryPick()) && (!escape)){
+            picker.forward();
+            escape = true;
             continue;
         }
 
-        if(isEscaped){
-            isEscaped = false;
-            buffer.push_back(escape(ch));
-            updateLocator(ch, locator);
+        if(escape){
+            escape = false;
+            token.buffer.push_back(doEscape(picker.pick()));
             continue;
         }
 
-        if(canRead(ch)){
-            buffer.push_back(ch);
-            updateLocator(ch, locator);
-            continue;
+        if(!canRead(picker.tryPick())){
+            break;
         }
 
-        break;
+        token.buffer.push_back(picker.pick());
     }
+
+    return token;
+ }
+
+ inline bool GeneralReader::canRead(Dchar ch) const noexcept{
+    return isGeneral(ch);
 }
 
-Dchar StringReader::escape(Dchar ch) const noexcept{
-    switch(ch){
-        case '0':
-            return '\0';
-        case 't':
-            return '\t';
-        case 'n':
-            return '\n';
-        case 'r':
-            return '\r';
-        case 'b':
-            return '\b';
-        default:
-            return ch;
+ inline bool GeneralReader::isThisReader(CharPicker &picker) const noexcept{
+    return canRead(picker.tryPick());
+ }
+
+  //=================== OperatorReader ===================
+ Token OperatorReader::readToken(CharPicker &picker) const noexcept{
+    if(!isThisReader(picker)) return {TokenType::Unknown};
+
+    Token token{TokenType::Operator};
+    while(picker.hasMore()){
+        if(!canRead(picker.tryPick())){
+            break;
+        }
+
+        token.buffer.push_back(picker.pick());
     }
+
+    return token;
+ }
+
+ inline bool OperatorReader::canRead(Dchar ch) const noexcept{
+    return isOperator(ch);
 }
 
-*/
+ inline bool OperatorReader::isThisReader(CharPicker &picker) const noexcept{
+    return canRead(picker.tryPick());
+ }
+
+  //=================== DelimitorReader ===================
+ Token DelimitorReader::readToken(CharPicker &picker) const noexcept{
+    if(!isThisReader(picker)) return {TokenType::Unknown};
+
+    Token token{TokenType::Operator};
+    while(picker.hasMore()){
+        if(!canRead(picker.tryPick())){
+            break;
+        }
+
+        token.buffer.push_back(picker.pick());
+    }
+
+    return token;
+ }
+
+ inline bool DelimitorReader::canRead(Dchar ch) const noexcept{
+    return isDelimitor(ch);
+}
+
+ inline bool DelimitorReader::isThisReader(CharPicker &picker) const noexcept{
+    return canRead(picker.tryPick());
+ }
+

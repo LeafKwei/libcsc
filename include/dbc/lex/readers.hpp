@@ -26,7 +26,7 @@ protected:
     inline bool isThisReader(CharPicker &picker) const noexcept override;
 };
 
-class StringReader : EmptyReader{
+class GeneralReader : EmptyReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override; 
 protected:

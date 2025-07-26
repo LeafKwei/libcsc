@@ -28,9 +28,11 @@ public:
 
 private:
     CharMngr m_charMngr;
-    ReaderBranches m_readerBranches;
+    ReaderBranches m_readers;
+    ReaderBranches m_explicitReaders;
 
     void installReaders();
+    void installExplicitReaders();
 };
 
 

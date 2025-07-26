@@ -9,24 +9,28 @@ inline bool isAlpha(Dchar ch){
     return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
 }
 
-inline bool isUnvisible(Dchar ch){
-    return ch <= 32;
+inline bool isNumber(Dchar ch){
+    return (ch >= '0' && ch <= '9');
 }
 
-inline bool isBlank(Dchar ch){
-    return (ch == '\n') || (ch == '\t' || (ch == ' '));
+inline bool isUnvisible(Dchar ch){
+    return ch <= 32;
 }
 
 inline bool isNewLine(Dchar ch){
     return ch == '\n';
 }
 
-inline bool isNumber(Dchar ch){
-    return (ch >= '0' && ch <= '9');
+inline bool isEscape(Dchar ch){
+    return ch == '\\';
 }
 
 inline bool isDot(Dchar ch){
     return ch == '.';
+}
+
+inline bool isBlank(Dchar ch){
+    return (ch == '\n') || (ch == '\t' || (ch == ' '));
 }
 
 inline bool isOperator(Dchar ch){
@@ -40,7 +44,37 @@ inline bool isOperator(Dchar ch){
 }
 
 inline bool isDelimitor(Dchar ch){
-    return (ch == '\'' || ch == '\"');
+    switch(ch){
+        case '\'':
+        case '\"':
+        case '[':
+        case ']':
+        case ',':
+            return true;
+        default:
+            return false;
+    }
+}
+
+inline bool isGeneral(Dchar ch){
+    return (!isBlank(ch)) && (!isOperator(ch)) && (!isDelimitor(ch));
+}
+
+inline Dchar doEscape(Dchar ch){
+    switch(ch){
+        case '0':
+            return '\0';
+        case 't':
+            return '\t';
+        case 'n':
+            return '\n';
+        case 'r':
+            return '\r';
+        case 'b':
+            return '\b';
+        default:
+            return ch;
+    }
 }
 
 DBC_END

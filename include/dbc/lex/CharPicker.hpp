@@ -8,7 +8,7 @@ DBC_BEGIN
 class CharPicker{
 public:
     virtual Dchar pick() noexcept =0;
-    virtual Dchar tryPick() noexcept =0;                       //Pick char but don't increase index.
+    virtual Dchar tryPick() const noexcept =0;             //Pick char but don't increase index.
     virtual void forward(int value=1) noexcept =0;     //Increase index.
     virtual void backward(int value=1) noexcept =0;  //Decrease index.
     virtual bool hasMore() const noexcept =0;
