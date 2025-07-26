@@ -22,6 +22,31 @@ class BlankReader : EmptyReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override; 
 protected:
+    inline bool canRead(Dchar ch) const noexcept;
+    inline bool isThisReader(CharPicker &picker) const noexcept override;
+};
+
+class StringReader : EmptyReader{
+public:
+    Token readToken(CharPicker &picker) const noexcept override; 
+protected:
+    inline bool canRead(Dchar ch) const noexcept;
+    inline bool isThisReader(CharPicker &picker) const noexcept override;
+};
+
+class OperatorReader : EmptyReader{
+public:
+    Token readToken(CharPicker &picker) const noexcept override; 
+protected:
+    inline bool canRead(Dchar ch) const noexcept;
+    inline bool isThisReader(CharPicker &picker) const noexcept override;
+};
+
+class DelimitorReader : EmptyReader{
+public:
+    Token readToken(CharPicker &picker) const noexcept override; 
+protected:
+    inline bool canRead(Dchar ch) const noexcept;
     inline bool isThisReader(CharPicker &picker) const noexcept override;
 };
 

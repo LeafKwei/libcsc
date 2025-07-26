@@ -9,7 +9,7 @@
 #include "dbc/types.hpp"
 #include "dbc/lex/structs.hpp"
 #include "dbc/lex/readers.hpp"
-#include "dbc/lex/CharReceiver.hpp"
+#include "dbc/lex/CharMngr.hpp"
 DBC_BEGIN
 
 using TokenReaderPtr = std::shared_ptr<TokenReader>;
@@ -20,14 +20,14 @@ public:
     LexHelper(const Dstring &raw);
     ~LexHelper();
 
-    bool hasMore(const Dstring &raw) const noexcept;
-    Token readToken(const Dstring &raw);                                                //Read token by reader which is automatically selected by 'raw.at[index]'
-    Token readToken(const Dstring &raw, TokenType type);                     //Read token by reader of specific type
+    bool hasMore() const noexcept;
+    Token readToken();                                                //Read token by reader which is automatically selected by 'raw.at[index]'
+    Token readToken(TokenType type);                      //Read token by reader of specific type
     int numberOfRow() const noexcept;
     int numberOfCol() const noexcept;
 
 private:
-    
+    CharMngr m_charMngr;
     ReaderBranches m_readerBranches;
 
     void installReaders();

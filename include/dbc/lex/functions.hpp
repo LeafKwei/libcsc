@@ -29,10 +29,6 @@ inline bool isDot(Dchar ch){
     return ch == '.';
 }
 
-inline bool isQuota(Dchar ch){
-    return (ch == '\'' || ch == '\"');
-}
-
 inline bool isOperator(Dchar ch){
     switch(ch){
         case ':' :
@@ -41,6 +37,10 @@ inline bool isOperator(Dchar ch){
         default:
             return false;
     }
+}
+
+inline bool isDelimitor(Dchar ch){
+    return (ch == '\'' || ch == '\"');
 }
 
 DBC_END
