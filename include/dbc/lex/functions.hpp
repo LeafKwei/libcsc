@@ -33,6 +33,10 @@ inline bool isBlank(Dchar ch){
     return (ch == '\n') || (ch == '\t' || (ch == ' '));
 }
 
+inline bool isIdentifier(Dchar ch){
+    return isAlpha(ch) || ch =='_';
+}
+
 inline bool isOperator(Dchar ch){
     switch(ch){
         case ':' :
@@ -54,10 +58,6 @@ inline bool isDelimitor(Dchar ch){
         default:
             return false;
     }
-}
-
-inline bool isGeneral(Dchar ch){
-    return (!isBlank(ch)) && (!isOperator(ch)) && (!isDelimitor(ch));
 }
 
 inline Dchar doEscape(Dchar ch){

@@ -5,7 +5,7 @@
 #include "dbc/lex/TokenReader.hpp"
 DBC_BEGIN
 
-class EmptyReader : TokenReader{
+class EmptyReader : public TokenReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override;
 protected:
@@ -13,12 +13,12 @@ protected:
     virtual inline bool isThisReader(CharPicker &picker) const noexcept;
 };
 
-class UnknownReader : EmptyReader{
+class UnknownReader : public EmptyReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override;
 };
 
-class BlankReader : EmptyReader{
+class BlankReader : public EmptyReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override; 
 protected:
@@ -26,7 +26,7 @@ protected:
     inline bool isThisReader(CharPicker &picker) const noexcept override;
 };
 
-class GeneralReader : EmptyReader{
+class IdentifierReader : public EmptyReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override; 
 protected:
@@ -34,7 +34,7 @@ protected:
     inline bool isThisReader(CharPicker &picker) const noexcept override;
 };
 
-class OperatorReader : EmptyReader{
+class NumberReader : public EmptyReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override; 
 protected:
@@ -42,7 +42,31 @@ protected:
     inline bool isThisReader(CharPicker &picker) const noexcept override;
 };
 
-class DelimitorReader : EmptyReader{
+class StringReader : public EmptyReader{
+public:
+    Token readToken(CharPicker &picker) const noexcept override; 
+protected:
+    inline bool canRead(Dchar ch) const noexcept;
+    inline bool isThisReader(CharPicker &picker) const noexcept override;
+};
+
+class LongStringReader : public EmptyReader{
+public:
+    Token readToken(CharPicker &picker) const noexcept override; 
+protected:
+    inline bool canRead(Dchar ch) const noexcept;
+    inline bool isThisReader(CharPicker &picker) const noexcept override;
+};
+
+class OperatorReader : public EmptyReader{
+public:
+    Token readToken(CharPicker &picker) const noexcept override; 
+protected:
+    inline bool canRead(Dchar ch) const noexcept;
+    inline bool isThisReader(CharPicker &picker) const noexcept override;
+};
+
+class DelimitorReader : public EmptyReader{
 public:
     Token readToken(CharPicker &picker) const noexcept override; 
 protected:

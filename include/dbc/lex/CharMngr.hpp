@@ -4,7 +4,7 @@
 #include "dbc/lex/CharPicker.hpp"
 DBC_BEGIN
 
-class CharMngr : CharPicker{
+class CharMngr : public CharPicker{
 public:
     CharMngr(const Dstring &raw);
 
@@ -12,11 +12,12 @@ public:
     int numberOfRow() const noexcept;
 
     Dchar pick() noexcept override;
+    Dstring pickn(unsigned int n) noexcept override;
     Dchar tryPick() const noexcept override; 
-    void forward(int value=1) noexcept override;
-    void backward(int value=1) noexcept override;
+    Dstring tryPickn(unsigned int n) const noexcept;
+    void forward(unsigned int value=1) noexcept override;
+    void backward(unsigned int value=1) noexcept override;
     bool hasMore() const noexcept override;
-    void setIndexFlag(bool flag) noexcept override;
     
 private:
     Dstring m_raw;

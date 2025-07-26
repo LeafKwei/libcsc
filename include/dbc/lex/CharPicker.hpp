@@ -8,11 +8,12 @@ DBC_BEGIN
 class CharPicker{
 public:
     virtual Dchar pick() noexcept =0;
-    virtual Dchar tryPick() const noexcept =0;             //Pick char but don't increase index.
-    virtual void forward(int value=1) noexcept =0;     //Increase index.
-    virtual void backward(int value=1) noexcept =0;  //Decrease index.
+    virtual Dstring pickn(unsigned int n) noexcept =0;                //Pick n char.
+    virtual Dchar tryPick() const noexcept =0;                             //Pick char but don't increase index.
+    virtual Dstring tryPickn(unsigned int n) const noexcept =0; //Pick n char but don't increase index.
+    virtual void forward(unsigned int value=1) noexcept =0;     //Increase index.
+    virtual void backward(unsigned int value=1) noexcept =0;  //Decrease index.
     virtual bool hasMore() const noexcept =0;
-    virtual void setIndexFlag(bool flag) noexcept =0;   //true: increase flag after picking char, otherwise not.
 };
 
 DBC_END
