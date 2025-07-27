@@ -13,6 +13,10 @@ inline bool isNumber(Dchar ch){
     return (ch >= '0' && ch <= '9');
 }
 
+inline bool isHexNumber(Dchar ch){
+    return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <='F');
+}
+
 inline bool isUnvisible(Dchar ch){
     return ch <= 32;
 }

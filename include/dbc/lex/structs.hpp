@@ -5,12 +5,6 @@
 #include "dbc/types.hpp"
 DBC_BEGIN
 
-struct Locator{
-    int index;
-    int row;
-    int col;
-};
-
 struct Token{
     TokenType type;
     Dstring buffer;
