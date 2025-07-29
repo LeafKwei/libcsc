@@ -10,9 +10,8 @@ enum class EndingFlag{
 };
 
 enum class TokenType{
-    Empty, Unknown, Blank, 
-    Identifier, Number, String, 
-    Operator, Delimitor
+    Empty, Unknown, 
+    Identifier, Operator, Delimitor
 };
 
 enum class ErrorType{

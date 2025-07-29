@@ -1,17 +1,18 @@
 ; This is a sample of dbc(Domain-Based Config)
 
-custom::                  ; I'm a comment, and this is a domain.
-    tom::                   ; sub domain.
-        name = tom                    ; string, can't contain  any space or blank.
-        age = 3                            ; number.
-        height = 103.5                 ; number.
-        weight = 34.7                   ; number.
-        isHappy = true                 ; bool.
-        friend = {jerry,jimi,cherry}; array.
+player = "Smith"
+isMale = true
+
+custom::                  ; domain
+    tom::                   ; child domain
+        name = "tom"                                ; string
+        age = 3                                          ; number.
+        height = 171.5                               ; number.
+        weight = 0x3F                               ; number.
+        isHappy = true                              ; bool.
+        friend = {"jerry","jimi","cherry"}    ; array. All elements in array must be a same type.
     ::tom
     
-    ; You can place a text section into a 'name = "text"' structure.
-    ; Anything in '" "' will be considered a string.
     ; We can use '\' to escape symbol in the string to avoid it to be recognized.
     school = "The university for \"cat\" and \"mouse\""
 

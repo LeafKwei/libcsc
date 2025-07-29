@@ -18,9 +18,6 @@ struct Dpair{
     Dstring value;
     DpairPtr next;
     DpairWkr prev;
-
-    Dpair(){std::cout << "Dpair" << std::endl;}
-    ~Dpair(){std::cout << "~Dpair" <<  std::endl;}
 };
 
 struct Ddomain{
@@ -30,9 +27,6 @@ struct Ddomain{
     DdomainPtr next;
     DdomainWkr parent;
     DdomainWkr prev;
-
-    Ddomain(){std::cout << "Ddomain" << std::endl;}
-    ~Ddomain(){std::cout << "~Ddomain" <<  std::endl;}
 };
 
 DBC_END
