@@ -6,7 +6,7 @@
 #include <memory>
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
-#include "dbc/core/structs.hpp"
+#include "dbc/core/types.hpp"
 #include "dbc/core/Dseeker.hpp"
 DBC_BEGIN
 

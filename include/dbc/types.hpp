@@ -5,15 +5,6 @@
 #include "dbc/alias.hpp"
 DBC_BEGIN
 
-enum class EndingFlag{
-    
-};
-
-enum class TokenType{
-    Empty, Unknown, 
-    Identifier, Operator, Delimitor
-};
-
 enum class ErrorType{
     OK, Unexcepted, NoSuch, 
     Denied

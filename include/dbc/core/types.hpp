@@ -1,5 +1,5 @@
-#ifndef DBC_CORE_STRUCTS_HPP
-#define DBC_CORE_STRUCTS_HPP
+#ifndef DBC_CORE_TYPES_HPP
+#define DBC_CORE_TYPES_HPP
 
 #include <memory>
 #include "dbc/dbc.hpp"
