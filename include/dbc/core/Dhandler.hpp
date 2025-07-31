@@ -12,11 +12,11 @@ public:
     Dhandler();
     Dhandler(const Dstring &raw);
     Dhandler(const Dhandler &oth);
-    Dhandler(Dhandler &&oth) noexcept;
+    Dhandler(Dhandler &&oth);
     ~Dhandler();
 
-    Derror  decode(const Dstring &raw) noexcept;
-    Dstring  encode() noexcept;
+    Derror  decode(const Dstring &raw);
+    Dstring  encode();
 
 private:
 };

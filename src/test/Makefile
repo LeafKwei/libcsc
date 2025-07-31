@@ -1,6 +1,6 @@
 extra=-g
 incl=../../include
-test_any.exe.src=test_any.cpp ../lex/Locator.cpp
+test_any.exe.src=test_any.cpp ../lex/CharMngr.cpp
 test_ptr.exe.src=test_ptr.cpp
 test_context.exe.src=test_context.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
 test_ctor.exe.src=test_ctor.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp

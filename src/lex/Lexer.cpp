@@ -7,7 +7,7 @@ Lexer::Lexer(const Dstring &str) :
 
 }
 
-Locator Lexer::locator() const noexcept{
+Locator Lexer::locator() const{
     return Locator(m_str, m_index);
 }
 

@@ -5,43 +5,43 @@
 #include "dbc/alias.hpp"
 DBC_BEGIN
 
-inline bool isAlpha(Dchar ch){
+inline bool isAlpha(Dchar ch) noexcept{
     return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
 }
 
-inline bool isNumber(Dchar ch){
+inline bool isNumber(Dchar ch) noexcept{
     return (ch >= '0' && ch <= '9');
 }
 
-inline bool isHexNumber(Dchar ch){
+inline bool isHexNumber(Dchar ch) noexcept{
     return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <='F');
 }
 
-inline bool isUnvisible(Dchar ch){
+inline bool isUnvisible(Dchar ch) noexcept{
     return ch <= 32;
 }
 
-inline bool isNewLine(Dchar ch){
+inline bool isNewLine(Dchar ch) noexcept{
     return ch == '\n';
 }
 
-inline bool isEscape(Dchar ch){
+inline bool isEscape(Dchar ch) noexcept{
     return ch == '\\';
 }
 
-inline bool isDot(Dchar ch){
+inline bool isDot(Dchar ch) noexcept{
     return ch == '.';
 }
 
-inline bool isBlank(Dchar ch){
+inline bool isBlank(Dchar ch) noexcept{
     return (ch == '\n') || (ch == '\t' || (ch == ' '));
 }
 
-inline bool isIdentifier(Dchar ch){
+inline bool isIdentifier(Dchar ch) noexcept{
     return isAlpha(ch) || ch =='_';
 }
 
-inline bool isOperator(Dchar ch){
+inline bool isOperator(Dchar ch) noexcept{
     switch(ch){
         case ':' :
         case '=':
@@ -51,7 +51,7 @@ inline bool isOperator(Dchar ch){
     }
 }
 
-inline bool isDelimitor(Dchar ch){
+inline bool isDelimitor(Dchar ch) noexcept{
     switch(ch){
         case '\'':
         case '\"':
@@ -64,7 +64,7 @@ inline bool isDelimitor(Dchar ch){
     }
 }
 
-inline Dchar doEscape(Dchar ch){
+inline Dchar doEscape(Dchar ch) noexcept{
     switch(ch){
         case '0':
             return '\0';

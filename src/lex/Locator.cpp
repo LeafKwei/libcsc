@@ -17,15 +17,15 @@ Locator::Locator(const Dstring &str, int index) :
     }
 }
 
-int Locator::numberOfRow() const noexcept{
+int Locator::numberOfRow() const{
     return m_row;
 }
 
-int Locator::numberOfCol() const noexcept{
+int Locator::numberOfCol() const{
     return m_col;
 }
 
-int Locator::index() const noexcept{
+int Locator::index() const{
     return m_index;
 }
 

@@ -11,9 +11,9 @@ DBC_BEGIN
 class Lexer{
 public:
     Lexer(const Dstring &str);
-    Token readNext(TokenType type) noexcept;
-    int index() const noexcept;
-    Locator locator() const noexcept;
+    Token readNext(TokenType type);
+    int index() const;
+    Locator locator() const;
 
 private:
     int m_index;

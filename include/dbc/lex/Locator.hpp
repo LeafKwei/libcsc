@@ -8,9 +8,9 @@ DBC_BEGIN
 class Locator{
 public:
     Locator(const Dstring &str, int index);
-    int numberOfRow() const noexcept;
-    int numberOfCol() const noexcept;
-    int index() const noexcept;
+    int numberOfRow() const;
+    int numberOfCol() const;
+    int index() const;
 
 private:
     int m_row;

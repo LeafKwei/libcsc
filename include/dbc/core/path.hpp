@@ -11,11 +11,11 @@
 DBC_BEGIN
 
 extern const char *builtinPaths[];
-std::tuple<Dstring,Dstring> separatePath(const Dstring &path) noexcept;
-std::vector<Dstring> splitPath(const Dstring &path) noexcept;
+std::tuple<Dstring,Dstring> separatePath(const Dstring &path);
+std::vector<Dstring> splitPath(const Dstring &path);
 
 //=============== inline ===============
-inline bool isEmptyPath(const Dstring &path) noexcept { 
+inline bool isEmptyPath(const Dstring &path){ 
     return path.size() == 0; 
 }
 
@@ -29,7 +29,7 @@ inline int indexOfBuiltinPath(const Dstring &path){
     return -1;
 }
 
-inline bool isBuiltinPath(const Dstring &path) noexcept { 
+inline bool isBuiltinPath(const Dstring &path){ 
     return indexOfBuiltinPath(path) != -1;
 }
 

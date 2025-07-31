@@ -6,7 +6,7 @@ const char *builtinPaths[] = {
     ""    //As the end of builtinPaths
 };
 
-std::tuple<Dstring,Dstring> separatePath(const Dstring &path) noexcept{
+std::tuple<Dstring,Dstring> separatePath(const Dstring &path){
     Dstring prefix;
     Dstring name;
     auto lastCharPos = path.size() - 1;
@@ -38,7 +38,7 @@ std::tuple<Dstring,Dstring> separatePath(const Dstring &path) noexcept{
     return std::make_tuple(prefix, name);
 }
 
-std::vector<Dstring> splitPath(const Dstring &path) noexcept{
+std::vector<Dstring> splitPath(const Dstring &path){
     std::vector<Dstring> names;
     decltype(path.size()) pos = 0;
     decltype(path.size()) size = path.size();
