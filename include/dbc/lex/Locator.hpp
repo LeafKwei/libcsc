@@ -8,8 +8,8 @@ DBC_BEGIN
 class Locator{
 public:
     Locator(const Dstring &str, int index);
-    int numberOfRow() const;
-    int numberOfCol() const;
+    int col() const;
+    int row() const;
     int index() const;
 
 private:

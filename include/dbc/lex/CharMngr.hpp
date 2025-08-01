@@ -14,6 +14,7 @@ public:
     int length() const;
     bool valid() const;
     Dchar at(int index) const;
+    Dchar getch() const;
     Dchar forward();
     Dchar backward();
     const Dstring& str() const;

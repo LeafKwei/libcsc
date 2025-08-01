@@ -17,12 +17,12 @@ Locator::Locator(const Dstring &str, int index) :
     }
 }
 
-int Locator::numberOfRow() const{
-    return m_row;
+int Locator::col() const{
+    return m_col;
 }
 
-int Locator::numberOfCol() const{
-    return m_col;
+int Locator::row() const{
+    return m_row;
 }
 
 int Locator::index() const{

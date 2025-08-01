@@ -22,6 +22,10 @@ Dchar CharMngr::at(int index) const{
     return m_str.at(index);
 }
 
+Dchar CharMngr::getch() const{
+    return m_str.at(m_index);
+}
+
 Dchar CharMngr::forward(){
     auto index = m_index;
     ++m_index;
