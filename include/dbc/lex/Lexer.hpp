@@ -5,20 +5,22 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/lex/types.hpp"
+#include "dbc/lex/CharMngr.hpp"
 #include "dbc/lex/Locator.hpp"
 DBC_BEGIN
 
 class Lexer{
 public:
     Lexer(const Dstring &str);
-    Token readNext(TokenType type);
+    Token nextToken();
     int index() const;
     Locator locator() const;
+    void setAutoSkipBlank(bool b);
 
 private:
     int m_index;
-    const Dstring m_str;
-    Dstring m_custom;
+    CharMngr m_mngr;
+    bool m_autoSkipBlank;
 };
 
 DBC_END

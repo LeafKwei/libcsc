@@ -38,7 +38,7 @@ inline bool isBlank(Dchar ch) noexcept{
 }
 
 inline bool isIdentifier(Dchar ch) noexcept{
-    return isAlpha(ch) || ch =='_';
+    return isAlpha(ch) || isNumber(ch) || ch == '_';
 }
 
 inline bool isOperator(Dchar ch) noexcept{

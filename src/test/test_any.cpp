@@ -14,24 +14,32 @@ void parseAssign(CharMngr &mngr, Dcontext &context, const Dstring &name);
 Dstring readIdentifer(CharMngr &mngr);
 Dstring readOperator(CharMngr &mngr);
 
-
 void parseDomain(CharMngr &mngr, Dcontext &context){
     while(mngr.valid()){
         skipBlank(mngr);
         skipDescription(mngr);
 
-        
-
         Dstring id = readIdentifer(mngr);
-        if(!mngr.valid() || id.size() == 0){
-            showError("Error: excepted identifier.", mngr);
-            return;
+        if(id.size() == 0){
+            Dstring optor = readOperator(mngr);
+            if(optor.size() == 0){
+                showError("Error: excepted identifier or '::'", mngr);
+                return;
+            }
+            
+            skipBlank(mngr);
+            skipDescription(mngr);
+            id = readIdentifer(mngr);
+            if(id.size() == 0){
+                showError("Error: incomplete domain ending", mngr);
+                return;
+            }
         }
 
         skipBlank(mngr);
         skipDescription(mngr);
         Dstring optor = readOperator(mngr);
-        if(!mngr.valid() || optor.size() == 0){
+        if(optor.size() == 0){
             showError("Error: excepted operator.", mngr);
         }
 
@@ -47,7 +55,7 @@ void parseDomain(CharMngr &mngr, Dcontext &context){
 }
 
 void parseAssign(CharMngr &mngr, Dcontext &context, const Dstring &name){
-
+    
 }
 
 void showError(const Dstring &err, const CharMngr &mngr){

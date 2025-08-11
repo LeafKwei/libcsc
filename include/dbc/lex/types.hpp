@@ -6,12 +6,10 @@
 #include "dbc/types.hpp"
 DBC_BEGIN
 
-typedef uint32_t EndingFlag;
-
 enum class TokenType{
-    Bad, None, 
-    Identifier, Operator, Delimitor,
-    Number, String, RawString
+    Aborted, Unexcepted, Blank,
+    Identifier, Operator, Number,
+    String, LongString
 };
 
 struct Token{
