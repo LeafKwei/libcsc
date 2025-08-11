@@ -2,16 +2,16 @@
 DBC_BEGIN
 
 Locator::Locator(const Dstring &str, int index) : 
-    m_row(0), m_col(0), m_index(index)
+    m_row(1), m_col(1), m_index(index)
 {
     decltype(str.size()) start = 0;
-    decltype(str.size()) end = index + 1;
+    decltype(str.size()) end = index;
     end = end > str.size() ? str.size() : end;
 
     for(; start < end; start++){
         ++m_col;
         if(str.at(start) == '\n'){
-            m_col = 0;
+            m_col = 1;
             ++m_row;
         }
     }

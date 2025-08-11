@@ -23,6 +23,16 @@ protected:
     bool canRead(Dchar ch) override;
 };
 
+class DescriptionReader : public CommonReader{
+public:
+    Token read(CharMngr &mngr) override;
+    bool isThisType(CharMngr &mngr) override;
+    TokenType type() override;
+
+protected:
+    bool canRead(Dchar ch) override;
+};
+
 class IdentifierReader : public CommonReader{
 public:
     bool isThisType(CharMngr &mngr) override;
@@ -51,21 +61,21 @@ protected:
     bool canRead(Dchar ch) override;
 
 private:
-    int m_type;        //0 general, 1 hex, 2, float
-    int m_directly;
+    int m_type;        //0 general, 1 float, 2 hex
 
-    bool isGeneralNumber(CharMngr &mngr);
-    bool isHexNumber(CharMngr &mngr);
+    bool isHex(CharMngr &mngr);
+    void readHex(Token &token, CharMngr &mngr);
+    void readNumber(Token &token, CharMngr &mngr);
 };
 
 class StringReader : public CommonReader{
 public:
+    Token read(CharMngr &mngr) override;
     bool isThisType(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
     bool canRead(Dchar ch) override;
-    bool isCompletedEnd(CharMngr &mngr) const;
 };
 
 

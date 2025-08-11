@@ -47,7 +47,7 @@ void CharMngr::seek(SeekOption option, int offset){
         case Set:
             m_index = offset;
             break;
-        case Current:
+        case Cur:
             m_index += offset;
             break;
         case End:

@@ -7,7 +7,7 @@ DBC_BEGIN
 
 class CharMngr{
 public:
-    enum SeekOption{Set, Current, End};
+    enum SeekOption{Set, Cur, End};
     CharMngr(const Dstring &str, int index=0);
     
     int index() const;
