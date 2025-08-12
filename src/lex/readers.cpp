@@ -185,11 +185,7 @@ Token StringReader::read(CharMngr &mngr){
 }
 
 bool StringReader::isThisType(CharMngr &mngr){
-    if(mngr.valid() && mngr.getch() == '"'){
-        return true;
-    }
-
-    return false;
+    return mngr.valid() && mngr.getch() == '"';
 }
 
 TokenType StringReader::type(){
@@ -236,5 +232,48 @@ void StringReader::readString(Token &token, CharMngr &mngr){
     mngr.forward();
 }
 
+//============== ArrayReader =============
+Token ArrayReader::read(CharMngr &mngr){
+    Token token{TokenType::Aborted};
+    if(!isThisType(mngr)) return token;
+
+    token.type = TokenType::Array;
+    auto idx = mngr.index();
+    mngr.forward();
+
+    /* Read all characters in '{}'*/
+    while(mngr.valid()){
+        if(mngr.getch() == '}') break;
+        token.buffer.push_back(mngr.forward());
+    }
+
+    if(!mngr.valid()){
+        token.type = TokenType::Unexcepted;
+        return token;
+    }
+
+    mngr.forward();
+
+    /* Part each element */
+    part(token);
+
+    return token;
+}
+
+bool ArrayReader::isThisType(CharMngr &mngr){
+    return mngr.valid() && mngr.getch() == '{';
+}
+
+TokenType ArrayReader::type(){
+    return TokenType::Array;
+}
+
+bool ArrayReader::canRead(Dchar ch){
+    return false;
+}
+
+void ArrayReader::part(Token &token){
+    
+}
 
 DBC_END

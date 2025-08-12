@@ -9,7 +9,7 @@ DBC_BEGIN
 enum class TokenType{
     Aborted, Ignored, Unexcepted,
     Blank, Identifier, Operator, 
-    Number, String
+    Number, String, Array
 };
 
 struct Token{

@@ -1,6 +1,8 @@
 #ifndef DBC_LEX_READERS_HPP
 #define DBC_LEX_READERS_HPP
 
+#include <vector>
+#include <memory>
 #include "dbc/lex/TokenReader.hpp"
 DBC_BEGIN
 
@@ -76,6 +78,8 @@ public:
 
 protected:
     bool canRead(Dchar ch) override;
+
+private:
     void readString(Token &token, CharMngr &mngr);
 };
 
@@ -87,6 +91,9 @@ public:
 
 protected:
     bool canRead(Dchar ch) override;
+
+private:
+    void part(Token &token);
 };
 
 

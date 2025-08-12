@@ -28,6 +28,8 @@ void show(const Token &token){
         case TokenType::String:
             printf("String: %s\n", token.buffer.c_str());
             break;
+        case TokenType::Array:
+             printf("Array: %s\n", token.buffer.c_str());
         default:
             printf("Unexepted\n");
             break;
@@ -35,14 +37,17 @@ void show(const Token &token){
 }
 
 int main(void){
-    Lexer lexer("        _uname_ = \"Hello \\n World\"    _name = 0x10ABCDEF   _val987 = 9899 _val2 = 887.445\n\n  ;;;;;I am a description \nHacker_89_998__ = 19930.113   Priority    =     0xFF89E  ");
+    std::ifstream ifs("myconfig.dbc");
+    Dstring str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());  //Use parentheses for (std::istreambuf_iterator<char>(ifs) because cpp compiler will recongnize it as a function declaraion without parentheses
+
+    Lexer lexer(str);
     lexer.setAutoSkipBlank(true);
 
     while(lexer.valid()){
         auto token = lexer.nextToken();
         if(token.type == TokenType::Unexcepted){
             auto locator = lexer.locator();
-            printf("Unexcepted error at col: %d, row: %d\n", locator.col(), locator.row());
+            printf("Unexcepted error at row: %d, col: %d\n", locator.row(), locator.col());
             printf("str: `%s`\n", lexer.str().c_str() + locator.index());
             break;
         }

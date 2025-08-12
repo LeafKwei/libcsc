@@ -12,6 +12,7 @@ Lexer::Lexer(const Dstring &str) :
     m_readers.push_back(std::make_shared<NumberReader>());
     m_readers.push_back(std::make_shared<DescriptionReader>());
     m_readers.push_back(std::make_shared<StringReader>());
+    m_readers.push_back(std::make_shared<ArrayReader>());
 }
 
 Token Lexer::nextToken(){
