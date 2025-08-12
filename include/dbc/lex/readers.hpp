@@ -76,6 +76,17 @@ public:
 
 protected:
     bool canRead(Dchar ch) override;
+    void readString(Token &token, CharMngr &mngr);
+};
+
+class ArrayReader : public CommonReader{
+public:
+    Token read(CharMngr &mngr) override;
+    bool isThisType(CharMngr &mngr) override;
+    TokenType type() override;
+
+protected:
+    bool canRead(Dchar ch) override;
 };
 
 

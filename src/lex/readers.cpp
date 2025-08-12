@@ -178,10 +178,17 @@ void NumberReader::readHex(Token &token, CharMngr &mngr){
 
 //============== StringReader =============
 Token StringReader::read(CharMngr &mngr){
-    return Token{};
+    Token token{TokenType::Aborted};
+    if(!isThisType(mngr)) return token;
+    readString(token, mngr);
+    return token;
 }
 
 bool StringReader::isThisType(CharMngr &mngr){
+    if(mngr.valid() && mngr.getch() == '"'){
+        return true;
+    }
+
     return false;
 }
 
@@ -192,4 +199,42 @@ TokenType StringReader::type(){
 bool StringReader::canRead(Dchar ch){
     return false;
 }
+
+void StringReader::readString(Token &token, CharMngr &mngr){
+    mngr.forward();  //skip first quota
+    token.type = TokenType::String;
+
+    bool escape = false;
+    while(mngr.valid()){
+        Dchar ch = mngr.forward();
+
+        if(escape){
+            escape = false;
+            token.buffer.push_back(escapeTo(ch));
+            continue;
+        }
+
+        if(isEscape(ch)){
+            escape = true;
+            continue;
+        }
+
+        if(ch == '"'){
+            break;
+        }
+
+        token.buffer.push_back(ch);
+    }
+
+    //If there is no quota as ending
+    if(!(mngr.valid())){
+        token.type = TokenType::Unexcepted;
+        return;
+    }
+
+    //Skip ending quota
+    mngr.forward();
+}
+
+
 DBC_END

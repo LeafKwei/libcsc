@@ -35,7 +35,7 @@ void show(const Token &token){
 }
 
 int main(void){
-    Lexer lexer("            _name = 0x10ABCDEF   _val987 = 9899 _val2 = 887.445\n\n  ;;;;;I am a description \nHacker_89_998__ = 19930.113   Priority    =     0xFF89E");
+    Lexer lexer("        _uname_ = \"Hello \\n World\"    _name = 0x10ABCDEF   _val987 = 9899 _val2 = 887.445\n\n  ;;;;;I am a description \nHacker_89_998__ = 19930.113   Priority    =     0xFF89E  ");
     lexer.setAutoSkipBlank(true);
 
     while(lexer.valid()){

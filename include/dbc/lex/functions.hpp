@@ -64,7 +64,7 @@ inline bool isDelimitor(Dchar ch) noexcept{
     }
 }
 
-inline Dchar doEscape(Dchar ch) noexcept{
+inline Dchar escapeTo(Dchar ch) noexcept{
     switch(ch){
         case '0':
             return '\0';
