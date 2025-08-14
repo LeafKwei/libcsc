@@ -7,7 +7,7 @@
 DBC_BEGIN
 
 enum class TokenType{
-    Aborted, Ignored, Unexcepted,
+    Aborted, Ignored, Unexcepted, Keyword,
     Blank, Identifier, Operator, 
     Number, String, Array
 };

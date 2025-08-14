@@ -1,6 +1,6 @@
 extra=-g
 incl=../../include
-test_lexer.exe.src=test_lexer.cpp ../lex/CharMngr.cpp ../lex/functions.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp
+test_lexer.exe.src=test_lexer.cpp ../lex/CharMngr.cpp ../lex/functions.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/ctrls.cpp
 test_ptr.exe.src=test_ptr.cpp
 test_context.exe.src=test_context.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
 test_ctor.exe.src=test_ctor.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp

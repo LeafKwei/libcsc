@@ -226,9 +226,10 @@ bool Dcontext::exists(const Dstring &name) const{
     return findPair(name) != nullptr;
 }
 
-void Dcontext::set(const Dstring &name, const Dstring &value){
+void Dcontext::set(Dtype type, const Dstring &name, const Dstring &value){
     auto pair = findPair(name);
     if(pair != nullptr){
+        pair -> type = type;
         pair -> value = value;
         return;
     }
@@ -242,9 +243,14 @@ void Dcontext::set(const Dstring &name, const Dstring &value){
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     auto newPair = std::make_shared<Dpair>();
+    newPair -> type = type;
     newPair -> name = name;
     newPair -> value = value;
     appendPair(m_crntPtr, newPair);
+}
+
+void Dcontext::set(const Dstring &name, const Dstring &value){
+    set(Dtype::Null, name, value);
 }
 
 void Dcontext::unset(const Dstring &name){

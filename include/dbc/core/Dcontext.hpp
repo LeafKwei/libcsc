@@ -7,7 +7,6 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/core/types.hpp"
-#include "dbc/core/Dseeker.hpp"
 DBC_BEGIN
 
 class Dcontext{
@@ -30,6 +29,7 @@ public:
     Dstring absolutePath() const;                                           /* Get absolute path which begins from root domain to current domain*/
     bool exists(const Dstring &name) const;                         /* For current domain, test whether a pair is existing.*/
     void set(const Dstring &name, const Dstring &value);   /* In current domain, set a pair. */
+    void set(Dtype type, const Dstring &name, const Dstring &value);  /* In current domain, set a pair with type. */
     void unset(const Dstring &name);                                   /* For current domain, unset a pair. */
     Dstring get(const Dstring &name);                                 /* From current domain, get the value for name.*/
     void resetContext();
@@ -51,17 +51,7 @@ private:
     DdomainPtr findDomain(const Dstring &path) const;
     DdomainPtr findBuiltinDomain(const Dstring &path) const;
     DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const;
-
-public:
-    template<typename Rt>
-    void seekContext(const Dseeker<Rt> &seeker);
 };
-
-//=================== Template ==================
-template <typename Rt>
-void Dcontext::seekContext(const Dseeker<Rt> &seeker){
-        
-}
 
 DBC_END
 #endif

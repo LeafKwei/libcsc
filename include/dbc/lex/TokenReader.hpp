@@ -1,12 +1,18 @@
 #ifndef DBC_TOKENREADER_HPP
 #define DBC_TOKENREADER_HPP
 
+#include <vector>
+#include <memory>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/lex/types.hpp"
 #include "dbc/lex/CharMngr.hpp"
 DBC_BEGIN
+
+class TokenReader;
+using ReaderPtr = std::shared_ptr<TokenReader>;
+using ReaderBranches = std::vector<ReaderPtr>;
 
 class TokenReader{
 public:

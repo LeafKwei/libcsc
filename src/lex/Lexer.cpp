@@ -1,18 +1,13 @@
 #include "dbc/lex/Lexer.hpp"
 #include "dbc/lex/readers.hpp"
+#include "dbc/lex/ctrls.hpp"
 DBC_BEGIN
 
 Lexer::Lexer(const Dstring &str) : 
     m_autoSkipBlank(true), m_mngr(str)
 {
-    //Registe readers
-    m_readers.push_back(std::make_shared<BlankReader>());
-    m_readers.push_back(std::make_shared<IdentifierReader>());
-    m_readers.push_back(std::make_shared<OperatorReader>());
-    m_readers.push_back(std::make_shared<NumberReader>());
-    m_readers.push_back(std::make_shared<DescriptionReader>());
-    m_readers.push_back(std::make_shared<StringReader>());
-    m_readers.push_back(std::make_shared<ArrayReader>());
+    installReaders();
+    installCtrls();
 }
 
 Token Lexer::nextToken(){
@@ -33,7 +28,7 @@ Token Lexer::nextToken(){
             continue;
         }
 
-        return token;
+        return keywordFilter(token);
     }
 
     token.type = valid() ? TokenType::Unexcepted : TokenType::Aborted;
@@ -54,6 +49,32 @@ void Lexer::setAutoSkipBlank(bool b){
 
 Locator Lexer::locator() const{
     return Locator(m_mngr.str(), m_mngr.index());
+}
+
+Token& Lexer::keywordFilter(Token &token){
+    if(token.type != TokenType::Identifier) return token;
+    auto pos = m_ctrls.find(token.buffer);
+    if(pos == m_ctrls.end()) return token;
+
+    auto &ctrl = pos -> second;
+    token.type = TokenType::Keyword;
+    ctrl -> changeReaderRule(m_readers);
+    return token;
+}
+
+void Lexer::installReaders(){
+    m_readers.push_back(std::make_shared<BlankReader>());
+    m_readers.push_back(std::make_shared<IdentifierReader>());
+    m_readers.push_back(std::make_shared<OperatorReader>());
+    m_readers.push_back(std::make_shared<NumberReader>());
+    m_readers.push_back(std::make_shared<DescriptionReader>());
+    m_readers.push_back(std::make_shared<StringReader>());
+    m_readers.push_back(std::make_shared<ArrayReader>());
+}
+
+void Lexer::installCtrls(){
+    m_ctrls.insert({"true", std::make_shared<TrueCtrl>()});
+    m_ctrls.insert({"false", std::make_shared<FalseCtrl>()});
 }
 
 DBC_END

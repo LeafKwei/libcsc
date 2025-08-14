@@ -30,6 +30,8 @@ void show(const Token &token){
             break;
         case TokenType::Array:
              printf("Array: %s\n", token.buffer.c_str());
+        case TokenType::Keyword:
+            printf("Keyword: %s\n", token.buffer.c_str());
         default:
             printf("Unexepted\n");
             break;

@@ -1,8 +1,6 @@
 #ifndef DBC_LEXCER_HPP
 #define DBC_LEXCER_HPP
 
-#include <vector>
-#include <memory>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
@@ -10,10 +8,8 @@
 #include "dbc/lex/CharMngr.hpp"
 #include "dbc/lex/Locator.hpp"
 #include "dbc/lex/TokenReader.hpp"
+#include "dbc/lex/KeywordCtrl.hpp"
 DBC_BEGIN
-
-using ReaderPtr = std::shared_ptr<TokenReader>;
-using ReaderBranches = std::vector<ReaderPtr>;
 
 class Lexer{
 public:
@@ -28,8 +24,12 @@ private:
     CharMngr m_mngr;
     bool m_autoSkipBlank;
     ReaderBranches m_readers;
+    CtrlBranches m_ctrls;
 
     inline bool isIgnoredToken(TokenType type) const noexcept;
+    Token& keywordFilter(Token &token);
+    void installReaders();
+    void installCtrls();
 };
 
 inline bool Lexer::isIgnoredToken(TokenType type) const noexcept{
