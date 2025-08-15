@@ -94,6 +94,7 @@ protected:
 
 private:
     void part(Token &token);
+    bool isValueType(Token &token);
 };
 
 

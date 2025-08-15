@@ -1,3 +1,6 @@
+#include <iostream>
+#include <sstream>
+#include "dbc/lex/PureLexer.hpp"
 #include "dbc/lex/readers.hpp"
 #include "dbc/lex/functions.hpp"
 DBC_BEGIN
@@ -152,8 +155,8 @@ read:
         goto read;
     }
 
-    //If this number is not ending with blank.
-    if(mngr.valid() && !isBlank(mngr.getch())){
+    //If this number is not ending with blank or separator.
+    if(mngr.valid() && (!isBlank(mngr.getch()) && !(isSeparator(mngr.getch())))){
         token.type = TokenType::Unexcepted;
     }
 }
@@ -171,7 +174,7 @@ void NumberReader::readHex(Token &token, CharMngr &mngr){
         token.buffer.push_back(mngr.forward());
     }
 
-    if(mngr.valid() && !isBlank(mngr.getch())){
+    if(mngr.valid() && (!isBlank(mngr.getch()) && !isSeparator(mngr.getch()))){
         token.type = TokenType::Unexcepted;
     }
 }
@@ -216,20 +219,15 @@ void StringReader::readString(Token &token, CharMngr &mngr){
         }
 
         if(ch == '"'){
-            break;
+            return;
         }
 
         token.buffer.push_back(ch);
     }
 
-    //If there is no quota as ending
-    if(!(mngr.valid())){
+    if(!(mngr.valid())){ //If there is no ending quota
         token.type = TokenType::Unexcepted;
-        return;
     }
-
-    //Skip ending quota
-    mngr.forward();
 }
 
 //============== ArrayReader =============
@@ -239,7 +237,7 @@ Token ArrayReader::read(CharMngr &mngr){
 
     token.type = TokenType::Array;
     auto idx = mngr.index();
-    mngr.forward();
+    mngr.forward();   //Skip first '{'
 
     /* Read all characters in '{}'*/
     while(mngr.valid()){
@@ -247,15 +245,20 @@ Token ArrayReader::read(CharMngr &mngr){
         token.buffer.push_back(mngr.forward());
     }
 
-    if(!mngr.valid()){
+    if(!mngr.valid()){        //Restore index if token is unexcepted
+        mngr.seek(CharMngr::Set, idx);
         token.type = TokenType::Unexcepted;
         return token;
     }
 
     mngr.forward();
-
-    /* Part each element */
-    part(token);
+    part(token);              //Part each element
+    
+    if(token.type == TokenType::Unexcepted){  //Restore index if token is unexcepted
+        mngr.seek(CharMngr::Set, idx);
+        token.type = TokenType::Unexcepted;
+        return token;
+    }
 
     return token;
 }
@@ -273,7 +276,52 @@ bool ArrayReader::canRead(Dchar ch){
 }
 
 void ArrayReader::part(Token &token){
+    PureLexer lexer;
+    CharMngr mngr(token.buffer);
+    std::stringstream stream;
+    auto arrayType = TokenType::Unexcepted;
     
+    while(mngr.valid()){
+        auto tempToken = lexer.nextTokenFrom(mngr);
+    
+        if((tempToken.type == TokenType::Unexcepted) && mngr.valid() && mngr.getch() == ','){
+            mngr.forward();
+            continue;
+        }
+
+        if(!isValueType(tempToken)){
+            token.type = TokenType::Unexcepted;
+            return;
+        }
+
+        if(arrayType != TokenType::Unexcepted){      //Append comma if there is a next element.
+            stream << ",";
+
+            if(arrayType != tempToken.type){
+                token.type = TokenType::Unexcepted;  //If elements are not a same type.
+                return;
+            }
+        }
+
+        arrayType = tempToken.type;
+        stream << tempToken.buffer;
+    }
+
+    token.buffer = stream.str();
+}
+
+bool ArrayReader::isValueType(Token &token){
+    if(token.type == TokenType::Keyword){
+        return (token.buffer == "true") || (token.buffer == "false");
+    }
+
+    switch(token.type){
+        case TokenType::Number:
+        case TokenType::String:
+            return true;
+        default:
+            return false;
+    }
 }
 
 DBC_END

@@ -31,6 +31,7 @@ void show(const Token &token){
             break;
         case TokenType::Array:
              printf("Array: %s\n", token.buffer.c_str());
+             break;
         case TokenType::Keyword:
             printf("Keyword: %s\n", token.buffer.c_str());
             break;

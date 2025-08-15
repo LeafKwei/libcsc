@@ -43,8 +43,8 @@ inline bool isIdentifier(Dchar ch) noexcept{
 
 inline bool isOperator(Dchar ch) noexcept{
     switch(ch){
-        case ':' :
-        case '=':
+        case ':'   :
+        case '=' :
             return true;
         default:
             return false;
@@ -53,11 +53,19 @@ inline bool isOperator(Dchar ch) noexcept{
 
 inline bool isDelimitor(Dchar ch) noexcept{
     switch(ch){
-        case '\'':
-        case '\"':
-        case '[':
-        case ']':
-        case ',':
+        case '\''  :
+        case '\"' :
+        case '{'   :
+        case '}'   :
+            return true;
+        default:
+            return false;
+    }
+}
+
+inline bool isSeparator(Dchar ch) noexcept{
+    switch(ch){
+        case ',' :
             return true;
         default:
             return false;
@@ -66,15 +74,15 @@ inline bool isDelimitor(Dchar ch) noexcept{
 
 inline Dchar escapeTo(Dchar ch) noexcept{
     switch(ch){
-        case '0':
+        case '0' :
             return '\0';
-        case 't':
+        case 't' :
             return '\t';
-        case 'n':
+        case 'n' :
             return '\n';
-        case 'r':
+        case 'r' :
             return '\r';
-        case 'b':
+        case 'b' :
             return '\b';
         default:
             return ch;
