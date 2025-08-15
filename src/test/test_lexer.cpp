@@ -6,6 +6,7 @@
 #include "dbc/lex/Locator.hpp"
 #include "dbc/core/Dcontext.hpp"
 #include "dbc/lex/Lexer.hpp"
+#include "dbc/lex/PureLexer.hpp"
 using namespace dbc;
 
 void show(const Token &token){
@@ -43,7 +44,8 @@ int main(void){
     std::ifstream ifs("myconfig.dbc");
     Dstring str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());  //Use parentheses for (std::istreambuf_iterator<char>(ifs) because cpp compiler will recongnize it as a function declaraion without parentheses
 
-    Lexer lexer(str);
+#if 0
+    Lexer lexer{};
     lexer.setAutoSkipBlank(true);
 
     while(lexer.valid()){
@@ -57,4 +59,24 @@ int main(void){
 
         show(token);
     }
+#endif
+
+#if 1
+    PureLexer pure;
+    //pure.setAutoSkipBlank(false);
+    CharMngr mngr{str};
+
+    while(mngr.valid()){
+        auto token = pure.nextTokenFrom(mngr);
+        if(token.type == TokenType::Unexcepted){
+            Locator locator(mngr.str(), mngr.index());
+            printf("Unexcepted error at row: %d, col: %d\n", locator.row(), locator.col());
+            printf("str: `%s`\n", mngr.str().c_str() + locator.index());
+            break;
+        }
+
+        show(token);
+    }
+
+#endif
 }
