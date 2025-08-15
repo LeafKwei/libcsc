@@ -1,6 +1,7 @@
 #ifndef DBC_LEXCER_HPP
 #define DBC_LEXCER_HPP
 
+#include <map>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
@@ -8,8 +9,9 @@
 #include "dbc/lex/CharMngr.hpp"
 #include "dbc/lex/Locator.hpp"
 #include "dbc/lex/TokenReader.hpp"
-#include "dbc/lex/KeywordCtrl.hpp"
 DBC_BEGIN
+
+using ConverterBranches = std::map<Dstring, TokenType>;
 
 class Lexer{
 public:
@@ -24,12 +26,12 @@ private:
     CharMngr m_mngr;
     bool m_autoSkipBlank;
     ReaderBranches m_readers;
-    CtrlBranches m_ctrls;
+    ConverterBranches m_converters;
 
     inline bool isIgnoredToken(TokenType type) const noexcept;
-    Token& keywordFilter(Token &token);
+    Token& identifierConverter(Token &token);
     void installReaders();
-    void installCtrls();
+    void installConverters();
 };
 
 inline bool Lexer::isIgnoredToken(TokenType type) const noexcept{

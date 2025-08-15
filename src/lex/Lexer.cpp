@@ -1,13 +1,12 @@
 #include "dbc/lex/Lexer.hpp"
 #include "dbc/lex/readers.hpp"
-#include "dbc/lex/ctrls.hpp"
 DBC_BEGIN
 
 Lexer::Lexer(const Dstring &str) : 
     m_autoSkipBlank(true), m_mngr(str)
 {
     installReaders();
-    installCtrls();
+    installConverters();
 }
 
 Token Lexer::nextToken(){
@@ -28,7 +27,7 @@ Token Lexer::nextToken(){
             continue;
         }
 
-        return keywordFilter(token);
+        return identifierConverter(token);
     }
 
     token.type = valid() ? TokenType::Unexcepted : TokenType::Aborted;
@@ -51,14 +50,12 @@ Locator Lexer::locator() const{
     return Locator(m_mngr.str(), m_mngr.index());
 }
 
-Token& Lexer::keywordFilter(Token &token){
+Token& Lexer::identifierConverter(Token &token){
     if(token.type != TokenType::Identifier) return token;
-    auto pos = m_ctrls.find(token.buffer);
-    if(pos == m_ctrls.end()) return token;
-
-    auto &ctrl = pos -> second;
-    token.type = TokenType::Keyword;
-    ctrl -> changeReaderRule(m_readers);
+    auto pos = m_converters.find(token.buffer);
+    if(pos == m_converters.end()) return token;
+    
+    token.type = pos -> second;
     return token;
 }
 
@@ -72,9 +69,9 @@ void Lexer::installReaders(){
     m_readers.push_back(std::make_shared<ArrayReader>());
 }
 
-void Lexer::installCtrls(){
-    m_ctrls.insert({"true", std::make_shared<TrueCtrl>()});
-    m_ctrls.insert({"false", std::make_shared<FalseCtrl>()});
+void Lexer::installConverters(){
+    m_converters.insert({"true", TokenType::Keyword});
+    m_converters.insert({"false", TokenType::Keyword});
 }
 
 DBC_END

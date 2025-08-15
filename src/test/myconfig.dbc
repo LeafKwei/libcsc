@@ -1,7 +1,7 @@
 ; This is a sample of dbc(Domain-Based Config)
 
 player = "Smith"
-isMale = true
+isMale = false
 
 custom::                  ; domain
     tom::                   ; child domain
