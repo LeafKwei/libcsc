@@ -11,4 +11,10 @@ int main(void){
     Dcontext context;
     CommandDrv drv;
     drv.drive(str, context);
+    context.enterDomain("/custom/tom");
+    std::cout << context.get("name") << std::endl;
+    std::cout << context.get("age") << std::endl;
+    std::cout << context.get("weight") << std::endl;
+    context.exitDomain();
+    std::cout << context.get("school") << std::endl;
 }
