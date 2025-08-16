@@ -5,18 +5,10 @@
 
 using namespace dbc;
 
-void checke(Derror &e){
-    if(e.type != ErrorType::OK){
-        std::cout << "Error: " << e.message << std::endl;
-        std::exit(0);
-    }
-}
-
 int main(void){
     Dcontext context;
-    decltype(context.enterDomain("")) e;
-    e = context.makeDomains("/a/b/c"); checke(e);
-    e = context.enterDomain("/a/b/c"); checke(e);
+    context.makeDomains("/a/b/c"); 
+    context.enterDomain("/a/b/c"); 
     context.set("name", "tom");
     context.set("age", "18");
 
@@ -38,9 +30,9 @@ int main(void){
     std::cout << "absolute: "<< context2.absolutePath() << std::endl;
     std::cout << "today:" <<  context2.get("today") << std::endl;
 
-    e = context.attachDomain("/a/b/c/", std::move(context2)); checke(e);
-   context.enterDomain("/a/b/c");
+    context.attachDomain("/a/b/c/", std::move(context2)); 
+    context.enterDomain("/a/b/c");
     std::cout << context.get("name") << std::endl;
-    e = context.enterDomain("/a/b/c/d"); checke(e);
+    context.enterDomain("/a/b/c/d"); 
     std::cout << context.get("today") << std::endl;
 }

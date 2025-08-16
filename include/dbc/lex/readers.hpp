@@ -13,7 +13,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(Dchar ch) override;
+    virtual bool canRead(Dchar ch);
 };
 
 class BlankReader : public CommonReader{
@@ -94,7 +94,7 @@ protected:
 
 private:
     void part(Token &token);
-    bool isValueType(Token &token);
+    bool isValueType(const Token &token);
 };
 
 

@@ -17,19 +17,19 @@ public:
     ~Dcontext();
 
     bool existsDomain(const Dstring &path) const;              /* Test whether a domain is existing. */
-    Derror enterDomain(const Dstring &path);                     /* Enter a existing domain. */
-    Derror backDomain();                                                       /* Back to last domain. */
-    Derror makeDomain(const Dstring &path);                     /* Create a domain. */
-    Derror makeDomains(const Dstring &path);                   /* Create a domain. Make its parents if they don't exists.*/
-    Derror dropDomain(const Dstring &path);                      /* Remove an existing domain. */
-    Derror exitDomain();                                                         /* Exit current domain and back to its parent domain. */
-    Derror attachDomain(const Dstring &path, Dcontext &&context); /* Attach a context to another context. The attached context will be empty.*/
+    void enterDomain(const Dstring &path);                     /* Enter a existing domain. */
+    void backDomain();                                                       /* Back to last domain. */
+    void makeDomain(const Dstring &path);                     /* Create a domain. */
+    void makeDomains(const Dstring &path);                   /* Create a domain. Make its parents if they don't exists.*/
+    void dropDomain(const Dstring &path);                      /* Remove an existing domain. */
+    void exitDomain();                                                         /* Exit current domain and back to its parent domain. */
+    void attachDomain(const Dstring &path, Dcontext &&context); /* Attach a context to another context. The attached context will be empty.*/
     Dcontext detachDomain(const Dstring &path);               /* Detach a domain from current context. */
     Dstring path() const;                                                         /* Get current domain name. */
     Dstring absolutePath() const;                                           /* Get absolute path which begins from root domain to current domain*/
     bool exists(const Dstring &name) const;                         /* For current domain, test whether a pair is existing.*/
     void set(const Dstring &name, const Dstring &value);   /* In current domain, set a pair. */
-    void set(Dtype type, const Dstring &name, const Dstring &value);  /* In current domain, set a pair with type. */
+    void set(ValueType type, const Dstring &name, const Dstring &value);  /* In current domain, set a pair with type. */
     void unset(const Dstring &name);                                   /* For current domain, unset a pair. */
     Dstring get(const Dstring &name);                                 /* From current domain, get the value for name.*/
     void resetContext();

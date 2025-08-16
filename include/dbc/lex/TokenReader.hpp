@@ -19,9 +19,6 @@ public:
     virtual Token read(CharMngr &mngr) =0;
     virtual bool isThisType(CharMngr &mngr) =0;
     virtual TokenType type() =0;
-    
-protected:
-    virtual bool canRead(Dchar ch) =0;
 };
 
 DBC_END

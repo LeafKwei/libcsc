@@ -310,7 +310,7 @@ void ArrayReader::part(Token &token){
     token.buffer = stream.str();
 }
 
-bool ArrayReader::isValueType(Token &token){
+bool ArrayReader::isValueType(const Token &token){
     if(token.type == TokenType::Keyword){
         return (token.buffer == "true") || (token.buffer == "false");
     }

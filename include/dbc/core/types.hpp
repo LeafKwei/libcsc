@@ -13,10 +13,10 @@ using DdomainPtr = std::shared_ptr<Ddomain>;
 using DpairWkr = std::weak_ptr<Dpair>;
 using DdomainWkr = std::weak_ptr<Ddomain>;
 
-enum class Dtype{Null, Number, Bool, String, Array};
+enum class ValueType{Null, Number, Bool, String, Array};
 
 struct Dpair{
-    Dtype type;
+    ValueType type;
     Dstring name;
     Dstring value;
     DpairPtr next;

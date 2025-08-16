@@ -5,16 +5,8 @@
 
 using namespace dbc;
 
-void checke(Derror &e){
-    if(e.type != ErrorType::OK){
-        std::cout << "Error: " << e.message << std::endl;
-        std::exit(0);
-    }
-}
-
 int main(void){
     Dcontext context;
-    decltype(context.enterDomain("")) e;
 
     context.makeDomains("/a/b/c");
     context.enterDomain("a");

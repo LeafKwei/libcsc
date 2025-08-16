@@ -66,34 +66,30 @@ Dcontext& Dcontext::operator=(Dcontext &&oth){
     return findDomain(path) != nullptr;
  }
 
-Derror Dcontext::enterDomain(const Dstring &path){
-    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
+void Dcontext::enterDomain(const Dstring &path){
+    if(isEmptyPath(path)) throw ContextExcept("Empty path.");
 
     auto ptr = findDomain(path);
-    if(ptr != nullptr){
-        m_lastPtr = m_crntPtr;
-        m_crntPtr = ptr;
-        return Derror{ErrorType::OK};
-    }
-
-    return Derror{ErrorType::NoSuch, "No such domain."};
+    if(ptr == nullptr) throw ContextExcept("No such domain");
+    
+    m_lastPtr = m_crntPtr;
+    m_crntPtr = ptr;
 }
 
-Derror Dcontext::backDomain(){
+void Dcontext::backDomain(){
     auto tmp = m_crntPtr;
     m_crntPtr = m_lastPtr;
     m_lastPtr = tmp;
-    return Derror{ErrorType::OK};
 }
 
-Derror Dcontext::makeDomain(const Dstring &path){
-    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
-    if(isBuiltinPath(path)) return Derror{ErrorType::Denied, "Can't make built-in domain."};
+void Dcontext::makeDomain(const Dstring &path){
+    if(isEmptyPath(path)) throw ContextExcept("Empty path.");
+    if(isBuiltinPath(path)) throw ContextExcept("Can't make built-in domain.");
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     /* Let we trusts user. OwO
     if(findDomain(path) != nullptr){                                       //If you try to make a repeated domain.
-        return Derror{ErrorType::Denied, "Domain exists."};
+        throw ContextExcept("Domain exists.");
     }
     */
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -104,62 +100,50 @@ Derror Dcontext::makeDomain(const Dstring &path){
     if(prefix.size() != 0){
         parent = findDomain(prefix);
         if(parent == nullptr){
-            return Derror{ErrorType::NoSuch, "No such path."};
+            throw ContextExcept("No such path.");
         }
     }
 
     auto child = std::make_shared<Ddomain>();
     child -> name = name;
     appendChildDomain(parent, child);
-
-    return Derror{ErrorType::OK};
 }
 
-Derror Dcontext::makeDomains(const Dstring &path){
-    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
-    if(path == "/"){
-        return Derror{ErrorType::OK};
-    }
+void Dcontext::makeDomains(const Dstring &path){
+    if(isEmptyPath(path)) throw ContextExcept("Empty path.");
+    if(path == "/") return;  //No requirement to make root
 
     auto [prefix, name] = separatePath(path);
-    auto err = makeDomains(prefix);
-    
-    if(err.type != ErrorType::OK){
-        return err;
-    }
-
-    return makeDomain(path);
+    makeDomains(prefix);
+    makeDomain(path);
 }
 
-Derror Dcontext::dropDomain(const Dstring &path){
-    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
+void Dcontext::dropDomain(const Dstring &path){
+    if(isEmptyPath(path)) throw ContextExcept("Empty path.");
 
     auto domain = findDomain(path);
     if(domain == nullptr){
-        return Derror{ErrorType::NoSuch, "No such path."};
+        throw ContextExcept("No such path.");
     }
 
     auto parent = (domain -> parent.lock());
     if(parent == nullptr){
-        return Derror{ErrorType::Denied, "Can't drop root domain."};
+        throw ContextExcept("Can't drop root domain.");
     }
 
     updateRelativeDomain(domain);
     removeChildDomain(domain);
-
-    return Derror{ErrorType::OK};
 }
 
-Derror Dcontext::exitDomain(){
+void Dcontext::exitDomain(){
     auto parent = (m_crntPtr -> parent).lock();
-    if(parent == nullptr) return Derror{ErrorType::Denied, "Root reached."};
+    if(parent == nullptr) throw ContextExcept("Root reached.");
     m_crntPtr = parent;
-    return Derror{ErrorType::OK};
 }
 
-Derror Dcontext::attachDomain(const Dstring &path, Dcontext &&context){
-    if(isEmptyPath(path)) return Derror{ErrorType::Unexcepted, "Empty path."};
-    if(isBuiltinPath(path)) return Derror{ErrorType::Denied, "Can't attach domain on a built-in path."};
+void Dcontext::attachDomain(const Dstring &path, Dcontext &&context){
+    if(isEmptyPath(path)) throw ContextExcept("Empty path.");
+    if(isBuiltinPath(path)) throw ContextExcept("Can't attach domain on a built-in path.");
 
     auto parent = m_crntPtr;                   //Relative path is default.
     auto [prefix, name] = separatePath(path);
@@ -167,7 +151,7 @@ Derror Dcontext::attachDomain(const Dstring &path, Dcontext &&context){
     if(prefix.size() != 0){                            //If path contains multiple domain
         parent = findDomain(prefix);
         if(parent == nullptr){
-            return Derror{ErrorType::NoSuch, "No such path."};
+            throw ContextExcept("No such path.");
         }
     }
 
@@ -180,7 +164,6 @@ Derror Dcontext::attachDomain(const Dstring &path, Dcontext &&context){
     context.m_lastPtr = nullptr;
 
     appendChildDomain(parent, child);
-    return Derror{ErrorType::OK};
 }
 
 Dcontext Dcontext::detachDomain(const Dstring &path){
@@ -226,7 +209,7 @@ bool Dcontext::exists(const Dstring &name) const{
     return findPair(name) != nullptr;
 }
 
-void Dcontext::set(Dtype type, const Dstring &name, const Dstring &value){
+void Dcontext::set(ValueType type, const Dstring &name, const Dstring &value){
     auto pair = findPair(name);
     if(pair != nullptr){
         pair -> type = type;
@@ -250,7 +233,7 @@ void Dcontext::set(Dtype type, const Dstring &name, const Dstring &value){
 }
 
 void Dcontext::set(const Dstring &name, const Dstring &value){
-    set(Dtype::Null, name, value);
+    set(ValueType::Null, name, value);
 }
 
 void Dcontext::unset(const Dstring &name){

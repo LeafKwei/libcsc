@@ -5,34 +5,26 @@
 
 using namespace dbc;
 
-void checke(Derror &e){
-    if(e.type != ErrorType::OK){
-        std::cout << "Error: " << e.message << std::endl;
-        std::exit(0);
-    }
-}
-
 int main(void){
     Dcontext context;
-    decltype(context.enterDomain("")) e;
 
-    e = context.makeDomain("/user"); checke(e);
-    e = context.enterDomain("/user"); checke(e);
+    context.makeDomain("/user");
+    context.enterDomain("/user");
     context.set("zhang san", "19990804");
-    e = context.dropDomain("/user"); checke(e);
-    e = context.makeDomain("/user"); checke(e);
-    e = context.makeDomain("/user/teen"); checke(e);
-    e = context.makeDomain("/user/old"); checke(e);
-    e = context.makeDomain("/user/old"); checke(e);
-    e = context.makeDomains("/time/2025/01"); checke(e);
-    e = context.enterDomain("/user/teen"); checke(e);
+    context.dropDomain("/user");
+    context.makeDomain("/user");
+    context.makeDomain("/user/teen");
+    context.makeDomain("/user/old");
+    context.makeDomain("/user/old");
+    context.makeDomains("/time/2025/01");
+    context.enterDomain("/user/teen");
     context.set("Tom", "100");
-    e = context.exitDomain(); checke(e);
-    e = context.enterDomain("old"); checke(e);
+    context.exitDomain();
+    context.enterDomain("old");
     context.set("Jerry", "123");
     context.set("Jerry", "666");
     context.set("", "114514");
-    context.enterDomain("/time/2025/01"); checke(e);
+    context.enterDomain("/time/2025/01");
     context.set("today", "20250101");
 
     context.enterDomain("/user/teen");
