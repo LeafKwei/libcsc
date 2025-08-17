@@ -8,45 +8,49 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/core/types.hpp"
+#include "dbc/lex/types.hpp"
+#include "dbc/syntax/types.hpp"
 
 DBC_BEGIN
 
 Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::initializer_list<Dstring> &filters={});
+int baseOf(const Dstring &str);
+OperandType toOperandType(const Token &token);
 
 //============= Templates =============
 template <typename Tp>
-str toString(const Tp &v){
+inline str toString(const Tp &v){
     throw Dexcept("Unsupported type.");
 };
 
 template<>
-str toString<bool>(const bool &v){
+inline str toString<bool>(const bool &v){
     return v ? "true" : "false";
 }
 
 template<>
-str toString<int>(const int &v){
+inline str toString<int>(const int &v){
     std::stringstream stream;
     stream << v;
     return stream.str();
 }
 
 template<>
-str toString<long>(const long &v){
+inline str toString<long>(const long &v){
     std::stringstream stream;
     stream << v;
     return stream.str();
 }
 
 template<>
-str toString<double>(const double &v){
+inline str toString<double>(const double &v){
     std::stringstream stream;
     stream << v;
     return stream.str();
 }
 
 template<>
-str toString<barray>(const barray &array){
+inline str toString<barray>(const barray &array){
     std::stringstream stream;
     int idx = 0;
 
@@ -61,7 +65,7 @@ str toString<barray>(const barray &array){
 }
 
 template<>
-str toString<iarray>(const iarray &array){
+inline str toString<iarray>(const iarray &array){
     std::stringstream stream;
     int idx = 0;
 
@@ -76,7 +80,7 @@ str toString<iarray>(const iarray &array){
 }
 
 template<>
-str toString<larray>(const larray &array){
+inline str toString<larray>(const larray &array){
     std::stringstream stream;
     int idx = 0;
 
@@ -91,7 +95,7 @@ str toString<larray>(const larray &array){
 }
 
 template<>
-str toString<darray>(const darray &array){
+inline str toString<darray>(const darray &array){
     std::stringstream stream;
     int idx = 0;
 
@@ -106,7 +110,7 @@ str toString<darray>(const darray &array){
 }
 
 template<>
-str toString<sarray>(const sarray &array){
+inline str toString<sarray>(const sarray &array){
     std::stringstream stream;
     int idx = 0;
 
@@ -119,7 +123,6 @@ str toString<sarray>(const sarray &array){
 
     return stream.str();
 }
-
 
 DBC_END
 #endif

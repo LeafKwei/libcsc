@@ -12,6 +12,8 @@
 #include "dbc/lex/PureLexer.hpp"
 DBC_BEGIN
 
+using ConverterBranches = std::map<Dstring, TokenType>;
+
 class  PureLexer{
 public:
     PureLexer();
@@ -21,10 +23,12 @@ public:
 private:
     bool m_autoSkipBlank;
     ReaderBranches m_readers;
+    ConverterBranches m_converters;
 
     inline bool isIgnoredToken(TokenType type) const noexcept;
-    Token& tokenConvert(Token &token);
+    Token& identifierConverter(Token &token);
     void installReaders();
+    void installConverters();
 };
 
 inline bool PureLexer::isIgnoredToken(TokenType type) const noexcept{

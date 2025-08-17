@@ -3,23 +3,24 @@
 
 #include <vector>
 #include "dbc/syntax/Command.hpp"
+#include "dbc/utility/utility.hpp"
 DBC_BEGIN
 
 class CommonCmd : public Command{
 public:
     CommonCmd() =default;
-    CommonCmd(std::initializer_list<TokenType> types);
+    CommonCmd(std::initializer_list<OperandType> types);
     
     int tokenNumber() override;
     Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
 
 protected:
-    virtual const std::vector<TokenType>& typeList();
+    virtual const std::vector<OperandType>& typeList();
     virtual bool isThisType(const std::vector<Token> &tokens);
     virtual bool isLegalToken(const std::vector<Token> &tokens);
 
 private:
-    std::vector<TokenType> m_typeList;
+    std::vector<OperandType> m_typeList;
 };
 
 class EnterDomainCmd : public CommonCmd{

@@ -1,7 +1,7 @@
 extra=-g
 incl=../../include
-test_value.exe.src=test_value.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp
-test_drv.exe.src=test_drv.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp  ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
+test_value.exe.src=test_value.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../utility/utility.cpp
+test_drv.exe.src=test_drv.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp  ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp ../utility/utility.cpp
 test_lexer.exe.src=test_lexer.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp
 test_ptr.exe.src=test_ptr.cpp
 test_context.exe.src=test_context.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp

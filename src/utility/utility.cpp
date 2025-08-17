@@ -1,3 +1,4 @@
+#include "dbc/lex/types.hpp"
 #include "dbc/utility/utility.hpp"
 #include <algorithm>
 
@@ -15,6 +16,34 @@ Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::i
     }
 
     return result;
+}
+
+int baseOf(const Dstring &str){
+    if(str.substr(0, 2) == "0x") return 16;
+    return 10;
+}
+
+OperandType toOperandType(const Token &token){
+    switch(token.type){
+        case TokenType::Identifier:
+            return OperandType::Identifier;
+
+        case TokenType::Keyword:
+            if(token.buffer == "true" || token.buffer == "false")
+                return OperandType::Value;
+            return OperandType::Unexcepted;
+
+        case TokenType::Operator:
+            return OperandType::Operator;
+
+        case TokenType::Number:
+        case TokenType::String:
+        case TokenType::Array:
+            return OperandType::Value;
+
+        default:
+            return OperandType::Unexcepted;
+    }
 }
 
 DBC_END

@@ -2,7 +2,7 @@
 DBC_BEGIN
 
 //============== CommonCmd =============
-CommonCmd::CommonCmd(std::initializer_list<TokenType> types) : m_typeList(types){}
+CommonCmd::CommonCmd(std::initializer_list<OperandType> types) : m_typeList(types){}
 
 int CommonCmd::tokenNumber(){
     return typeList().size();
@@ -12,7 +12,7 @@ Policy CommonCmd::run(const std::vector<Token> &tokens, Dcontext &context){
     return Policy::Missed;
 }
 
-const std::vector<TokenType>& CommonCmd::typeList(){
+const std::vector<OperandType>& CommonCmd::typeList(){
     return m_typeList;
 }
 
@@ -23,7 +23,7 @@ bool CommonCmd::isThisType(const std::vector<Token> &tokens){
     if(tokens.size() != types.size()) return false;
 
     for(auto type : types){
-        if(tokens.at(index).type != type) return false;
+        if(toOperandType(tokens.at(index)) != type) return false;
         ++index;
     }
 
@@ -36,7 +36,7 @@ bool CommonCmd::isLegalToken(const std::vector<Token> &tokens){
 
 //============== EnterDomainCmd =============
 EnterDomainCmd::EnterDomainCmd() : CommonCmd(
-    {TokenType::Identifier, TokenType::Operator}
+    {OperandType::Identifier, OperandType::Operator}
 ){}
 
 Policy EnterDomainCmd::run(const std::vector<Token> &tokens, Dcontext &context){
@@ -61,7 +61,7 @@ bool EnterDomainCmd::isLegalToken(const std::vector<Token> &tokens){
 
 //============== ExitDomainCmd =============
 ExitDomainCmd::ExitDomainCmd() : CommonCmd(
-    {TokenType::Operator, TokenType::Identifier}
+    {OperandType::Operator, OperandType::Identifier}
 ){}
 
 Policy ExitDomainCmd::run(const std::vector<Token> &tokens, Dcontext &context){
@@ -88,7 +88,7 @@ bool ExitDomainCmd::isLegalToken(const std::vector<Token> &tokens){
 
 //============== AssignCmd =============
 AssignCmd::AssignCmd() : CommonCmd(
-    {TokenType::Identifier, TokenType::Operator, TokenType::Value}
+    {OperandType::Identifier, OperandType::Operator, OperandType::Value}
 ){}
 
 Policy AssignCmd::run(const std::vector<Token> &tokens, Dcontext &context){
