@@ -28,7 +28,7 @@ Tp Dvalue::to(){
 }
 
 template<>
-inline bool Dvalue::to<bool>(){
+inline bool Dvalue::to<bool>(){        //'inline' is used to avoid ODR(One Definition Rule)
     if(m_value == "true") return true;
     return false;
 }
@@ -61,28 +61,95 @@ inline barray Dvalue::to<barray>(){
 
     while(mngr.valid()){
         auto token = lexer.nextTokenFrom(mngr);
-        
+        if(token.type == TokenType::Unexcepted){
+            mngr.forward();
+            continue;
+        }
+
+        auto v = (token.buffer == "true") ? true : false;
+        array.push_back(v);
     }
+
+    return array;
 }
 
 template<>
 inline iarray Dvalue::to<iarray>(){
-   
+    iarray array;
+    CharMngr mngr(m_value);
+    PureLexer lexer;
+
+    while(mngr.valid()){
+        auto token = lexer.nextTokenFrom(mngr);
+        if(token.type == TokenType::Unexcepted){
+            mngr.forward();
+            continue;
+        }
+
+        auto v = std::stoi(token.buffer, 0, baseOf(token.buffer));
+        array.push_back(v);
+    }
+
+    return array;
 }
 
 template<>
 inline larray Dvalue::to<larray>(){
-    
+    larray array;
+    CharMngr mngr(m_value);
+    PureLexer lexer;
+
+    while(mngr.valid()){
+        auto token = lexer.nextTokenFrom(mngr);
+        if(token.type == TokenType::Unexcepted){
+            mngr.forward();
+            continue;
+        }
+
+        auto v = std::stol(token.buffer, 0, baseOf(token.buffer));
+        array.push_back(v);
+    }
+
+    return array;
 }
 
 template<>
 inline darray Dvalue::to<darray>(){
- 
+    darray array;
+    CharMngr mngr(m_value);
+    PureLexer lexer;
+
+    while(mngr.valid()){
+        auto token = lexer.nextTokenFrom(mngr);
+        if(token.type == TokenType::Unexcepted){
+            mngr.forward();
+            continue;
+        }
+
+        auto v = std::stod(token.buffer, 0);
+        array.push_back(v);
+    }
+
+    return array;
 }
 
 template<>
 inline sarray Dvalue::to<sarray>(){
+    sarray array;
+    CharMngr mngr(m_value);
+    PureLexer lexer;
 
+    while(mngr.valid()){
+        auto token = lexer.nextTokenFrom(mngr);
+        if(token.type == TokenType::Unexcepted){
+            mngr.forward();
+            continue;
+        }
+
+        array.push_back(token.buffer);
+    }
+
+    return array;
 }
 
 DBC_END

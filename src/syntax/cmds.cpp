@@ -43,7 +43,7 @@ Policy EnterDomainCmd::run(const std::vector<Token> &tokens, Dcontext &context){
     if(!isThisType(tokens)) return Policy::Missed;
     
     auto &name = tokens[0].buffer;
-
+    
     if(context.existsDomain(name)){
          context.enterDomain(name);
     }

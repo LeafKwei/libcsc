@@ -7,6 +7,7 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/core/types.hpp"
+#include "dbc/core/Diterator.hpp"
 DBC_BEGIN
 
 class Dcontext{
@@ -32,6 +33,7 @@ public:
     void unset(const Dstring &name);                                   /* For current domain, unset a pair. */
     Dstring get(const Dstring &name);                                 /* From current domain, get the value for name.*/
     void resetContext();
+    void iterate(Diterator &iterator);
 
     Dcontext& operator=(const Dcontext &oth);
     Dcontext& operator=(Dcontext &&oth);
@@ -41,6 +43,7 @@ private:
     DdomainPtr m_crntPtr;
     DdomainPtr m_lastPtr;
 
+    Dstring makeAbsolutePath(const DdomainPtr &domain) const;
     void appendPair(DdomainPtr &parent, DpairPtr &pair);
     void removePair(DdomainPtr &parent, DpairPtr &pair);
     void appendChildDomain(DdomainPtr &parent, DdomainPtr &child);
@@ -50,6 +53,7 @@ private:
     DdomainPtr findDomain(const Dstring &path) const;
     DdomainPtr findBuiltinDomain(const Dstring &path) const;
     DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const;
+    void iterateDomain(DdomainPtr &domain, Diterator &iterator);
 };
 
 DBC_END

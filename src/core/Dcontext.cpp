@@ -192,17 +192,7 @@ Dstring Dcontext::path() const{
 }
 
 Dstring Dcontext::absolutePath() const{
-    std::vector<Dstring> names;
-
-    auto domain = m_crntPtr;
-    while(domain != nullptr){
-        names.push_back(domain -> name);
-        auto parent = (domain -> parent).lock();
-        domain = parent;
-    }
-
-    std::reverse(names.begin(), names.end());
-    return join("/", names, {"/"});    
+    return makeAbsolutePath(m_crntPtr);
 }
 
 bool Dcontext::exists(const Dstring &name) const{
@@ -260,7 +250,25 @@ void Dcontext::resetContext(){
     m_lastPtr = m_rootPtr;
 }
 
+void Dcontext::iterate(Diterator &iterator){
+    iterateDomain(m_rootPtr, iterator);
+}
+
 //=============== Private ===============
+Dstring Dcontext::makeAbsolutePath(const DdomainPtr &end) const{
+    std::vector<Dstring> names;
+
+    auto domain = end;
+    while(domain != nullptr){
+        names.push_back(domain -> name);
+        auto parent = (domain -> parent).lock();
+        domain = parent;
+    }
+
+    std::reverse(names.begin(), names.end());
+    return join("/", names, {"/"});    
+}
+
 void Dcontext::appendPair(DdomainPtr &domain, DpairPtr &pair){
     if(domain -> pairs == nullptr){
         domain -> pairs = pair;
@@ -297,7 +305,6 @@ void Dcontext::appendChildDomain(DdomainPtr &parent, DdomainPtr &child){
     if(parent -> child == nullptr){
         parent -> child = child;
         parent -> child -> prev = child;
-        child -> prev = parent -> child;
         return;
     }
 
@@ -388,4 +395,31 @@ DdomainPtr Dcontext::findDomainFrom(DdomainPtr begin, const std::vector<Dstring>
     return DdomainPtr(nullptr);
 }
 
-    DBC_END
+void Dcontext::iterateDomain(DdomainPtr &domain, Diterator &iterator){
+    if(domain != m_rootPtr){                    //Don't pass root domain's name.
+        iterator.enter(domain -> name);
+    }
+
+    auto pair = domain -> pairs;
+    while(pair != nullptr){
+        iterator.pair(pair -> name, pair -> value);
+        pair = pair -> next;
+    }
+
+    auto child = domain -> child;
+    if(child != nullptr){
+        iterateDomain(child, iterator);
+    }
+
+    if(domain != m_rootPtr){
+        iterator.exit(domain -> name);
+    }
+
+    auto bro = domain -> next;
+    while(bro != nullptr){
+        iterateDomain(bro, iterator);
+        bro = bro -> next;
+    }
+}
+
+DBC_END
