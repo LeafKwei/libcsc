@@ -43,10 +43,7 @@ void CommandDrv::drive(const Dstring &script, Dcontext &context){
 void CommandDrv::installCommands(){
     m_commands.push_back(std::make_shared<EnterDomainCmd>());
     m_commands.push_back(std::make_shared<ExitDomainCmd>());
-    m_commands.push_back(std::make_shared<AssignBoolCmd>());
-    m_commands.push_back(std::make_shared<AssignNumberCmd>());
-    m_commands.push_back(std::make_shared<AssignStringCmd>());
-    m_commands.push_back(std::make_shared<AssignArrayCmd>());
+    m_commands.push_back(std::make_shared<AssignCmd>());
 }
 
 void CommandDrv::setTokenRange(){

@@ -38,38 +38,13 @@ protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;
 };
 
-class AssignBoolCmd : public CommonCmd{
+class AssignCmd : public CommonCmd{
 public:
-    AssignBoolCmd();
+    AssignCmd();
     Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
 protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;
 };
-
-class AssignNumberCmd : public CommonCmd{
-public:
-    AssignNumberCmd();
-    Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
-protected:
-    bool isLegalToken(const std::vector<Token> &tokens) override;
-};
-
-class AssignStringCmd : public CommonCmd{
-public:
-    AssignStringCmd();
-    Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
-protected:
-    bool isLegalToken(const std::vector<Token> &tokens) override;
-};
-
-class AssignArrayCmd : public CommonCmd{
-public:
-    AssignArrayCmd();
-    Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
-protected:
-    bool isLegalToken(const std::vector<Token> &tokens) override;
-};
-
 
 DBC_END
 #endif

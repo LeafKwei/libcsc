@@ -1,6 +1,7 @@
 #ifndef DBC_CORE_TYPES_HPP
 #define DBC_CORE_TYPES_HPP
 
+#include <vector>
 #include <memory>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
@@ -12,11 +13,14 @@ using DpairPtr = std::shared_ptr<Dpair>;
 using DdomainPtr = std::shared_ptr<Ddomain>;
 using DpairWkr = std::weak_ptr<Dpair>;
 using DdomainWkr = std::weak_ptr<Ddomain>;
-
-enum class ValueType{Null, Number, Bool, String, Array};
+using str = Dstring;
+using barray = std::vector<bool>;
+using iarray = std::vector<int>;
+using larray = std::vector<long>;
+using darray = std::vector<double>;
+using sarray = std::vector<str>;
 
 struct Dpair{
-    ValueType type;
     Dstring name;
     Dstring value;
     DpairPtr next;

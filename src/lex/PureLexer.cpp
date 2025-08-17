@@ -4,7 +4,6 @@ DBC_BEGIN
 
 PureLexer::PureLexer() : m_autoSkipBlank(true){
     installReaders();
-    installConverters();
 }
 
 Token PureLexer::nextTokenFrom(CharMngr &mngr){
@@ -25,7 +24,7 @@ Token PureLexer::nextTokenFrom(CharMngr &mngr){
             continue;
         }
 
-        return identifierConverter(token);
+        return tokenConvert(token);
     }
 
     token.type = mngr.valid() ? TokenType::Unexcepted : TokenType::Aborted;
@@ -36,12 +35,15 @@ void PureLexer::setAutoSkipBlank(bool b){
     m_autoSkipBlank = b;
 }
 
-Token& PureLexer::identifierConverter(Token &token){
-    if(token.type != TokenType::Identifier) return token;
-    auto pos = m_converters.find(token.buffer);
-    if(pos == m_converters.end()) return token;
-    
-    token.type = pos -> second;
+Token& PureLexer::tokenConvert(Token &token){
+    switch(token.type){
+        case TokenType::Identifier:
+            if(token.buffer == "true" || token.buffer == "false"){
+                token.type = TokenType::Keyword;
+            }
+            break;
+    }
+
     return token;
 }
 
@@ -53,11 +55,6 @@ void PureLexer::installReaders(){
     m_readers.push_back(std::make_shared<DescriptionReader>());
     m_readers.push_back(std::make_shared<StringReader>());
     m_readers.push_back(std::make_shared<ArrayReader>());
-}
-
-void PureLexer::installConverters(){
-    m_converters.insert({"true", TokenType::Keyword});
-    m_converters.insert({"false", TokenType::Keyword});
 }
 
 

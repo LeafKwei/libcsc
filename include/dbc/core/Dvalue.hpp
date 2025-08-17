@@ -9,22 +9,21 @@
 #include "dbc/lex/PureLexer.hpp"
 DBC_BEGIN
 
-using str = Dstring;
-using barray = std::vector<bool>;
-using iarray = std::vector<int>;
-using larray = std::vector<long>;
-using darray = std::vector<double>;
-using sarray = std::vector<str>;
+inline int baseOf(const Dstring &str){
+    if(str.substr(0, 2) == "0x") return 16;
+    return 10;
+}
 
+
+//============= Templates =============
 class Dvalue{
 public:
-    Dvalue(ValueType type, const Dstring &value) : m_type(type), m_value(value){}
+    Dvalue(const Dstring &value) : m_value(value){}
 
     template<typename Tp>
     Tp to();    
 
 private:
-    ValueType m_type;
     Dstring m_value;
 };
 
@@ -41,12 +40,12 @@ bool Dvalue::to<bool>(){
 
 template<>
 int Dvalue::to<int>(){
-    return std::stoi(m_value);
+    return std::stoi(m_value, 0, baseOf(m_value));
 }
 
 template<>
 long Dvalue::to<long>(){
-    return std::stol(m_value);
+    return std::stol(m_value, 0, baseOf(m_value));
 }
 
 template<>
@@ -67,96 +66,28 @@ barray Dvalue::to<barray>(){
 
     while(mngr.valid()){
         auto token = lexer.nextTokenFrom(mngr);
-        if(token.type == TokenType::Unexcepted){
-            mngr.forward();
-            continue;
-        }
 
-        if(token.buffer == "true"){
-            array.push_back(true);
-            continue;
-        }
-
-        array.push_back(false);
     }
-
-    return array;
 }
 
 template<>
 iarray Dvalue::to<iarray>(){
-    iarray array;
-    CharMngr mngr(m_value);
-    PureLexer lexer;
-
-    while(mngr.valid()){
-        auto token = lexer.nextTokenFrom(mngr);
-        if(token.type == TokenType::Unexcepted){
-            mngr.forward();
-            continue;
-        }
-
-        array.push_back(std::stoi(token.buffer));
-    }
-
-    return array;
+   
 }
 
 template<>
 larray Dvalue::to<larray>(){
-    larray array;
-    CharMngr mngr(m_value);
-    PureLexer lexer;
-
-    while(mngr.valid()){
-        auto token = lexer.nextTokenFrom(mngr);
-        if(token.type == TokenType::Unexcepted){
-            mngr.forward();
-            continue;
-        }
-
-        array.push_back(std::stol(token.buffer));
-    }
-
-    return array;  
+    
 }
 
 template<>
 darray Dvalue::to<darray>(){
-    darray array;
-    CharMngr mngr(m_value);
-    PureLexer lexer;
-
-    while(mngr.valid()){
-        auto token = lexer.nextTokenFrom(mngr);
-        if(token.type == TokenType::Unexcepted){
-            mngr.forward();
-            continue;
-        }
-
-        array.push_back(std::stod(token.buffer));
-    }
-
-    return array;  
+ 
 }
 
 template<>
 sarray Dvalue::to<sarray>(){
-    sarray array;
-    CharMngr mngr(m_value);
-    PureLexer lexer;
 
-    while(mngr.valid()){
-        auto token = lexer.nextTokenFrom(mngr);
-        if(token.type == TokenType::Unexcepted){
-            mngr.forward();
-            continue;
-        }
-
-        array.push_back(token.buffer);
-    }
-
-    return array;  
 }
 
 DBC_END

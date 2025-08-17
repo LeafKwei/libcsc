@@ -86,72 +86,23 @@ bool ExitDomainCmd::isLegalToken(const std::vector<Token> &tokens){
     return tokens[0].buffer == "::";
 }
 
-//============== AssignBoolCmd =============
-AssignBoolCmd::AssignBoolCmd() : CommonCmd(
-    {TokenType::Identifier, TokenType::Operator, TokenType::Keyword}
+//============== AssignCmd =============
+AssignCmd::AssignCmd() : CommonCmd(
+    {TokenType::Identifier, TokenType::Operator, TokenType::Value}
 ){}
 
-Policy AssignBoolCmd::run(const std::vector<Token> &tokens, Dcontext &context){
+Policy AssignCmd::run(const std::vector<Token> &tokens, Dcontext &context){
     if(!isThisType(tokens)) return Policy::Missed;
 
-    context.set(ValueType::Bool, tokens[0].buffer, tokens[2].buffer);
+    context.set(tokens[0].buffer, tokens[2].buffer);
     return Policy::Accepted;
 }
 
-bool AssignBoolCmd::isLegalToken(const std::vector<Token> &tokens){
+bool AssignCmd::isLegalToken(const std::vector<Token> &tokens){
     auto &opt = tokens[1].buffer;
     auto &value = tokens[2].buffer;
 
-    return (opt == "=") && (value == "true" || value == "false");
+    return (opt == "=");
 }
-
-//============== AssignNumberCmd =============
-AssignNumberCmd::AssignNumberCmd() : CommonCmd(
-    {TokenType::Identifier, TokenType::Operator, TokenType::Number}
-){}
-
-Policy AssignNumberCmd::run(const std::vector<Token> &tokens, Dcontext &context){
-    if(!isThisType(tokens)) return Policy::Missed;
-
-    context.set(ValueType::Number, tokens[0].buffer, tokens[2].buffer);
-    return Policy::Accepted;
-}
-
-bool AssignNumberCmd::isLegalToken(const std::vector<Token> &tokens){
-    return tokens[1].buffer == "=";
-}
-
-//============== AssignStringCmd =============
-AssignStringCmd::AssignStringCmd() : CommonCmd(
-    {TokenType::Identifier, TokenType::Operator, TokenType::String}
-){}
-
-Policy AssignStringCmd::run(const std::vector<Token> &tokens, Dcontext &context){
-    if(!isThisType(tokens)) return Policy::Missed;
-
-    context.set(ValueType::Bool, tokens[0].buffer, tokens[2].buffer);
-    return Policy::Accepted;
-}
-
-bool AssignStringCmd::isLegalToken(const std::vector<Token> &tokens){
-    return tokens[1].buffer == "=";
-}
-
-//============== AssignArrayCmd =============
-AssignArrayCmd::AssignArrayCmd() : CommonCmd(
-    {TokenType::Identifier, TokenType::Operator, TokenType::Array}
-){}
-
-Policy AssignArrayCmd::run(const std::vector<Token> &tokens, Dcontext &context){
-    if(!isThisType(tokens)) return Policy::Missed;
-
-    context.set(ValueType::Bool, tokens[0].buffer, tokens[2].buffer);
-    return Policy::Accepted;
-}
-
-bool AssignArrayCmd::isLegalToken(const std::vector<Token> &tokens){
-    return tokens[1].buffer == "=";
-}
-
 
 DBC_END
