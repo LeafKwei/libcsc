@@ -15,7 +15,6 @@ DBC_BEGIN
 
 Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::initializer_list<Dstring> &filters={});
 int baseOf(const Dstring &str);
-OperandType toOperandType(const Token &token);
 
 //============= Templates =============
 template <typename Tp>

@@ -252,7 +252,7 @@ Token ArrayReader::read(CharMngr &mngr){
     }
 
     mngr.forward();
-    part(token);              //Part each element
+    trim(token);              //Part each element
     
     if(token.type == TokenType::Unexcepted){  //Restore index if token is unexcepted
         mngr.seek(CharMngr::Set, idx);
@@ -275,7 +275,7 @@ bool ArrayReader::canRead(Dchar ch){
     return false;
 }
 
-void ArrayReader::part(Token &token){
+void ArrayReader::trim(Token &token){
     PureLexer lexer;
     CharMngr mngr(token.buffer);
     std::stringstream stream;
@@ -304,7 +304,14 @@ void ArrayReader::part(Token &token){
         }
 
         arrayType = tempToken.type;
-        stream << tempToken.buffer;
+
+        /* For String Array, we should put quota as delimitor of each element. */
+        if(tempToken.type == TokenType::String){
+            stream << "\"" << tempToken.buffer << "\"";
+        }
+        else{
+            stream << tempToken.buffer;
+        }
     }
 
     token.buffer = stream.str();

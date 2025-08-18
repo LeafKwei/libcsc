@@ -1,4 +1,5 @@
 #include "dbc/syntax/cmds.hpp"
+#include "dbc/syntax/functions.hpp"
 DBC_BEGIN
 
 //============== CommonCmd =============

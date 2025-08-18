@@ -20,7 +20,7 @@ public:
         printf("::%s\n", name.c_str());
     }
 
-    void pair(const Dstring &name, const Dstring &value) override{
+    void pair(const Dstring &name, const Dstring &value, ValueType type) override{
         for(int i = 0; i < indent; i++) printf("\t");
         printf("%s = %s\n", name.c_str(), value.c_str());
     }

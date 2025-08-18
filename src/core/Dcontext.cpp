@@ -200,8 +200,13 @@ bool Dcontext::exists(const Dstring &name) const{
 }
 
 void Dcontext::set(const Dstring &name, const Dstring &value){
+    set(name, value, ValueType::Unknown);
+}
+
+void Dcontext::set(const Dstring &name, const Dstring &value, ValueType type){
     auto pair = findPair(name);
     if(pair != nullptr){
+        pair -> type = type;
         pair -> value = value;
         return;
     }
@@ -215,6 +220,7 @@ void Dcontext::set(const Dstring &name, const Dstring &value){
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     auto newPair = std::make_shared<Dpair>();
+    newPair -> type = type;
     newPair -> name = name;
     newPair -> value = value;
     appendPair(m_crntPtr, newPair);
@@ -402,7 +408,7 @@ void Dcontext::iterateDomain(DdomainPtr &domain, Diterator &iterator){
 
     auto pair = domain -> pairs;
     while(pair != nullptr){
-        iterator.pair(pair -> name, pair -> value);
+        iterator.pair(pair -> name, pair -> value, pair -> type);
         pair = pair -> next;
     }
 

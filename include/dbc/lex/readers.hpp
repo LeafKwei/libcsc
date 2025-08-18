@@ -93,7 +93,7 @@ protected:
     bool canRead(Dchar ch) override;
 
 private:
-    void part(Token &token);
+    void trim(Token &token);
     bool isValueType(const Token &token);
 };
 

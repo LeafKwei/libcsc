@@ -20,7 +20,14 @@ using larray = std::vector<long>;
 using darray = std::vector<double>;
 using sarray = std::vector<str>;
 
+enum class ValueType{
+    Unknown, 
+    Bool, Integer, Double, String,
+    Bools, Integers, Doubles, Strings
+};
+
 struct Dpair{
+    ValueType type;
     Dstring name;
     Dstring value;
     DpairPtr next;
