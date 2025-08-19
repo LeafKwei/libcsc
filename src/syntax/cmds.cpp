@@ -95,7 +95,7 @@ AssignCmd::AssignCmd() : CommonCmd(
 Policy AssignCmd::run(const std::vector<Token> &tokens, Dcontext &context){
     if(!isThisType(tokens)) return Policy::Missed;
 
-    context.set(tokens[0].buffer, tokens[2].buffer);
+    context.set(tokens[0].buffer, tokens[2].buffer, toValueType(tokens[2]));
     return Policy::Accepted;
 }
 

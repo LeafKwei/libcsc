@@ -1,11 +1,11 @@
 #include <iostream>
-#include "dbc/core/Dvalue.hpp"
+#include "dbc/core/Ditem.hpp"
 
 using namespace dbc;
 
 int main(void){
-    std::cout << Dvalue("true").to<bool>() << std::endl;
-    for(auto e : Dvalue("true,false,true").to<barray>()){
+    std::cout << Ditem("true", ValueType::Bool).to<bool>() << std::endl;
+    for(auto e : Ditem("true,false,true", ValueType::Bools).to<barray>()){
         std::cout << e << std::endl;
     }
 

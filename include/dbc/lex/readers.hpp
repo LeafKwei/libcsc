@@ -94,7 +94,7 @@ protected:
 
 private:
     void trim(Token &token);
-    bool isValueType(const Token &token);
+    bool isValue(const Token &token);
 };
 
 

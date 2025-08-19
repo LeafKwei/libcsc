@@ -32,7 +32,7 @@ inline OperandType toOperandType(const Token &token){
     }
 }
 
-static inline ValueType toValueTypeHelper(const Token &token){
+inline ValueType toValueTypeHelper(const Token &token){
     //Bool
     if(token.type == TokenType::Keyword){
         if(token.buffer == "true" || token.buffer == "false"){

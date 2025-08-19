@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <map>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
 DBC_BEGIN
@@ -13,6 +14,7 @@ using DpairPtr = std::shared_ptr<Dpair>;
 using DdomainPtr = std::shared_ptr<Ddomain>;
 using DpairWkr = std::weak_ptr<Dpair>;
 using DdomainWkr = std::weak_ptr<Ddomain>;
+
 using str = Dstring;
 using barray = std::vector<bool>;
 using iarray = std::vector<int>;

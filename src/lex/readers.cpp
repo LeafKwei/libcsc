@@ -289,7 +289,7 @@ void ArrayReader::trim(Token &token){
             continue;
         }
 
-        if(!isValueType(tempToken)){
+        if(!isValue(tempToken)){
             token.type = TokenType::Unexcepted;
             return;
         }
@@ -317,7 +317,7 @@ void ArrayReader::trim(Token &token){
     token.buffer = stream.str();
 }
 
-bool ArrayReader::isValueType(const Token &token){
+bool ArrayReader::isValue(const Token &token){
     if(token.type == TokenType::Keyword){
         return (token.buffer == "true") || (token.buffer == "false");
     }

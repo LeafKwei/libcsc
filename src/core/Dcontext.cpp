@@ -235,13 +235,13 @@ void Dcontext::unset(const Dstring &name){
     removePair(m_crntPtr, pair);
 }
 
-Dstring Dcontext::get(const Dstring &name){
+Dvalue Dcontext::get(const Dstring &name){
     auto pair = findPair(name);
     if(pair != nullptr){
-        return pair -> value;
+        return Dvalue(pair -> value, pair -> type);
     }
 
-    return Dstring("");
+    return Dvalue("", ValueType::Unknown);
 }
 
 void Dcontext::resetContext(){

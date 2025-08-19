@@ -1,5 +1,5 @@
-#ifndef DBC_AUXI_HPP
-#define DBC_AUXI_HPP
+#ifndef DBC_UTILITY_HPP
+#define DBC_UTILITY_HPP
 
 #include <vector>
 #include <iostream>
@@ -114,7 +114,7 @@ inline str toString<sarray>(const sarray &array){
     int idx = 0;
 
     for(; idx < array.size(); idx++){
-        stream << array.at(idx);
+        stream << "\"" << array.at(idx) << "\"";
         if(idx + 1 < array.size()){
             stream << ",";
         }

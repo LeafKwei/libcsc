@@ -7,6 +7,7 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/core/types.hpp"
+#include "dbc/core/Dvalue.hpp"
 #include "dbc/core/Diterator.hpp"
 DBC_BEGIN
 
@@ -17,7 +18,7 @@ public:
     Dcontext(Dcontext &&oth);
     ~Dcontext();
 
-    bool existsDomain(const Dstring &path) const;              /* Test whether a domain is existing. */
+    bool existsDomain(const Dstring &path) const;            /* Test whether a domain is existing. */
     void enterDomain(const Dstring &path);                     /* Enter a existing domain. */
     void backDomain();                                                       /* Back to last domain. */
     void makeDomain(const Dstring &path);                     /* Create a domain. */
@@ -32,9 +33,9 @@ public:
     void set(const Dstring &name, const Dstring &value);   /* In current domain, set a pair. */
     void set(const Dstring &name, const Dstring &value, ValueType type);
     void unset(const Dstring &name);                                   /* For current domain, unset a pair. */
-    Dstring get(const Dstring &name);                                 /* From current domain, get the value for name.*/
-    void resetContext();
-    void iterate(Diterator &iterator);
+    Dvalue get(const Dstring &name);                                 /* From current domain, get the value for name.*/
+    void resetContext();                                                         /* Clean all doamin and pair. */
+    void iterate(Diterator &iterator);                                     /* Seek each domain and pair with DFS. */
 
     Dcontext& operator=(const Dcontext &oth);
     Dcontext& operator=(Dcontext &&oth);
