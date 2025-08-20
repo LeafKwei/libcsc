@@ -1,6 +1,7 @@
 #ifndef DBC_CONTEXT_HPP
 #define DBC_CONTEXT_HPP
 
+#if 0
 #include <tuple>
 #include <vector>
 #include <memory>
@@ -57,6 +58,6 @@ private:
     DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const;
     void iterateDomain(DdomainPtr &domain, Diterator &iterator);
 };
+#endif
 
-DBC_END
 #endif

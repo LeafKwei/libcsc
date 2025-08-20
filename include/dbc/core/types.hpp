@@ -1,12 +1,12 @@
 #ifndef DBC_CORE_TYPES_HPP
 #define DBC_CORE_TYPES_HPP
 
+#if 0
 #include <vector>
 #include <memory>
 #include <map>
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
-DBC_BEGIN
 
 struct Dpair;
 struct Ddomain;
@@ -44,6 +44,6 @@ struct Ddomain{
     DdomainWkr parent;
     DdomainWkr prev;
 };
+#endif
 
-DBC_END
 #endif
