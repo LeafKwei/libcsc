@@ -1,3 +1,4 @@
+#if 0
 #include <algorithm>
 #include <cassert>
 #include "dbc/core/Dcontext.hpp"
@@ -429,3 +430,4 @@ void Dcontext::iterateDomain(DdomainPtr &domain, Diterator &iterator){
 }
 
 DBC_END
+#endif

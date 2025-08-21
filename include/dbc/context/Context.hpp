@@ -9,7 +9,8 @@ public:
     
 
 private:
-    ScopeKeeper m_scopes;
+    ScopePtr m_root;
+    ScopePtr m_current;
 };
 
 DBC_END

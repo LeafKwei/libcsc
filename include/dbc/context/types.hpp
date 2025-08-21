@@ -11,6 +11,7 @@ struct Variable;
 struct Scope;
 using VariablePtr = std::shared_ptr<Variable>;
 using ScopePtr = std::shared_ptr<Scope>;
+using ScopeWkr = std::weak_ptr<Scope>;
 using VariableKeeper = std::map<Dstring, VariablePtr>;
 using ScopeKeeper = std::map<Dstring, ScopePtr>;
 
@@ -28,7 +29,9 @@ struct Variable{
 
 struct Scope{
     Dstring name;
+    ScopeWkr parent;
     VariableKeeper variables;
+    ScopeKeeper scopes;
 };
 
 DBC_END

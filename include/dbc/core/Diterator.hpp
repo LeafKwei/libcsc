@@ -3,7 +3,7 @@
 
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
-#include "dbc/core/types.hpp"
+#include "dbc/context/types.hpp"
 DBC_BEGIN
 
 class Diterator{
