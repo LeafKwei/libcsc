@@ -8,7 +8,7 @@ DBC_BEGIN
 class CommandDrv{
 public:
     CommandDrv();
-    void drive(const Dstring &script, Dcontext &context);
+    void drive(const Dstring &script, Context &context);
 
 private:
     int m_minTokenNum;

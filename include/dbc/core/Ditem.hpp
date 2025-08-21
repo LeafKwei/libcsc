@@ -5,7 +5,7 @@
 #include "dbc/dbc.hpp"
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
-#include "dbc/core/types.hpp"
+#include "dbc/context/types.hpp"
 #include "dbc/lex/PureLexer.hpp"
 #include "dbc/utility/utility.hpp"
 DBC_BEGIN

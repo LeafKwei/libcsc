@@ -3,7 +3,7 @@
 
 #include "dbc/dbc.hpp"
 #include "dbc/core/Ditem.hpp"
-#include "dbc/core/Dcontext.hpp"
+#include "dbc/context/Context.hpp"
 #include "dbc/syntax/CommandDrv.hpp"
 DBC_BEGIN
 
@@ -15,7 +15,7 @@ public:
     Dstring toString();
 
 private:
-    Dcontext m_context;
+    Context m_context;
     CommandDrv m_driver;
 };
 

@@ -12,7 +12,7 @@ public:
     CommonCmd(std::initializer_list<OperandType> types);
     
     int tokenNumber() override;
-    Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
+    Policy run(const std::vector<Token> &tokens, Context &context) override;
 
 protected:
     virtual const std::vector<OperandType>& typeList();
@@ -26,7 +26,7 @@ private:
 class EnterDomainCmd : public CommonCmd{
 public:
     EnterDomainCmd();
-    Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
+    Policy run(const std::vector<Token> &tokens, Context &context) override;
 protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;
 };
@@ -34,7 +34,7 @@ protected:
 class ExitDomainCmd : public CommonCmd{
 public:
     ExitDomainCmd();
-    Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
+    Policy run(const std::vector<Token> &tokens, Context &context) override;
 protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;
 };
@@ -42,7 +42,7 @@ protected:
 class AssignCmd : public CommonCmd{
 public:
     AssignCmd();
-    Policy run(const std::vector<Token> &tokens, Dcontext &context) override;
+    Policy run(const std::vector<Token> &tokens, Context &context) override;
 protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;
 };

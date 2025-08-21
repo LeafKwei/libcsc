@@ -9,7 +9,7 @@ int CommonCmd::tokenNumber(){
     return typeList().size();
 }
 
-Policy CommonCmd::run(const std::vector<Token> &tokens, Dcontext &context){
+Policy CommonCmd::run(const std::vector<Token> &tokens, Context &context){
     return Policy::Missed;
 }
 
@@ -40,17 +40,16 @@ EnterDomainCmd::EnterDomainCmd() : CommonCmd(
     {OperandType::Identifier, OperandType::Operator}
 ){}
 
-Policy EnterDomainCmd::run(const std::vector<Token> &tokens, Dcontext &context){
+Policy EnterDomainCmd::run(const std::vector<Token> &tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
     
     auto &name = tokens[0].buffer;
     
-    if(context.existsDomain(name)){
-         context.enterDomain(name);
+    if(context.probeScope(name)){
+         context.enterScope(name);
     }
     else{
-        context.makeDomain(name);
-        context.enterDomain(name);
+        context.makeScope(name, true);
     }
 
     return Policy::Accepted;
@@ -65,17 +64,17 @@ ExitDomainCmd::ExitDomainCmd() : CommonCmd(
     {OperandType::Operator, OperandType::Identifier}
 ){}
 
-Policy ExitDomainCmd::run(const std::vector<Token> &tokens, Dcontext &context){
+Policy ExitDomainCmd::run(const std::vector<Token> &tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
     
     auto &name = tokens[1].buffer;
 
-    if(name != context.path()){
+    if(name != context.scopeName()){
         return Policy::Bad;
     }
 
     try{
-        context.exitDomain();
+        context.leaveScope();
         return Policy::Accepted;
     }
     catch(ContextExcept &e){
@@ -92,10 +91,10 @@ AssignCmd::AssignCmd() : CommonCmd(
     {OperandType::Identifier, OperandType::Operator, OperandType::Value}
 ){}
 
-Policy AssignCmd::run(const std::vector<Token> &tokens, Dcontext &context){
+Policy AssignCmd::run(const std::vector<Token> &tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
 
-    context.set(tokens[0].buffer, tokens[2].buffer, toValueType(tokens[2]));
+    context.makeVariable(tokens[0].buffer, tokens[2].buffer, toValueType(tokens[2]));
     return Policy::Accepted;
 }
 

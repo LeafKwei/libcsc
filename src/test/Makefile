@@ -1,15 +1,15 @@
 extra=-g
 incl=../../include
-test_iterator.exe.src=test_iterator.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp  ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
+test_iterator.exe.src=test_iterator.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp  ../context/Context.cpp ../utility/utility.cpp
 test_value.exe.src=test_value.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../utility/utility.cpp
-test_drv.exe.src=test_drv.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp  ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
+test_drv.exe.src=test_drv.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp  ../context/Context.cpp ../utility/utility.cpp
 test_lexer.exe.src=test_lexer.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp
 test_ptr.exe.src=test_ptr.cpp
-test_context.exe.src=test_context.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
-test_ctor.exe.src=test_ctor.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
-test_attach.exe.src=test_attach.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
-test_builtin.exe.src=test_builtin.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
-test_reset.exe.src=test_reset.cpp ../core/Dcontext.cpp ../utility/utility.cpp ../core/path.cpp
+test_context.exe.src=test_context.cpp ../context/Context.cpp ../utility/utility.cpp
+test_ctor.exe.src=test_ctor.cpp ../context/Context.cpp ../utility/utility.cpp
+test_attach.exe.src=test_attach.cpp ../context/Context.cpp ../utility/utility.cpp
+test_builtin.exe.src=test_builtin.cpp ../context/Context.cpp ../utility/utility.cpp
+test_reset.exe.src=test_reset.cpp ../context/Context.cpp ../utility/utility.cpp
 
 test_iterator.exe: $(test_iterator.exe.src)
 	g++ $(extra) -o test_iterator -I $(incl) $(test_iterator.exe.src)

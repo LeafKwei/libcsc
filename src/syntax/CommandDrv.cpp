@@ -8,7 +8,7 @@ CommandDrv::CommandDrv(){
     setTokenRange();
 }
 
-void CommandDrv::drive(const Dstring &script, Dcontext &context){
+void CommandDrv::drive(const Dstring &script, Context &context){
     Lexer lexer(script);
     Policy policy;
     std::vector<Token> tokens;

@@ -4,7 +4,6 @@
 #include "dbc/lex/CharMngr.hpp"
 #include "dbc/lex/functions.hpp"
 #include "dbc/lex/Locator.hpp"
-#include "dbc/core/Dcontext.hpp"
 #include "dbc/lex/Lexer.hpp"
 #include "dbc/lex/PureLexer.hpp"
 using namespace dbc;

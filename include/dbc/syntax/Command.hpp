@@ -7,7 +7,7 @@
 #include "dbc/alias.hpp"
 #include "dbc/types.hpp"
 #include "dbc/lex/types.hpp"
-#include "dbc/core/Dcontext.hpp"
+#include "dbc/context/Context.hpp"
 #include "dbc/syntax/types.hpp"
 DBC_BEGIN
 
@@ -18,7 +18,7 @@ using CommandBranches = std::vector<CommandPtr>;
 class Command{
 public:
     virtual int tokenNumber() =0;
-    virtual Policy run(const std::vector<Token> &tokens, Dcontext &context) =0; 
+    virtual Policy run(const std::vector<Token> &tokens, Context &context) =0; 
 };
 
 DBC_END
