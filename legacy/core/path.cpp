@@ -1,14 +1,14 @@
-#include "dbc/core/path.hpp"
-DBC_BEGIN
+#include "csc/core/path.hpp"
+CSC_BEGIN
 
 const char *builtinPaths[] = {
     "/"  ,
     ""    //As the end of builtinPaths
 };
 
-std::tuple<Dstring,Dstring> separatePath(const Dstring &path){
-    Dstring prefix;
-    Dstring name;
+std::tuple<CscStr,CscStr> separatePath(const CscStr &path){
+    CscStr prefix;
+    CscStr name;
     auto lastCharPos = path.size() - 1;
     auto size = path.size();
 
@@ -28,18 +28,18 @@ std::tuple<Dstring,Dstring> separatePath(const Dstring &path){
     /* For '/bar' */
     if(path.find('/') == pos){
         prefix = "/";
-        name = (pos + 1) < size ? path.substr(pos + 1, size - pos - 1) : Dstring("");
+        name = (pos + 1) < size ? path.substr(pos + 1, size - pos - 1) : CscStr("");
         return std::make_tuple(prefix, name);
     }
 
     /* For '/bar/foo' */
     prefix = path.substr(0, pos);
-    name = (pos + 1) < path.size() ? path.substr(pos + 1, size - pos -1) : Dstring("");
+    name = (pos + 1) < path.size() ? path.substr(pos + 1, size - pos -1) : CscStr("");
     return std::make_tuple(prefix, name);
 }
 
-std::vector<Dstring> splitPath(const Dstring &path){
-    std::vector<Dstring> names;
+std::vector<CscStr> splitPath(const CscStr &path){
+    std::vector<CscStr> names;
     decltype(path.size()) pos = 0;
     decltype(path.size()) size = path.size();
     
@@ -69,4 +69,4 @@ std::vector<Dstring> splitPath(const Dstring &path){
     return names;
 }
 
-DBC_END
+CSC_END

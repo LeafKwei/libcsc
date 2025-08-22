@@ -1,11 +1,11 @@
 #if 0
 #include <algorithm>
 #include <cassert>
-#include "dbc/core/Dcontext.hpp"
-#include "dbc/core/path.hpp"
-#include "dbc/utility/utility.hpp"
+#include "csc/core/Dcontext.hpp"
+#include "csc/core/path.hpp"
+#include "csc/utility/utility.hpp"
 
-DBC_BEGIN
+CSC_BEGIN
 
 //=============== Constructor ===============
 Dcontext::Dcontext(){
@@ -62,12 +62,12 @@ Dcontext& Dcontext::operator=(Dcontext &&oth){
 }
 
 //=============== Public ===============
- bool Dcontext::existsDomain(const Dstring &path) const{
+ bool Dcontext::existsDomain(const CscStr &path) const{
     if(isEmptyPath(path)) return false;
     return findDomain(path) != nullptr;
  }
 
-void Dcontext::enterDomain(const Dstring &path){
+void Dcontext::enterDomain(const CscStr &path){
     if(isEmptyPath(path)) throw ContextExcept("Empty path.");
 
     auto ptr = findDomain(path);
@@ -83,7 +83,7 @@ void Dcontext::backDomain(){
     m_lastPtr = tmp;
 }
 
-void Dcontext::makeDomain(const Dstring &path){
+void Dcontext::makeDomain(const CscStr &path){
     if(isEmptyPath(path)) throw ContextExcept("Empty path.");
     if(isBuiltinPath(path)) throw ContextExcept("Can't make built-in domain.");
 
@@ -110,7 +110,7 @@ void Dcontext::makeDomain(const Dstring &path){
     appendChildDomain(parent, child);
 }
 
-void Dcontext::makeDomains(const Dstring &path){
+void Dcontext::makeDomains(const CscStr &path){
     if(isEmptyPath(path)) throw ContextExcept("Empty path.");
     if(path == "/") return;  //No requirement to make root
 
@@ -119,7 +119,7 @@ void Dcontext::makeDomains(const Dstring &path){
     makeDomain(path);
 }
 
-void Dcontext::dropDomain(const Dstring &path){
+void Dcontext::dropDomain(const CscStr &path){
     if(isEmptyPath(path)) throw ContextExcept("Empty path.");
 
     auto domain = findDomain(path);
@@ -142,7 +142,7 @@ void Dcontext::exitDomain(){
     m_crntPtr = parent;
 }
 
-void Dcontext::attachDomain(const Dstring &path, Dcontext &&context){
+void Dcontext::attachDomain(const CscStr &path, Dcontext &&context){
     if(isEmptyPath(path)) throw ContextExcept("Empty path.");
     if(isBuiltinPath(path)) throw ContextExcept("Can't attach domain on a built-in path.");
 
@@ -167,7 +167,7 @@ void Dcontext::attachDomain(const Dstring &path, Dcontext &&context){
     appendChildDomain(parent, child);
 }
 
-Dcontext Dcontext::detachDomain(const Dstring &path){
+Dcontext Dcontext::detachDomain(const CscStr &path){
     if(isEmptyPath(path)) return Dcontext();
 
     auto domain = findDomain(path);
@@ -188,23 +188,23 @@ Dcontext Dcontext::detachDomain(const Dstring &path){
     return context;
 }
 
-Dstring Dcontext::path() const{
+CscStr Dcontext::path() const{
     return m_crntPtr -> name;
 }
 
-Dstring Dcontext::absolutePath() const{
+CscStr Dcontext::absolutePath() const{
     return makeAbsolutePath(m_crntPtr);
 }
 
-bool Dcontext::exists(const Dstring &name) const{
+bool Dcontext::exists(const CscStr &name) const{
     return findPair(name) != nullptr;
 }
 
-void Dcontext::set(const Dstring &name, const Dstring &value){
+void Dcontext::set(const CscStr &name, const CscStr &value){
     set(name, value, ValueType::Unknown);
 }
 
-void Dcontext::set(const Dstring &name, const Dstring &value, ValueType type){
+void Dcontext::set(const CscStr &name, const CscStr &value, ValueType type){
     auto pair = findPair(name);
     if(pair != nullptr){
         pair -> type = type;
@@ -227,7 +227,7 @@ void Dcontext::set(const Dstring &name, const Dstring &value, ValueType type){
     appendPair(m_crntPtr, newPair);
 }
 
-void Dcontext::unset(const Dstring &name){
+void Dcontext::unset(const CscStr &name){
     auto pair = findPair(name);
     if(pair == nullptr){
         return;
@@ -236,7 +236,7 @@ void Dcontext::unset(const Dstring &name){
     removePair(m_crntPtr, pair);
 }
 
-Dvalue Dcontext::get(const Dstring &name){
+Dvalue Dcontext::get(const CscStr &name){
     auto pair = findPair(name);
     if(pair != nullptr){
         return Dvalue(pair -> value, pair -> type);
@@ -262,8 +262,8 @@ void Dcontext::iterate(Diterator &iterator){
 }
 
 //=============== Private ===============
-Dstring Dcontext::makeAbsolutePath(const DdomainPtr &end) const{
-    std::vector<Dstring> names;
+CscStr Dcontext::makeAbsolutePath(const DdomainPtr &end) const{
+    std::vector<CscStr> names;
 
     auto domain = end;
     while(domain != nullptr){
@@ -350,7 +350,7 @@ void Dcontext::updateRelativeDomain(DdomainPtr &domain){
     }
 }
 
-DpairPtr Dcontext::findPair(const Dstring &name) const{
+DpairPtr Dcontext::findPair(const CscStr &name) const{
     auto nextptr = m_crntPtr -> pairs;
 
     while(nextptr != nullptr){
@@ -364,7 +364,7 @@ DpairPtr Dcontext::findPair(const Dstring &name) const{
     return DpairPtr(nullptr);
 }
 
-DdomainPtr Dcontext::findDomain(const Dstring &path) const{
+DdomainPtr Dcontext::findDomain(const CscStr &path) const{
     if(isBuiltinPath(path)) return findBuiltinDomain(path);
 
     auto names = splitPath(path);
@@ -376,7 +376,7 @@ DdomainPtr Dcontext::findDomain(const Dstring &path) const{
     }
 }
 
-DdomainPtr Dcontext::findBuiltinDomain(const Dstring &path) const{
+DdomainPtr Dcontext::findBuiltinDomain(const CscStr &path) const{
     switch(indexOfBuiltinPath(path)){
         case 0:  //root
             return m_rootPtr;
@@ -385,7 +385,7 @@ DdomainPtr Dcontext::findBuiltinDomain(const Dstring &path) const{
     }
 }
 
-DdomainPtr Dcontext::findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const{
+DdomainPtr Dcontext::findDomainFrom(DdomainPtr begin, const std::vector<CscStr> &names, std::size_t pos) const{
     auto nextptr = begin;
     
     if(pos < names.size()){
@@ -429,5 +429,5 @@ void Dcontext::iterateDomain(DdomainPtr &domain, Diterator &iterator){
     }
 }
 
-DBC_END
+CSC_END
 #endif

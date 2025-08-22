@@ -1,9 +1,9 @@
 #include <iostream>
 #include <sstream>
-#include "dbc/lex/PureLexer.hpp"
-#include "dbc/lex/readers.hpp"
-#include "dbc/lex/functions.hpp"
-DBC_BEGIN
+#include "csc/lex/PureLexer.hpp"
+#include "csc/lex/readers.hpp"
+#include "csc/lex/functions.hpp"
+CSC_BEGIN
 
 //============== CommonReader =============
 Token CommonReader::read(CharMngr &mngr){
@@ -27,7 +27,7 @@ TokenType CommonReader::type(){
     return TokenType::Aborted;
 }
 
-bool CommonReader::canRead(Dchar ch){
+bool CommonReader::canRead(CscChar ch){
     return false;
 }
 
@@ -40,7 +40,7 @@ TokenType BlankReader::type(){
     return TokenType::Blank;
 }
 
-bool BlankReader::canRead(Dchar ch){
+bool BlankReader::canRead(CscChar ch){
     return isBlank(ch);
 }
 
@@ -64,7 +64,7 @@ TokenType DescriptionReader::type(){
     return TokenType::Ignored;
 }
 
-bool DescriptionReader::canRead(Dchar ch){
+bool DescriptionReader::canRead(CscChar ch){
     if(!isNewLine(ch)) return true;
     return false;
 }
@@ -78,7 +78,7 @@ TokenType IdentifierReader::type(){
     return TokenType::Identifier;
 }
 
-bool IdentifierReader::canRead(Dchar ch){
+bool IdentifierReader::canRead(CscChar ch){
     return isIdentifier(ch);
 }
 
@@ -91,7 +91,7 @@ TokenType OperatorReader::type(){
     return TokenType::Operator;
 }
 
-bool OperatorReader::canRead(Dchar ch){
+bool OperatorReader::canRead(CscChar ch){
     return isOperator(ch);
 }
 
@@ -123,7 +123,7 @@ TokenType NumberReader::type(){
     return TokenType::Number;
 }
 
-bool NumberReader::canRead(Dchar ch){
+bool NumberReader::canRead(CscChar ch){
     return false;
 }
 
@@ -195,7 +195,7 @@ TokenType StringReader::type(){
     return TokenType::String;
 }
 
-bool StringReader::canRead(Dchar ch){
+bool StringReader::canRead(CscChar ch){
     return false;
 }
 
@@ -205,7 +205,7 @@ void StringReader::readString(Token &token, CharMngr &mngr){
 
     bool escape = false;
     while(mngr.valid()){
-        Dchar ch = mngr.forward();
+        CscChar ch = mngr.forward();
 
         if(escape){
             escape = false;
@@ -271,7 +271,7 @@ TokenType ArrayReader::type(){
     return TokenType::Array;
 }
 
-bool ArrayReader::canRead(Dchar ch){
+bool ArrayReader::canRead(CscChar ch){
     return false;
 }
 
@@ -331,4 +331,4 @@ bool ArrayReader::isValue(const Token &token){
     }
 }
 
-DBC_END
+CSC_END

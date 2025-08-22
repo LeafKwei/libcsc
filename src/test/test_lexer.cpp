@@ -1,12 +1,12 @@
 #include <cstdio>
 #include <iostream>
 #include <fstream>
-#include "dbc/lex/CharMngr.hpp"
-#include "dbc/lex/functions.hpp"
-#include "dbc/lex/Locator.hpp"
-#include "dbc/lex/Lexer.hpp"
-#include "dbc/lex/PureLexer.hpp"
-using namespace dbc;
+#include "csc/lex/CharMngr.hpp"
+#include "csc/lex/functions.hpp"
+#include "csc/lex/Locator.hpp"
+#include "csc/lex/Lexer.hpp"
+#include "csc/lex/PureLexer.hpp"
+using namespace csc;
 
 void show(const Token &token){
     switch(token.type){
@@ -41,8 +41,8 @@ void show(const Token &token){
 }
 
 int main(void){
-    std::ifstream ifs("myconfig.dbc");
-    Dstring str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());  //Use parentheses for (std::istreambuf_iterator<char>(ifs) because cpp compiler will recongnize it as a function declaraion without parentheses
+    std::ifstream ifs("myconfig.csc");
+    CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());  //Use parentheses for (std::istreambuf_iterator<char>(ifs) because cpp compiler will recongnize it as a function declaraion without parentheses
 
 #if 0
     Lexer lexer{};

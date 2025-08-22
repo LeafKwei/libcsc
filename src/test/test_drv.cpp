@@ -1,12 +1,12 @@
 #include <cstdio>
 #include <iostream>
 #include <fstream>
-#include "dbc/syntax/CommandDrv.hpp"
-using namespace dbc;
+#include "csc/syntax/CommandDrv.hpp"
+using namespace csc;
 
 int main(void){
-    std::ifstream ifs("myconfig.dbc");
-    Dstring str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    std::ifstream ifs("myconfig.csc");
+    CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
     Context context;
     CommandDrv drv;

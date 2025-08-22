@@ -1,6 +1,6 @@
-#include "dbc/syntax/cmds.hpp"
-#include "dbc/syntax/functions.hpp"
-DBC_BEGIN
+#include "csc/syntax/cmds.hpp"
+#include "csc/syntax/functions.hpp"
+CSC_BEGIN
 
 //============== CommonCmd =============
 CommonCmd::CommonCmd(std::initializer_list<OperandType> types) : m_typeList(types){}
@@ -105,4 +105,4 @@ bool AssignCmd::isLegalToken(const std::vector<Token> &tokens){
     return (opt == "=");
 }
 
-DBC_END
+CSC_END

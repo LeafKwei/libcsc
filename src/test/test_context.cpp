@@ -1,6 +1,6 @@
 #include <iostream>
-#include "dbc/context/Context.hpp"
-using namespace dbc;
+#include "csc/context/Context.hpp"
+using namespace csc;
 
 int main(void){
     Context context;

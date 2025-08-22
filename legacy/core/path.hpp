@@ -1,25 +1,25 @@
-#ifndef DBC_PATH_HPP
-#define DBC_PATH_HPP
+#ifndef CSC_PATH_HPP
+#define CSC_PATH_HPP
 
 #include <vector>
 #include <tuple>
 #include <array>
 #include <cstring>
-#include "dbc/dbc.hpp"
-#include "dbc/alias.hpp"
+#include "csc/csc.hpp"
+#include "csc/alias.hpp"
 
-DBC_BEGIN
+CSC_BEGIN
 
 extern const char *builtinPaths[];
-std::tuple<Dstring,Dstring> separatePath(const Dstring &path);
-std::vector<Dstring> splitPath(const Dstring &path);
+std::tuple<CscStr,CscStr> separatePath(const CscStr &path);
+std::vector<CscStr> splitPath(const CscStr &path);
 
 //=============== inline ===============
-inline bool isEmptyPath(const Dstring &path){ 
+inline bool isEmptyPath(const CscStr &path){ 
     return path.size() == 0; 
 }
 
-inline int indexOfBuiltinPath(const Dstring &path){
+inline int indexOfBuiltinPath(const CscStr &path){
      for(int index = 0; strlen(builtinPaths[index]) > 0; index++){
         if(path == builtinPaths[index]){
             return index;
@@ -29,9 +29,9 @@ inline int indexOfBuiltinPath(const Dstring &path){
     return -1;
 }
 
-inline bool isBuiltinPath(const Dstring &path){ 
+inline bool isBuiltinPath(const CscStr &path){ 
     return indexOfBuiltinPath(path) != -1;
 }
 
-DBC_END
+CSC_END
 #endif

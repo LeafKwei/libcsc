@@ -1,14 +1,14 @@
 #include <iostream>
 #include <sstream>
-#include "dbc/syntax/CommandDrv.hpp"
-DBC_BEGIN
+#include "csc/syntax/CommandDrv.hpp"
+CSC_BEGIN
 
 CommandDrv::CommandDrv(){
     installCommands();
     setTokenRange();
 }
 
-void CommandDrv::drive(const Dstring &script, Context &context){
+void CommandDrv::drive(const CscStr &script, Context &context){
     Lexer lexer(script);
     Policy policy;
     std::vector<Token> tokens;
@@ -69,7 +69,7 @@ void CommandDrv::setTokenRange(){
     m_maxTokenNum = max;
 }
 
-Dstring CommandDrv::makeMessage(const Dstring &tips, const Locator &locator){
+CscStr CommandDrv::makeMessage(const CscStr &tips, const Locator &locator){
     std::stringstream stream;
     stream 
         <<  tips 
@@ -80,4 +80,4 @@ Dstring CommandDrv::makeMessage(const Dstring &tips, const Locator &locator){
     return stream.str();
 }
 
-DBC_END
+CSC_END

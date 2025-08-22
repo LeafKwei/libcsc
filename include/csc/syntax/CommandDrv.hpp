@@ -1,0 +1,25 @@
+#ifndef CSC_COMMANDDRV_HPP
+#define CSC_COMMANDDRV_HPP
+
+#include "csc/lex/Lexer.hpp"
+#include "csc/syntax/cmds.hpp"
+CSC_BEGIN
+
+class CommandDrv{
+public:
+    CommandDrv();
+    void drive(const CscStr &script, Context &context);
+
+private:
+    int m_minTokenNum;
+    int m_maxTokenNum;
+    CommandBranches m_commands;
+
+    void installCommands();
+    void setTokenRange();
+    CscStr makeMessage(const CscStr &tips, const Locator &locator);
+};
+
+
+CSC_END
+#endif

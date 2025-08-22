@@ -1,6 +1,6 @@
-#include "dbc/types.hpp"
-#include "dbc/context/Context.hpp"
-DBC_BEGIN
+#include "csc/types.hpp"
+#include "csc/context/Context.hpp"
+CSC_BEGIN
 
 Context::Context(){
     clean();
@@ -110,6 +110,10 @@ Context& Context::clean(){
     return *this;
 }
 
+Context& Context::iterate(ContextSeeker &seeker){
+
+}
+
 void Context::do_makeScope(ConstStr name){
     auto scope = std::make_shared<Scope>();
     scope -> name = name;
@@ -147,4 +151,4 @@ void Context::do_setVariable(ConstStr name, ConstStr value, ValueType type){
     variable -> type = type;
 }
 
-DBC_END
+CSC_END

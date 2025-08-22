@@ -1,16 +1,16 @@
-#ifndef DBC_CONTEXT_HPP
-#define DBC_CONTEXT_HPP
+#ifndef CSC_CONTEXT_HPP
+#define CSC_CONTEXT_HPP
 
 #if 0
 #include <tuple>
 #include <vector>
 #include <memory>
-#include "dbc/alias.hpp"
-#include "dbc/types.hpp"
-#include "dbc/core/types.hpp"
-#include "dbc/core/Dvalue.hpp"
-#include "dbc/core/Diterator.hpp"
-DBC_BEGIN
+#include "csc/alias.hpp"
+#include "csc/types.hpp"
+#include "csc/core/types.hpp"
+#include "csc/core/Dvalue.hpp"
+#include "csc/core/Diterator.hpp"
+CSC_BEGIN
 
 class Dcontext{
 public:
@@ -19,22 +19,22 @@ public:
     Dcontext(Dcontext &&oth);
     ~Dcontext();
 
-    bool existsDomain(const Dstring &path) const;            /* Test whether a domain is existing. */
-    void enterDomain(const Dstring &path);                     /* Enter a existing domain. */
+    bool existsDomain(const CscStr &path) const;            /* Test whether a domain is existing. */
+    void enterDomain(const CscStr &path);                     /* Enter a existing domain. */
     void backDomain();                                                       /* Back to last domain. */
-    void makeDomain(const Dstring &path);                     /* Create a domain. */
-    void makeDomains(const Dstring &path);                   /* Create a domain. Make its parents if they don't exists.*/
-    void dropDomain(const Dstring &path);                      /* Remove an existing domain. */
+    void makeDomain(const CscStr &path);                     /* Create a domain. */
+    void makeDomains(const CscStr &path);                   /* Create a domain. Make its parents if they don't exists.*/
+    void dropDomain(const CscStr &path);                      /* Remove an existing domain. */
     void exitDomain();                                                         /* Exit current domain and back to its parent domain. */
-    void attachDomain(const Dstring &path, Dcontext &&context); /* Attach a context to another context. The attached context will be empty.*/
-    Dcontext detachDomain(const Dstring &path);               /* Detach a domain from current context. */
-    Dstring path() const;                                                         /* Get current domain name. */
-    Dstring absolutePath() const;                                           /* Get absolute path which begins from root domain to current domain*/
-    bool exists(const Dstring &name) const;                         /* For current domain, test whether a pair is existing.*/
-    void set(const Dstring &name, const Dstring &value);   /* In current domain, set a pair. */
-    void set(const Dstring &name, const Dstring &value, ValueType type);
-    void unset(const Dstring &name);                                   /* For current domain, unset a pair. */
-    Dvalue get(const Dstring &name);                                 /* From current domain, get the value for name.*/
+    void attachDomain(const CscStr &path, Dcontext &&context); /* Attach a context to another context. The attached context will be empty.*/
+    Dcontext detachDomain(const CscStr &path);               /* Detach a domain from current context. */
+    CscStr path() const;                                                         /* Get current domain name. */
+    CscStr absolutePath() const;                                           /* Get absolute path which begins from root domain to current domain*/
+    bool exists(const CscStr &name) const;                         /* For current domain, test whether a pair is existing.*/
+    void set(const CscStr &name, const CscStr &value);   /* In current domain, set a pair. */
+    void set(const CscStr &name, const CscStr &value, ValueType type);
+    void unset(const CscStr &name);                                   /* For current domain, unset a pair. */
+    Dvalue get(const CscStr &name);                                 /* From current domain, get the value for name.*/
     void resetContext();                                                         /* Clean all doamin and pair. */
     void iterate(Diterator &iterator);                                     /* Seek each domain and pair with DFS. */
 
@@ -46,16 +46,16 @@ private:
     DdomainPtr m_crntPtr;
     DdomainPtr m_lastPtr;
 
-    Dstring makeAbsolutePath(const DdomainPtr &domain) const;
+    CscStr makeAbsolutePath(const DdomainPtr &domain) const;
     void appendPair(DdomainPtr &parent, DpairPtr &pair);
     void removePair(DdomainPtr &parent, DpairPtr &pair);
     void appendChildDomain(DdomainPtr &parent, DdomainPtr &child);
     void removeChildDomain(DdomainPtr &child);
     void updateRelativeDomain(DdomainPtr &domain);
-    DpairPtr findPair(const Dstring &name) const;
-    DdomainPtr findDomain(const Dstring &path) const;
-    DdomainPtr findBuiltinDomain(const Dstring &path) const;
-    DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<Dstring> &names, std::size_t pos) const;
+    DpairPtr findPair(const CscStr &name) const;
+    DdomainPtr findDomain(const CscStr &path) const;
+    DdomainPtr findBuiltinDomain(const CscStr &path) const;
+    DdomainPtr findDomainFrom(DdomainPtr begin, const std::vector<CscStr> &names, std::size_t pos) const;
     void iterateDomain(DdomainPtr &domain, Diterator &iterator);
 };
 #endif

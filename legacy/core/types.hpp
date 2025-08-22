@@ -1,12 +1,12 @@
-#ifndef DBC_CORE_TYPES_HPP
-#define DBC_CORE_TYPES_HPP
+#ifndef CSC_CORE_TYPES_HPP
+#define CSC_CORE_TYPES_HPP
 
 #if 0
 #include <vector>
 #include <memory>
 #include <map>
-#include "dbc/dbc.hpp"
-#include "dbc/alias.hpp"
+#include "csc/csc.hpp"
+#include "csc/alias.hpp"
 
 struct Dpair;
 struct Ddomain;
@@ -15,7 +15,7 @@ using DdomainPtr = std::shared_ptr<Ddomain>;
 using DpairWkr = std::weak_ptr<Dpair>;
 using DdomainWkr = std::weak_ptr<Ddomain>;
 
-using str = Dstring;
+using str = CscStr;
 using barray = std::vector<bool>;
 using iarray = std::vector<int>;
 using larray = std::vector<long>;
@@ -30,14 +30,14 @@ enum class ValueType{
 
 struct Dpair{
     ValueType type;
-    Dstring name;
-    Dstring value;
+    CscStr name;
+    CscStr value;
     DpairPtr next;
     DpairWkr prev;
 };
 
 struct Ddomain{
-    Dstring name;
+    CscStr name;
     DpairPtr pairs;
     DdomainPtr child;
     DdomainPtr next;

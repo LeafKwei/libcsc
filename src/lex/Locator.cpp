@@ -1,7 +1,7 @@
-#include "dbc/lex/Locator.hpp"
-DBC_BEGIN
+#include "csc/lex/Locator.hpp"
+CSC_BEGIN
 
-Locator::Locator(const Dstring &str, int index) : 
+Locator::Locator(const CscStr &str, int index) : 
     m_row(1), m_col(1), m_index(index)
 {
     decltype(str.size()) start = 0;
@@ -29,4 +29,4 @@ int Locator::index() const{
     return m_index;
 }
 
-DBC_END
+CSC_END

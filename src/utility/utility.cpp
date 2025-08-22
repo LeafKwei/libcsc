@@ -1,11 +1,11 @@
-#include "dbc/lex/types.hpp"
-#include "dbc/utility/utility.hpp"
+#include "csc/lex/types.hpp"
+#include "csc/utility/utility.hpp"
 #include <algorithm>
 
-DBC_BEGIN
+CSC_BEGIN
 
-Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::initializer_list<Dstring> &filters){
-    Dstring result;
+CscStr join(CscStr splitor, const std::vector<CscStr> &elements, const std::initializer_list<CscStr> &filters){
+    CscStr result;
 
     for(int idx = 0; idx < elements.size(); idx++){
         auto &e = elements.at(idx);
@@ -18,9 +18,9 @@ Dstring join(Dstring splitor, const std::vector<Dstring> &elements, const std::i
     return result;
 }
 
-int baseOf(const Dstring &str){
+int baseOf(const CscStr &str){
     if(str.substr(0, 2) == "0x") return 16;
     return 10;
 }
 
-DBC_END
+CSC_END

@@ -1,6 +1,6 @@
-#include "dbc/lex/PureLexer.hpp"
-#include "dbc/lex/readers.hpp"
-DBC_BEGIN
+#include "csc/lex/PureLexer.hpp"
+#include "csc/lex/readers.hpp"
+CSC_BEGIN
 
 PureLexer::PureLexer() : m_autoSkipBlank(true){
     installReaders();
@@ -60,4 +60,4 @@ void PureLexer::installConverters(){
     m_converters.insert({"false", TokenType::Keyword});
 }
 
-DBC_END
+CSC_END
