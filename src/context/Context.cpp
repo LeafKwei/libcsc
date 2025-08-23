@@ -111,7 +111,8 @@ Context& Context::clean(){
 }
 
 Context& Context::iterate(ContextSeeker &seeker){
-
+    do_iterate(m_current, seeker);
+    return *this;
 }
 
 void Context::do_makeScope(ConstStr name){
@@ -149,6 +150,30 @@ void Context::do_setVariable(ConstStr name, ConstStr value, ValueType type){
     auto variable = (m_current -> variables.find(name)) -> second;
     variable -> value = value;
     variable -> type = type;
+}
+
+void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
+    if(scope != m_root){                                 //Ignore root name.
+        seeker.enterScope(scope -> name);
+    }
+
+    auto &variables = scope -> variables;
+    if(variables.size() != 0){
+        for(auto &variable : variables){
+            seeker.getVariable(variable.second -> name, variable.second -> value, variable.second -> type);
+        }
+    }
+
+    auto &scopes = scope -> scopes;
+    if(scopes.size() != 0){
+        for(auto &scope : scopes){
+            do_iterate(scope.second, seeker);
+        }
+    }
+
+    if(scope != m_root){
+        seeker.leaveScope(scope -> name);
+    }
 }
 
 CSC_END

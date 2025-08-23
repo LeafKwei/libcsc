@@ -31,7 +31,7 @@ public:
                                                           
     Context& restart();                                                                 /* Back to root scope. */
     Context& clean();                                                                   /* Clean all present scopes, then create a new root scope.*/
-    Context& iterate(ContextSeeker &seeker);                           /* Iterate all scope with DFS. */
+    Context& iterate(ContextSeeker &seeker);                           /* From current scope, iterate all variables and child scopes with DFS. */
 
 private:
     ScopePtr m_root;
@@ -44,6 +44,7 @@ private:
     void do_makeVariable(ConstStr name, ConstStr value, ValueType type);
     void do_cleanVariable(ConstStr name);
     void do_setVariable(ConstStr name, ConstStr value, ValueType type);
+    void do_iterate(ScopePtr scope, ContextSeeker &seeker);
 };
 
 CSC_END

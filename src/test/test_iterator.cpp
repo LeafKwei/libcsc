@@ -1,0 +1,19 @@
+#include <iostream>
+#include <fstream>
+#include "csc/context/Context.hpp"
+#include "csc/core/CscStrSeeker.hpp"
+#include "csc/syntax/CommandDrv.hpp"
+using namespace csc;
+
+int main(void){
+    std::ifstream ifs("myconfig.csc");
+    CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+
+    Context context;
+    CommandDrv drv;
+    CscStrSeeker seeker;
+    drv.drive(str, context);
+
+    context.iterate(seeker);
+    std::cout << seeker.toString() << std::endl;
+}
