@@ -12,9 +12,9 @@ int main(void){
     CommandDrv drv;
     drv.drive(str, context);
     context.enterScope("custom").enterScope("tom");
-    std::cout << context.getValue("name") << std::endl;
-    std::cout << context.getValue("age") << std::endl;
-    std::cout << context.getValue("weight") << std::endl;
+    std::cout << context.getValue("name").str << std::endl;
+    std::cout << context.getValue("age").str << std::endl;
+    std::cout << context.getValue("weight").str << std::endl;
     context.leaveScope();
-    std::cout << context.getValue("school") << std::endl;
+    std::cout << context.getValue("school").str << std::endl;
 }

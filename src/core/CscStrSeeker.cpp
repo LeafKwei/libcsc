@@ -16,13 +16,13 @@ void CscStrSeeker::leaveScope(const CscStr &name){
     m_buffer << "::" << name << std::endl;
 }
 
-void CscStrSeeker::values(const CscStr &name, const Values &values){
+void CscStrSeeker::values(const CscStr &name, const VariableValues &values){
     writeIndent();
     
     auto vtype = arrayToValue(values.type());
     if(vtype == ValueType::Unknown){                //If the value is not in array.
         m_buffer << name << " = ";
-        writeValue(values.value(), values.type());
+        writeValue(values.str(), values.type());
         m_buffer << std::endl;
         return;
     }
@@ -32,7 +32,7 @@ void CscStrSeeker::values(const CscStr &name, const Values &values){
     /* "index = 1" is for skipping first empty element. */
     for(int index = 1; index < values.size(); index++){
         if(index > 1) m_buffer << ", ";
-        writeValue(values.value(index), vtype);
+        writeValue(values.str(index), vtype);
     }
 
     m_buffer << "}" << std::endl;

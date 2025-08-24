@@ -11,7 +11,7 @@ public:
     CscStrSeeker();
     void enterScope(const CscStr &name) override;
     void leaveScope(const CscStr &name) override;
-    void values(const CscStr &name, const Values &values) override;
+    void values(const CscStr &name, const VariableValues &values) override;
     CscStr toString();
 
 private:

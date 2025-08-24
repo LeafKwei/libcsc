@@ -84,7 +84,7 @@ Context& Context::cleanVariable(ConstStr name){
     return *this;
 }
 
-CscStr Context::getValue(ConstStr name){
+Context::Value Context::getValue(ConstStr name){
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -92,10 +92,10 @@ CscStr Context::getValue(ConstStr name){
 
     auto variable = iterator -> second;
     assert(variable -> values.size() > 0);
-    return variable -> values.at(0);
+    return {variable -> values.at(0), variable -> type};
 }
 
-Values Context::getValues(ConstStr name){
+Context::Values Context::getValues(ConstStr name){
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);

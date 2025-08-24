@@ -8,14 +8,14 @@
 #include "csc/context/types.hpp"
 CSC_BEGIN
 
-class Values{
+class VariableValues{
 public:
-    Values(const ValueKeeper &keeper, ValueType type) : m_keeper(keeper), m_type(type){}
+    VariableValues(const ValueKeeper &keeper, ValueType type) : m_keeper(keeper), m_type(type){}
     ValueType type() const      { return m_type; }
     bool          isEmpty() const { return m_keeper.empty(); }
     int             size() const       { return m_keeper.size(); }
-    CscStr       value() const     { assert(m_keeper.size() > 0); return m_keeper.at(0); }
-    CscStr       value(int index) const          { return m_keeper.at(index); }
+    CscStr       str() const     { assert(m_keeper.size() > 0); return m_keeper.at(0); }
+    CscStr       str(int index) const          { return m_keeper.at(index); }
     CscStr       operator[] (int index) const { return m_keeper[index]; }
 
 private:

@@ -37,5 +37,10 @@ struct Scope{
     ScopeKeeper scopes;
 };
 
+struct VariableValue{
+    CscStr str;
+    ValueType type;
+};
+
 CSC_END
 #endif

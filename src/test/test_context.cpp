@@ -16,10 +16,10 @@ int main(void){
             .makeVariable("age", "18", ValueType::String);
 
     context.restart();
-    std::cout << context.getValue("what") << std::endl;
-    std::cout << context.enterScope("users").enterScope("tom").getValue("name") << std::endl;
+    std::cout << context.getValue("what").str << std::endl;
+    std::cout << context.enterScope("users").enterScope("tom").getValue("name").str << std::endl;
     
     context.restart();
-    std::cout << context.enterScope("users").enterScope("jerry").getValue("age") << std::endl;
+    std::cout << context.enterScope("users").enterScope("jerry").getValue("age").str << std::endl;
     context.clean();
 }
