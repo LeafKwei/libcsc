@@ -251,14 +251,7 @@ Token ArrayReader::read(CharMngr &mngr){
         return token;
     }
 
-    mngr.forward();
-    trim(token);              //Part each element
-    
-    if(token.type == TokenType::Unexcepted){  //Restore index if token is unexcepted
-        mngr.seek(CharMngr::Set, idx);
-        token.type = TokenType::Unexcepted;
-        return token;
-    }
+    mngr.forward(); //Skip ending '}'
 
     return token;
 }
@@ -273,62 +266,6 @@ TokenType ArrayReader::type(){
 
 bool ArrayReader::canRead(CscChar ch){
     return false;
-}
-
-void ArrayReader::trim(Token &token){
-    PureLexer lexer;
-    CharMngr mngr(token.buffer);
-    std::stringstream stream;
-    auto arrayType = TokenType::Unexcepted;
-    
-    while(mngr.valid()){
-        auto tempToken = lexer.nextTokenFrom(mngr);
-    
-        if((tempToken.type == TokenType::Unexcepted) && mngr.valid() && mngr.getch() == ','){
-            mngr.forward();
-            continue;
-        }
-
-        if(!isValue(tempToken)){
-            token.type = TokenType::Unexcepted;
-            return;
-        }
-
-        if(arrayType != TokenType::Unexcepted){      //Append comma if there is a next element.
-            stream << ",";
-
-            if(arrayType != tempToken.type){
-                token.type = TokenType::Unexcepted;  //If elements are not a same type.
-                return;
-            }
-        }
-
-        arrayType = tempToken.type;
-
-        /* For String Array, we should put quota as delimitor of each element. */
-        if(tempToken.type == TokenType::String){
-            stream << "\"" << tempToken.buffer << "\"";
-        }
-        else{
-            stream << tempToken.buffer;
-        }
-    }
-
-    token.buffer = stream.str();
-}
-
-bool ArrayReader::isValue(const Token &token){
-    if(token.type == TokenType::Keyword){
-        return (token.buffer == "true") || (token.buffer == "false");
-    }
-
-    switch(token.type){
-        case TokenType::Number:
-        case TokenType::String:
-            return true;
-        default:
-            return false;
-    }
 }
 
 CSC_END

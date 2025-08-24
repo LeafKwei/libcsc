@@ -11,7 +11,7 @@ public:
     CscStrSeeker();
     void enterScope(const CscStr &name) override;
     void leaveScope(const CscStr &name) override;
-    void getVariable(const CscStr &name, const CscStr &value, ValueType type) override;
+    void values(const CscStr &name, const Values &values) override;
     CscStr toString();
 
 private:
@@ -19,6 +19,8 @@ private:
     std::stringstream m_buffer;
 
     void writeIndent();
+    void writeValue(const CscStr &value,  ValueType type);
+    ValueType arrayToValue(ValueType type);
 };
 
 CSC_END

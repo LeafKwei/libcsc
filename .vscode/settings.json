@@ -48,6 +48,7 @@
         "cstdarg": "cpp",
         "cassert": "cpp",
         "cstring": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "any": "cpp"
     }
 }

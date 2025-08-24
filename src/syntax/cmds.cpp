@@ -94,15 +94,67 @@ AssignCmd::AssignCmd() : CommonCmd(
 Policy AssignCmd::run(const std::vector<Token> &tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
 
-    context.makeVariable(tokens[0].buffer, tokens[2].buffer, toValueType(tokens[2]));
+    auto vtype = toValueType(tokens[2]);
+    if(vtype == ValueType::Unknown) return Policy::Bad;
+
+    context.makeVariable(tokens[0].buffer, tokens[2].buffer, vtype);
     return Policy::Accepted;
 }
 
 bool AssignCmd::isLegalToken(const std::vector<Token> &tokens){
-    auto &opt = tokens[1].buffer;
-    auto &value = tokens[2].buffer;
+    return (tokens[1].buffer == "=");
+}
 
-    return (opt == "=");
+//============== ArrayAssignCmd =============
+ArrayAssignCmd::ArrayAssignCmd() : CommonCmd(
+    {OperandType::Identifier, OperandType::Operator, OperandType::Values}
+){}
+
+Policy ArrayAssignCmd::run(const std::vector<Token> &tokens, Context &context){
+    if(!isThisType(tokens)) return Policy::Missed;
+
+    auto vtype = toValueType(tokens[2]);
+    if(vtype == ValueType::Unknown) return Policy::Bad;
+    context.makeVariable(tokens[0].buffer, "", vtype);
+
+    auto &name = tokens[0].buffer;
+    TokenType type = TokenType::Unexcepted;
+    CharMngr mngr(tokens[2].buffer);
+    PureLexer lexer;
+
+    while(mngr.valid()){
+        auto token = lexer.nextTokenFrom(mngr);
+
+        if(token.type == TokenType::Aborted){
+            break;
+        }
+
+        if(token.type == TokenType::Unexcepted){
+            if(mngr.getch() ==','){
+                mngr.forward();
+                continue;
+            }
+            
+            return Policy::Bad;
+        }
+
+        if(toOperandType(token) != OperandType::Value){
+            return Policy::Bad; 
+        }
+
+        if(type != TokenType::Unexcepted && type != token.type){  //If elements in array is not a same type.
+            return Policy::Bad;
+        }
+
+        context.extendValues(name, {token.buffer});
+        type = token.type;
+    }
+
+    return Policy::Accepted;
+}
+
+bool ArrayAssignCmd::isLegalToken(const std::vector<Token> &tokens){
+    return (tokens[1].buffer == "=");
 }
 
 CSC_END

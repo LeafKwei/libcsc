@@ -1,4 +1,5 @@
 #include "csc/core/CscStrSeeker.hpp"
+#include "csc/utility/utility.hpp"
 CSC_BEGIN
 
 CscStrSeeker::CscStrSeeker() : m_nest(0){}
@@ -15,25 +16,26 @@ void CscStrSeeker::leaveScope(const CscStr &name){
     m_buffer << "::" << name << std::endl;
 }
 
-void CscStrSeeker::getVariable(const CscStr &name, const CscStr &value, ValueType type){
+void CscStrSeeker::values(const CscStr &name, const Values &values){
     writeIndent();
-    switch(type){
-        case ValueType::Bool:
-        case ValueType::Integer:
-        case ValueType::Double:
-            m_buffer << name << " = " << value << std::endl;
-            break;
-        case ValueType::String:
-        case ValueType::Unknown:
-            m_buffer << name << " = " << "\"" << value << "\"" << std::endl;
-            break;
-        case ValueType::Bools:
-        case ValueType::Integers:
-        case ValueType::Doubles:
-        case ValueType::Strings:
-            m_buffer << name << " = " << "{" << value << "}" << std::endl;
-            break;
+    
+    auto vtype = arrayToValue(values.type());
+    if(vtype == ValueType::Unknown){                //If the value is not in array.
+        m_buffer << name << " = ";
+        writeValue(values.value(), values.type());
+        m_buffer << std::endl;
+        return;
     }
+
+    m_buffer << name << " = " << "{";
+
+    /* "index = 1" is for skipping first empty element. */
+    for(int index = 1; index < values.size(); index++){
+        if(index > 1) m_buffer << ", ";
+        writeValue(values.value(index), vtype);
+    }
+
+    m_buffer << "}" << std::endl;
 }
 
 CscStr CscStrSeeker::toString(){
@@ -43,6 +45,38 @@ CscStr CscStrSeeker::toString(){
 void CscStrSeeker::writeIndent(){
     for(int i = 0; i < m_nest; i++){
         m_buffer << "\t";
+    }
+}
+
+void CscStrSeeker::writeValue(const CscStr &value,  ValueType type){
+    switch(type){
+        case ValueType::Bool:
+        case ValueType::Integer:
+        case ValueType::Double:
+            m_buffer << value;
+            break;
+        case ValueType::String:
+            m_buffer << "\"" << toEscapingString(value) << "\"";
+            break;
+        case ValueType::Unknown:
+            m_buffer << "*** UNKNOWN VALUE ***";
+        default:
+            break;
+    }
+}
+
+ValueType CscStrSeeker::arrayToValue(ValueType type){
+    switch(type){
+        case ValueType::Bools:
+            return ValueType::Bool;
+        case ValueType::Integers:
+            return ValueType::Integer;
+        case ValueType::Doubles:
+            return ValueType::Double;
+        case ValueType::Strings:
+            return ValueType::String;
+        default:
+            return ValueType::Unknown;
     }
 }
 

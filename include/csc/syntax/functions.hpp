@@ -24,8 +24,9 @@ inline OperandType toOperandType(const Token &token){
 
         case TokenType::Number:
         case TokenType::String:
-        case TokenType::Array:
             return OperandType::Value;
+        case TokenType::Array:
+            return OperandType::Values;
 
         default:
             return OperandType::Unexcepted;

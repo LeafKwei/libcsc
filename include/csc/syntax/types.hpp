@@ -8,7 +8,7 @@ enum class Policy{Accepted, Missed, Bad};
 
 enum class OperandType{
     Unexcepted,
-    Identifier, Operator, Value
+    Identifier, Operator, Value, Values
 };
 
 CSC_END

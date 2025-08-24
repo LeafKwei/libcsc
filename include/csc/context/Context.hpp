@@ -7,7 +7,7 @@
 #include "csc/context/ContextSeeker.hpp"
 CSC_BEGIN
 
-using ConstVar = const Variable&;
+using ConstVal = const ValueKeeper&;
 using ConstStr = const CscStr&;
 
 class Context{
@@ -26,8 +26,10 @@ public:
 
     Context& makeVariable(ConstStr name, ConstStr value, ValueType type=ValueType::Unknown); /* Create a variable. Replace value and type if variable exists. */
     Context& cleanVariable(ConstStr name);                               /* Delete a variable in current socpe. */
-    ConstVar  getVariable(ConstStr name);                                  /* Get a variable with const. */
+    CscStr       getValue(ConstStr name);                                      /* Get value in a variable. */
+    Values      getValues(ConstStr name);                                      /* Get values in a variable */
     bool         probeVariable(ConstStr name);                              /* Return true if a variable in current socpe exists. */
+    Context& extendValues(ConstStr name, std::initializer_list<CscStr> values); /* Add values to variable which is specified by name. */
                                                           
     Context& restart();                                                                 /* Back to root scope. */
     Context& clean();                                                                   /* Clean all present scopes, then create a new root scope.*/
@@ -43,7 +45,7 @@ private:
     void do_cleanScope(ConstStr name);
     void do_makeVariable(ConstStr name, ConstStr value, ValueType type);
     void do_cleanVariable(ConstStr name);
-    void do_setVariable(ConstStr name, ConstStr value, ValueType type);
+    void do_setVariable(VariablePtr variable, ConstStr value, ValueType type);
     void do_iterate(ScopePtr scope, ContextSeeker &seeker);
 };
 

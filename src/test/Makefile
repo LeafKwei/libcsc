@@ -14,12 +14,9 @@ test_drv.exe: $(test_drv.exe.src)
 	g++ $(extra) -o test_drv -I $(incl) $(test_drv.exe.src)
 test_lexer.exe: $(test_lexer.exe.src)
 	g++ $(extra) -o test_lexer -I $(incl) $(test_lexer.exe.src)
-test_ptr.exe: $(test_ptr.exe.src)
-	g++ $(extra)  -o test_ptr.exe $(test_ptr.exe.src)
 
 clean:
 	del test_iterator.exe
 	del test_drv.exe
 	del test_lexer.exe
 	del test_context.exe
-	del test_ptr.exe

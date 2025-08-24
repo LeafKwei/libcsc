@@ -2,7 +2,6 @@
 #define CSC_CONFIG_HPP
 
 #include "csc/csc.hpp"
-#include "csc/core/CscItem.hpp"
 #include "csc/context/Context.hpp"
 #include "csc/syntax/CommandDrv.hpp"
 CSC_BEGIN

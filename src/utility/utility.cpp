@@ -23,4 +23,16 @@ int baseOf(const CscStr &str){
     return 10;
 }
 
+CscStr toEscapingString(const CscStr &str){
+    CscStr tmp(str);
+
+    auto pos = tmp.find('\"');
+    while(pos != CscStr::npos){
+        tmp.insert(pos, {'\\'});          //Insert escaping symbol.
+        pos = tmp.find('\"', pos+2);
+    }
+
+    return tmp;
+}
+
 CSC_END

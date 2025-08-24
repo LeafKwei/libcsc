@@ -1,7 +1,9 @@
 #ifndef CSC_CONTEXT_TYPES_HPP
 #define CSC_CONTEXT_TYPES_HPP
 
+#include <any>
 #include <map>
+#include <vector>
 #include <memory>
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
@@ -14,6 +16,7 @@ using ScopePtr = std::shared_ptr<Scope>;
 using ScopeWkr = std::weak_ptr<Scope>;
 using VariableKeeper = std::map<CscStr, VariablePtr>;
 using ScopeKeeper = std::map<CscStr, ScopePtr>;
+using ValueKeeper = std::vector<CscStr>;
 
 enum class ValueType{
     Unknown, 
@@ -22,9 +25,9 @@ enum class ValueType{
 };
 
 struct Variable{
-    ValueType type;
     CscStr name;
-    CscStr value;
+    ValueKeeper values;
+    ValueType type;
 };
 
 struct Scope{

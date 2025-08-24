@@ -8,12 +8,7 @@
 #include "csc/alias.hpp"
 CSC_BEGIN
 
-using str = CscStr;
-using barray = std::vector<bool>;
-using iarray = std::vector<int>;
-using larray = std::vector<long>;
-using darray = std::vector<double>;
-using sarray = std::vector<str>;
+
 
 CSC_END
 #endif

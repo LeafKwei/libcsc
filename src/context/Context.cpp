@@ -1,3 +1,4 @@
+#include <cassert>
 #include "csc/types.hpp"
 #include "csc/context/Context.hpp"
 CSC_BEGIN
@@ -64,8 +65,9 @@ ConstStr  Context::scopeName(){
 }                                         
 
 Context& Context::makeVariable(ConstStr name, ConstStr value, ValueType type){
-    if(probeVariable(name)){
-        do_setVariable(name, value, type);
+    auto iterator = m_current -> variables.find(name);
+    if(iterator != m_current -> variables.end()){
+        do_setVariable(iterator -> second, value, type);
         return *this;
     }
 
@@ -80,19 +82,46 @@ Context& Context::cleanVariable(ConstStr name){
 
     do_cleanVariable(name);
     return *this;
-}   
+}
 
-ConstVar Context::getVariable(ConstStr name){
-    if(!probeVariable(name)){
+CscStr Context::getValue(ConstStr name){
+    auto iterator = m_current -> variables.find(name);
+    if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
 
-    return *((m_current -> variables.find(name)) -> second);
+    auto variable = iterator -> second;
+    assert(variable -> values.size() > 0);
+    return variable -> values.at(0);
+}
+
+Values Context::getValues(ConstStr name){
+    auto iterator = m_current -> variables.find(name);
+    if(iterator == m_current -> variables.end()){
+        throw ContextExcept(std::string("No such variable: ") + name);
+    }
+
+    auto variable = iterator -> second;
+    return Values(variable -> values, variable -> type);
 }
 
 bool Context::probeVariable(ConstStr name){
     return (m_current -> variables.find(name)) != (m_current -> variables.end());
-}                       
+}
+
+Context& Context::extendValues(ConstStr name, std::initializer_list<CscStr> values){
+    auto iterator = m_current -> variables.find(name);
+    if(iterator == m_current -> variables.end()){
+        throw ContextExcept(std::string("No such variable: ") + name);
+    }
+
+    auto variable = iterator -> second;
+    for(auto &value : values){
+        variable -> values.push_back(value);
+    }
+    
+    return *this;
+}
                                                         
 Context& Context::restart(){
     m_current = m_root;
@@ -134,21 +163,21 @@ void Context::do_cleanScope(ConstStr name){
     m_current -> scopes.erase(name);
 }
 
-void Context::do_makeVariable(ConstStr name, ConstStr value, ValueType type){
-    auto variable = std::make_shared<Variable>();
-    variable -> name = name;
-    variable -> value = value;
-    variable -> type = type;
-    m_current -> variables.insert({name, variable});
-}
-
 void Context::do_cleanVariable(ConstStr name){
     m_current -> variables.erase(name);
 }
 
-void Context::do_setVariable(ConstStr name, ConstStr value, ValueType type){
-    auto variable = (m_current -> variables.find(name)) -> second;
-    variable -> value = value;
+void Context::do_makeVariable(ConstStr name, ConstStr value, ValueType type){
+    auto variable = std::make_shared<Variable>();
+    variable -> name = name;
+    variable -> values.push_back(value);
+    variable -> type = type;
+    m_current -> variables.insert({name, variable});
+}
+
+void Context::do_setVariable(VariablePtr variable, ConstStr value, ValueType type){
+    variable -> values.clear();
+    variable -> values.push_back(value);
     variable -> type = type;
 }
 
@@ -160,7 +189,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
     auto &variables = scope -> variables;
     if(variables.size() != 0){
         for(auto &variable : variables){
-            seeker.getVariable(variable.second -> name, variable.second -> value, variable.second -> type);
+            seeker.values(variable.second -> name, Values(variable.second -> values, variable.second -> type));
         }
     }
 

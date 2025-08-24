@@ -44,6 +44,7 @@ void CommandDrv::installCommands(){
     m_commands.push_back(std::make_shared<EnterDomainCmd>());
     m_commands.push_back(std::make_shared<ExitDomainCmd>());
     m_commands.push_back(std::make_shared<AssignCmd>());
+    m_commands.push_back(std::make_shared<ArrayAssignCmd>());
 }
 
 void CommandDrv::setTokenRange(){

@@ -91,10 +91,6 @@ public:
 
 protected:
     bool canRead(CscChar ch) override;
-
-private:
-    void trim(Token &token);
-    bool isValue(const Token &token);
 };
 
 

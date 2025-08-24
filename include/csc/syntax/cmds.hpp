@@ -47,5 +47,13 @@ protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;
 };
 
+class ArrayAssignCmd : public CommonCmd{
+public:
+    ArrayAssignCmd();
+    Policy run(const std::vector<Token> &tokens, Context &context) override;
+protected:
+    bool isLegalToken(const std::vector<Token> &tokens) override;
+};
+
 CSC_END
 #endif

@@ -16,4 +16,9 @@ int main(void){
 
     context.iterate(seeker);
     std::cout << seeker.toString() << std::endl;
+
+    CscStrSeeker seeker2;
+    context.enterScope("custom");
+    context.iterate(seeker2);
+    std::cout << seeker2.toString() << std::endl;
 }
