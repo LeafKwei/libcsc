@@ -62,7 +62,13 @@ bool Context::isAtRootScope(){
 
 ConstStr  Context::scopeName(){
     return m_current -> name;
-}                                         
+}
+
+CscStr Context::relation(ConstStr separator){
+    std::stringstream stream;
+    do_relation(m_current, stream, separator);
+    return stream.str();
+}
 
 Context& Context::makeVariable(ConstStr name, ConstStr value, ValueType type){
     auto iterator = m_current -> variables.find(name);
@@ -202,6 +208,19 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
 
     if(scope != m_root){
         seeker.leaveScope(scope -> name);
+    }
+}
+
+void Context::do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator){
+    if(scope -> parent.expired()){   //Don't output root scope's name.
+        return;
+    }
+
+    do_relation(scope -> parent.lock(), stream, separator);
+    stream << scope -> name;
+
+    if(scope != m_current){
+        stream << separator;
     }
 }
 

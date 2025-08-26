@@ -18,7 +18,7 @@ int main(void){
     context.restart();
     std::cout << context.getValue("what").str << std::endl;
     std::cout << context.enterScope("users").enterScope("tom").getValue("name").str << std::endl;
-    
+
     context.restart();
     std::cout << context.enterScope("users").enterScope("jerry").getValue("age").str << std::endl;
     context.clean();

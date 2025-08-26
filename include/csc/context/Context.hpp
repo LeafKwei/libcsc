@@ -1,6 +1,8 @@
 #ifndef CSC_CONTEXT_HPP
 #define CSC_CONTEXT_HPP
 
+#include <iostream>
+#include <sstream>
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
@@ -27,6 +29,7 @@ public:
     bool         probeScope(ConstStr name);                                /* Return true if a scope in current scope exists. */
     bool         isAtRootScope();                                                   /* Return true if there is root scope. */
     ConstStr  scopeName();                                                        /* Get current scope's name. */
+    CscStr      relation(ConstStr separator=" ");                           /* Get relation during root scope to current scope. */
 
     Context& makeVariable(ConstStr name, ConstStr value, ValueType type=ValueType::Unknown); /* Create a variable. Replace value and type if variable exists. */
     Context& cleanVariable(ConstStr name);                               /* Delete a variable in current socpe. */
@@ -51,6 +54,7 @@ private:
     void do_cleanVariable(ConstStr name);
     void do_setVariable(VariablePtr variable, ConstStr value, ValueType type);
     void do_iterate(ScopePtr scope, ContextSeeker &seeker);
+    void do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator);
 };
 
 CSC_END

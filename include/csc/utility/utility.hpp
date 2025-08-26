@@ -9,6 +9,7 @@
 #include "csc/types.hpp"
 #include "csc/lex/types.hpp"
 #include "csc/syntax/types.hpp"
+#include "csc/core/types.hpp"
 
 CSC_BEGIN
 
