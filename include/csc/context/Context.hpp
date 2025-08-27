@@ -9,9 +9,6 @@
 #include "csc/context/ContextSeeker.hpp"
 CSC_BEGIN
 
-using ConstVal = const ValueKeeper&;
-using ConstStr = const CscStr&;
-
 class Context{
 public:
     using Value = VariableValue;

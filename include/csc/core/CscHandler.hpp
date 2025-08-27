@@ -13,8 +13,8 @@ CSC_BEGIN
 class CscHandler{
 public:
     CscHandler() =default;
+    CscHandler(ConstStr script);
 
-    CscHandler& execute(ConstStr script);               /* Parse '.csc' configuration. */
     CscHandler& enter(ConstStr path);                     /* Enter specified scope. Enter root scope if path is only '/' */
     CscHandler& iterate(ContextSeeker &seeker);   /* Iterate current scope, child scope and their variabels. */
     CscStr toString();                                                  /* Convert ever scopes and variables to a string which can be written to '.csc' file directly. */
