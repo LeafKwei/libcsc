@@ -49,6 +49,5 @@ inline CscStr toString<double>(const double &v){
     return stream.str();
 }
 
-
 CSC_END
 #endif
