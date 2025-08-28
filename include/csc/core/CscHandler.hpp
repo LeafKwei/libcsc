@@ -6,6 +6,7 @@
 #include "csc/context/ContextSeeker.hpp"
 #include "csc/core/types.hpp"
 #include "csc/core/CscEditor.hpp"
+#include "csc/core/functions.hpp"
 #include "csc/syntax/CommandDrv.hpp"
 
 CSC_BEGIN
@@ -29,8 +30,6 @@ public:
 private:
     Context m_context;
     CommandDrv m_driver;
-
-    void do_enter(ConstStr path);
 };
 
 
@@ -165,7 +164,13 @@ inline array_string CscHandler::getValue<array_string>(ConstStr name){
 
 template<typename Tp>
 inline Tp CscHandler::enterAndGet(ConstStr path){
-    //return getValue<Tp>(name);
+    const auto &items = detachName(path);
+    if(items.second.size() == 0){
+        throw CscExcept(std::string("Invalid path: ") + path);
+    }
+
+    enter(items.first);
+    return getValue<Tp>(items.second);
 }
 
 CSC_END
