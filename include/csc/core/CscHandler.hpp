@@ -16,15 +16,15 @@ public:
     CscHandler() =default;
     CscHandler(ConstStr script);
 
-    CscHandler& enter(ConstStr path);                     /* Enter specified scope. Enter root scope if path is only '/' */
-    CscHandler& iterate(ContextSeeker &seeker);   /* Iterate current scope, child scope and their variabels. */
-    CscStr toString();                                                  /* Convert ever scopes and variables to a string which can be written to '.csc' file directly. */
-    CscEditor editor();                                                 /* Get an editor, which can be used to edit scopes and variables. */
+    CscHandler& enter(ConstStr path);                              /* Enter specified scope. Enter root scope if path is only '/' */
+    CscHandler& iterate(ContextSeeker &seeker);            /* Iterate current scope, child scope and their variabels. */
+    CscStr            toString();                                               /* Convert ever scopes and variables to a string which can be written to '.csc' file directly. */
+    CscEditor       editor();                                                  /* Get an editor, which can be used to edit scopes and variables. */
 
-    template<typename Tp>                                     /* Get a specified variable's value in current scope. */
+    template<typename Tp>                                            /* Get a specified variable's value in current scope. */
     Tp getValue(ConstStr name);
 
-    template<typename Tp>                                     /* Enter scope then get value. equivalent to enter(path).getValue<tp>(name) */
+    template<typename Tp>                                           /* Enter scope then get value. equivalent to enter(prefix).getValue<tp>(name) */
     Tp enterAndGet(ConstStr path);
 
 private:

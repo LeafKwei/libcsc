@@ -1,5 +1,6 @@
 extra=-g
 incl=../../include
+test_editor.exe.src=test_editor.cpp ../context/Context.cpp ../core/CscStrSeeker.cpp ../core/CscHandler.cpp ../core/CscEditor.cpp  ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp ../utility/utility.cpp
 test_handler.exe.src=test_handler.cpp ../context/Context.cpp ../core/CscStrSeeker.cpp ../core/CscHandler.cpp ../core/CscEditor.cpp  ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp ../utility/utility.cpp
 test_func.exe.src=test_func.cpp
 test_iterator.exe.src=test_iterator.cpp ../context/Context.cpp ../core/CscStrSeeker.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp ../utility/utility.cpp
@@ -8,6 +9,8 @@ test_drv.exe.src=test_drv.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locato
 test_lexer.exe.src=test_lexer.cpp ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp
 test_ptr.exe.src=test_ptr.cpp
 
+test_editor.exe: $(test_editor.exe.src)
+	g++ $(extra) -o test_editor -I $(incl) $(test_editor.exe.src)
 test_handler.exe: $(test_handler.exe.src)
 	g++ $(extra) -o test_handler -I $(incl) $(test_handler.exe.src)
 test_func.exe.src: $(test_func.exe.src)

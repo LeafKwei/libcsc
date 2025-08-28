@@ -13,6 +13,7 @@ class Context{
 public:
     using Value = VariableValue;
     using Values = VariableValues;
+    using InitValues = std::initializer_list<CscStr>;
 
 public:
     Context();
@@ -28,12 +29,13 @@ public:
     ConstStr  scopeName();                                                        /* Get current scope's name. */
     CscStr      relation(ConstStr separator=" ");                           /* Get relation during root scope to current scope. */
 
-    Context& makeVariable(ConstStr name, ConstStr value, ValueType type=ValueType::Unknown); /* Create a variable. Replace value and type if variable exists. */
+    Context& makeVariable(ConstStr name, ConstStr value, ValueType type=ValueType::Unknown);     /* Create a variable. Replace value and type if variable exists. */
+    Context& makeVariable(ConstStr name, InitValues values, ValueType type=ValueType::Unknown); /* Put values once. */
     Context& cleanVariable(ConstStr name);                               /* Delete a variable in current socpe. */
     Value        getValue(ConstStr name);                                      /* Get value in a variable. */
     Values      getValues(ConstStr name);                                      /* Get values in a variable */
     bool         probeVariable(ConstStr name);                              /* Return true if a variable in current socpe exists. */
-    Context& extendValues(ConstStr name, std::initializer_list<CscStr> values); /* Add values to variable which is specified by name. */
+    Context& extendValues(ConstStr name, InitValues values); /* Add values to variable which is specified by name. */
                                                           
     Context& restart();                                                                 /* Back to root scope. */
     Context& clean();                                                                   /* Clean all present scopes, then create a new root scope.*/
@@ -47,9 +49,9 @@ private:
     void do_enterScope(ConstStr name);
     void do_leaveScope();
     void do_cleanScope(ConstStr name);
-    void do_makeVariable(ConstStr name, ConstStr value, ValueType type);
+    void do_makeVariable(ConstStr name, InitValues values, ValueType type);
     void do_cleanVariable(ConstStr name);
-    void do_setVariable(VariablePtr variable, ConstStr value, ValueType type);
+    void do_setVariable(VariablePtr variable, InitValues values, ValueType type);
     void do_iterate(ScopePtr scope, ContextSeeker &seeker);
     void do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator);
 };

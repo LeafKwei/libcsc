@@ -71,13 +71,19 @@ CscStr Context::relation(ConstStr separator){
 }
 
 Context& Context::makeVariable(ConstStr name, ConstStr value, ValueType type){
+    return makeVariable(name, {value}, type);
+}
+
+Context& Context::makeVariable(ConstStr name, InitValues values, ValueType type){
+    if(values.size() == 0) throw ContextExcept(std::string("No value specified for variable: ") + name);
+
     auto iterator = m_current -> variables.find(name);
     if(iterator != m_current -> variables.end()){
-        do_setVariable(iterator -> second, value, type);
+        do_setVariable(iterator -> second, values, type);
         return *this;
     }
 
-    do_makeVariable(name, value, type);
+    do_makeVariable(name, values, type);
     return *this;
 }
 
@@ -115,7 +121,7 @@ bool Context::probeVariable(ConstStr name){
     return (m_current -> variables.find(name)) != (m_current -> variables.end());
 }
 
-Context& Context::extendValues(ConstStr name, std::initializer_list<CscStr> values){
+Context& Context::extendValues(ConstStr name, InitValues values){
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -173,18 +179,25 @@ void Context::do_cleanVariable(ConstStr name){
     m_current -> variables.erase(name);
 }
 
-void Context::do_makeVariable(ConstStr name, ConstStr value, ValueType type){
+void Context::do_makeVariable(ConstStr name, InitValues values, ValueType type){
     auto variable = std::make_shared<Variable>();
     variable -> name = name;
-    variable -> values.push_back(value);
     variable -> type = type;
+
+    for(const auto &value : values){
+        variable -> values.push_back(value);
+    }
+
     m_current -> variables.insert({name, variable});
 }
 
-void Context::do_setVariable(VariablePtr variable, ConstStr value, ValueType type){
+void Context::do_setVariable(VariablePtr variable, InitValues values, ValueType type){
     variable -> values.clear();
-    variable -> values.push_back(value);
     variable -> type = type;
+
+    for(const auto &value : values){
+        variable -> values.push_back(value);
+    }
 }
 
 void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
