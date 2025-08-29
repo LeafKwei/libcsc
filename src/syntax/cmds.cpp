@@ -35,12 +35,12 @@ bool CommonCmd::isLegalToken(const std::vector<Token> &tokens){
     return false;
 }
 
-//============== EnterDomainCmd =============
-EnterDomainCmd::EnterDomainCmd() : CommonCmd(
+//============== EnterScopeCmd =============
+EnterScopeCmd::EnterScopeCmd() : CommonCmd(
     {OperandType::Identifier, OperandType::Operator}
 ){}
 
-Policy EnterDomainCmd::run(const std::vector<Token> &tokens, Context &context){
+Policy EnterScopeCmd::run(const std::vector<Token> &tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
     
     auto &name = tokens[0].buffer;
@@ -55,16 +55,16 @@ Policy EnterDomainCmd::run(const std::vector<Token> &tokens, Context &context){
     return Policy::Accepted;
 }
 
-bool EnterDomainCmd::isLegalToken(const std::vector<Token> &tokens){
+bool EnterScopeCmd::isLegalToken(const std::vector<Token> &tokens){
     return tokens[1].buffer == "::";
 }
 
-//============== ExitDomainCmd =============
-ExitDomainCmd::ExitDomainCmd() : CommonCmd(
+//============== ExitScopeCmd =============
+ExitScopeCmd::ExitScopeCmd() : CommonCmd(
     {OperandType::Operator, OperandType::Identifier}
 ){}
 
-Policy ExitDomainCmd::run(const std::vector<Token> &tokens, Context &context){
+Policy ExitScopeCmd::run(const std::vector<Token> &tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
     
     auto &name = tokens[1].buffer;
@@ -82,7 +82,7 @@ Policy ExitDomainCmd::run(const std::vector<Token> &tokens, Context &context){
     }
 }
 
-bool ExitDomainCmd::isLegalToken(const std::vector<Token> &tokens){
+bool ExitScopeCmd::isLegalToken(const std::vector<Token> &tokens){
     return tokens[0].buffer == "::";
 }
 

@@ -6,15 +6,8 @@ CscHandler::CscHandler(ConstStr script){
     m_driver.drive(script, m_context);
 }
 
-bool CscHandler::accessible(ConstStr path, bool v=true){
-    auto result = true;
-    const auto &items = splitPath(path);
-    const auto backup = m_context.postion();
-
-    if(items.size() < 1) return false;
-    result = do_accessible(items, v);
-    m_context.setPostion(backup);
-    return result;
+bool CscHandler::accessible(ConstStr path, bool v){
+    return v ? do_accessibleVariable(path) : do_accessibleScope(path);
 }
 
 CscStr CscHandler::absolutePath(){
@@ -24,10 +17,16 @@ CscStr CscHandler::absolutePath(){
 CscHandler& CscHandler::enter(ConstStr path){
     const auto &items = splitPath(path);
     if(items.size() == 0){
-        throw CscExcept(std::string("enter: Invalid path: ") + path);
+        throw CscExcept(std::string("Invalid path: ") + path);
     }
 
-    do_enter(items);
+    try{
+        do_enter(items);
+    }
+    catch(ContextExcept &e){
+        throw CscExcept(std::string("Invalid path: ") + path);
+    }
+
     return *this;
 }
 
@@ -46,32 +45,42 @@ CscEditor CscHandler::editor(){
     return CscEditor(m_context);
 }
 
-bool CscHandler::do_accessible(const PathItems &items, bool v){
+bool CscHandler::do_accessibleScope(ConstStr path){
     auto result = true;
-
-    for(int index = 0; index < items.size(); index++){
-        const auto &item = items.at(index);
-
-        if(index == 0 && item == "/"){
-            m_context.restart();
-            continue;
-        }
-
-        if(v && (index == (items.size() - 1))){      //If last item is a variable's name.
-            if(!m_context.probeVariable(item)){
-                result = false;
-                break;
-            }
-            continue;
-        }
-
-        if(!m_context.probeScope(item)){
-           result = false;
-           break;
-        }
-
-        enter(item);
+    const auto pos = m_context.postion();
+    
+    try{
+        enter(path);
     }
+    catch(CscExcept &e){
+        result = false;
+    }
+
+    m_context.setPostion(pos);
+    return result;
+}
+
+bool CscHandler::do_accessibleVariable(ConstStr path){
+    auto result = true;
+    const auto &items = detachName(path);
+    const auto pos = m_context.postion();
+
+    if(items.first.size() != 0){      //If scope path is not empty.
+        try{
+            enter(items.first);
+        }
+        catch(CscExcept &e){
+            m_context.setPostion(pos);
+            return false;
+        }
+    }
+
+    if(!m_context.probeVariable(items.second)){
+        result = false;
+    }
+
+    m_context.setPostion(pos);
+    return result;
 }
 
 void CscHandler::do_enter(const PathItems &items){
@@ -81,11 +90,7 @@ void CscHandler::do_enter(const PathItems &items){
             m_context.restart();
             continue;
         }
-
-        if(!m_context.probeScope(item)){
-            throw CscExcept(std::string("enter: Invalid path item: ") + item);
-        }
-
+    
         m_context.enterScope(item);
     }
 }

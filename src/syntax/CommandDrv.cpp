@@ -41,8 +41,8 @@ void CommandDrv::drive(const CscStr &script, Context &context){
 }
 
 void CommandDrv::installCommands(){
-    m_commands.push_back(std::make_shared<EnterDomainCmd>());
-    m_commands.push_back(std::make_shared<ExitDomainCmd>());
+    m_commands.push_back(std::make_shared<EnterScopeCmd>());
+    m_commands.push_back(std::make_shared<ExitScopeCmd>());
     m_commands.push_back(std::make_shared<AssignCmd>());
     m_commands.push_back(std::make_shared<ArrayAssignCmd>());
 }

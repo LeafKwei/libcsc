@@ -23,17 +23,17 @@ private:
     std::vector<OperandType> m_typeList;
 };
 
-class EnterDomainCmd : public CommonCmd{
+class EnterScopeCmd : public CommonCmd{
 public:
-    EnterDomainCmd();
+    EnterScopeCmd();
     Policy run(const std::vector<Token> &tokens, Context &context) override;
 protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;
 };
 
-class ExitDomainCmd : public CommonCmd{
+class ExitScopeCmd : public CommonCmd{
 public:
-    ExitDomainCmd();
+    ExitScopeCmd();
     Policy run(const std::vector<Token> &tokens, Context &context) override;
 protected:
     bool isLegalToken(const std::vector<Token> &tokens) override;

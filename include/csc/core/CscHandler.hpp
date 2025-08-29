@@ -36,7 +36,8 @@ private:
     Context m_context;
     CommandDrv m_driver;
 
-    bool do_accessible(const PathItems &items, bool v);
+    bool do_accessibleScope(ConstStr path);
+    bool do_accessibleVariable(ConstStr path);
     void do_enter(const PathItems &items);
 };
 
@@ -44,14 +45,14 @@ private:
 //============= Templates =============
 template<typename Tp>
 inline Tp getValue(ConstStr name){
-    throw CscExcept("getValue: Unsupported type.");
+    throw CscExcept("Unsupported type.");
 }
 
 template<>
 inline bool CscHandler::getValue<bool>(ConstStr name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Bool){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     return value.str == "true" ? true : false;
@@ -61,7 +62,7 @@ template<>
 inline int CscHandler::getValue<int>(ConstStr name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Integer){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     return static_cast<int>(std::strtol(value.str.c_str(), NULL, baseOf(value.str)));
@@ -71,7 +72,7 @@ template<>
 inline long CscHandler::getValue<long>(ConstStr name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Integer){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     return std::strtol(value.str.c_str(), NULL, baseOf(value.str));
@@ -81,7 +82,7 @@ template<>
 inline double CscHandler::getValue<double>(ConstStr name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Double){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     return std::strtod(value.str.c_str(), NULL);
@@ -98,7 +99,7 @@ inline array_bool CscHandler::getValue<array_bool>(ConstStr name){
 
     auto values = m_context.getValues(name);
     if(values.type() != ValueType::Bools){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     for(int i = 1; i < values.size(); i++){
@@ -113,7 +114,7 @@ inline array_int CscHandler::getValue<array_int>(ConstStr name){
 
     auto values = m_context.getValues(name);
     if(values.type() != ValueType::Integers){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     for(int i = 1; i < values.size(); i++){
@@ -129,7 +130,7 @@ inline array_long CscHandler::getValue<array_long>(ConstStr name){
 
     auto values = m_context.getValues(name);
     if(values.type() != ValueType::Integers){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     for(int i = 1; i < values.size(); i++){
@@ -145,7 +146,7 @@ inline array_double CscHandler::getValue<array_double>(ConstStr name){
 
     auto values = m_context.getValues(name);
     if(values.type() != ValueType::Doubles){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     for(int i = 1; i < values.size(); i++){
@@ -161,7 +162,7 @@ inline array_string CscHandler::getValue<array_string>(ConstStr name){
 
     auto values = m_context.getValues(name);
     if(values.type() != ValueType::Strings){
-        throw CscExcept("getValue: Incompatible type.");
+        throw CscExcept("Incompatible type.");
     }
 
     for(int i = 1; i < values.size(); i++){
@@ -173,11 +174,11 @@ inline array_string CscHandler::getValue<array_string>(ConstStr name){
 template<typename Tp>
 inline Tp CscHandler::enterAndGet(ConstStr path){
     const auto &items = detachName(path);
-    if(items.second.size() == 0){
-        throw CscExcept(std::string("Invalid path: ") + path);
-    }
 
-    enter(items.first);
+    if(items.first.size() != 0){
+        enter(items.first);
+    }
+    
     return getValue<Tp>(items.second);
 }
 

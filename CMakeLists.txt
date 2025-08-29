@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.20)
+project(libcsc)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	message("Build on Windows")
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/static)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/dll)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	message("Build on Linux")
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/static)
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/shared)
+else()
+	message("Build on Other OS")
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endif()
+
+add_subdirectory(src)

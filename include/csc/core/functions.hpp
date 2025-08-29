@@ -39,19 +39,19 @@ inline std::vector<CscStr> splitPath(ConstStr path){
 inline std::pair<CscStr, CscStr> detachName(ConstStr path){
     auto pos = path.rfind('/');
 
-    if(pos == CscStr::npos){                       //If path is just variable name.
+    if(pos == CscStr::npos){                       //If path is just variable name. e.g. 'age'
         return {"", path};
     }
 
-    if(pos != 0 && pos != path.size() - 1){  //If path contain prefix and variable name.
+    if(pos != 0 && pos != path.size() - 1){  //If pos is inside of path.
          return {path.substr(0, pos), path.substr(pos + 1)};
     }
 
-    if(pos == 0 && path.size() > 1){          //If path is begining from root.
+    if(pos == 0 && path.size() > 1){          //If pos is only at start of path.
         return {"/", path.substr(pos + 1)};
     }
 
-    if(pos == path.size() - 1 && path.size() > 1){  //If '/' is last one in path
+    if(pos == path.size() - 1 && path.size() > 1){  //If pos is at end of path.
         return {path.substr(0, pos), ""};
     }
 
