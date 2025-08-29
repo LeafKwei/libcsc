@@ -14,7 +14,12 @@ void CommandDrv::drive(const CscStr &script, Context &context){
     std::vector<Token> tokens;
 
     while(lexer.valid()){
-        tokens.push_back(lexer.nextToken());
+        const auto &token = lexer.nextToken();
+        tokens.push_back(token);
+
+        if(token.type == TokenType::Unexcepted){
+            throw CommandExcept(makeMessage("Unexcepted token at ", lexer.locator()));
+        }
 
         if(tokens.size() > m_maxTokenNum){
             throw CommandExcept(makeMessage("Unexcepted command at ", lexer.locator()));
