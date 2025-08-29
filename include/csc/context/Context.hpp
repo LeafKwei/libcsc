@@ -11,9 +11,10 @@ CSC_BEGIN
 
 class Context{
 public:
-    using Value = VariableValue;
-    using Values = VariableValues;
+    using Value        = VariableValue;
+    using Values      = VariableValues;
     using InitValues = std::initializer_list<CscStr>;
+    using Pos           = ScopePos;
 
 public:
     Context();
@@ -26,8 +27,10 @@ public:
     Context& cleanScope(ConstStr name);                                 /* Delete a scope and all variables in it. */
     bool         probeScope(ConstStr name);                                /* Return true if a scope in current scope exists. */
     bool         isAtRootScope();                                                   /* Return true if there is root scope. */
-    ConstStr  scopeName();                                                        /* Get current scope's name. */
-    CscStr      relation(ConstStr separator=" ");                           /* Get relation during root scope to current scope. */
+    ConstStr   scopeName();                                                        /* Get current scope's name. */                                    
+    Pos           postion();                                                               /* Get postion of current scope. */
+    void          setPostion(const Pos &pos);                                /* Set a scope which is specified by pos to current scope. */
+    CscStr       relation(ConstStr separator=" ");                          /* Get relation during root scope to current scope. */
 
     Context& makeVariable(ConstStr name, ConstStr value, ValueType type=ValueType::Unknown);     /* Create a variable. Replace value and type if variable exists. */
     Context& makeVariable(ConstStr name, InitValues values, ValueType type=ValueType::Unknown); /* Put values once. */
@@ -37,9 +40,9 @@ public:
     bool         probeVariable(ConstStr name);                              /* Return true if a variable in current socpe exists. */
     Context& extendValues(ConstStr name, InitValues values); /* Add values to variable which is specified by name. */
                                                           
-    Context& restart();                                                                 /* Back to root scope. */
-    Context& clean();                                                                   /* Clean all present scopes, then create a new root scope.*/
-    Context& iterate(ContextSeeker &seeker);                           /* From current scope, iterate all variables and child scopes with DFS. */
+    Context& restart();                                                                /* Back to root scope. */
+    void clean();                                                                           /* Clean all present scopes, then create a new root scope.*/
+    void iterate(ContextSeeker &seeker);                                   /* From current scope, iterate all variables and child scopes with DFS. */
 
 private:
     ScopePtr m_root;

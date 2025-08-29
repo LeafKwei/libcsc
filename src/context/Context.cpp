@@ -60,8 +60,19 @@ bool Context::isAtRootScope(){
     return !(m_current -> parent.expired());
 }   
 
-ConstStr  Context::scopeName(){
+ConstStr Context::scopeName(){
     return m_current -> name;
+}
+
+Context::Pos Context::postion(){
+    return Pos{m_current};
+}
+void Context::setPostion(const Pos &pos){
+    if(pos.scope.expired()){
+        throw ContextExcept(std::string("Invalid scope postion."));
+    }
+
+    m_current = pos.scope.lock();
 }
 
 CscStr Context::relation(ConstStr separator){
@@ -140,20 +151,17 @@ Context& Context::restart(){
     return *this;
 }
 
-Context& Context::clean(){
+void Context::clean(){
     m_root = nullptr;
     m_current = nullptr;
 
     m_root = std::make_shared<Scope>();
     m_root -> name = "/";
     m_current = m_root;
-
-    return *this;
 }
 
-Context& Context::iterate(ContextSeeker &seeker){
+void Context::iterate(ContextSeeker &seeker){
     do_iterate(m_current, seeker);
-    return *this;
 }
 
 void Context::do_makeScope(ConstStr name){
@@ -225,7 +233,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
 }
 
 void Context::do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator){
-    if(scope -> parent.expired()){   //Don't output root scope's name.
+    if(scope -> parent.expired()){   //Don't put root scope's name.
         return;
     }
 

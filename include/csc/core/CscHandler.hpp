@@ -13,9 +13,14 @@ CSC_BEGIN
 
 class CscHandler{
 public:
+    using PathItems = decltype(splitPath(""));
+
+public:
     CscHandler() =default;
     CscHandler(ConstStr script);
 
+    bool               accessible(ConstStr path, bool v=false); /* Check if a scope path is accessiable. Check path as variable's path if v is true. */
+    CscStr            absolutePath();                                       /* Return a path from root scope to current scope. */
     CscHandler& enter(ConstStr path);                              /* Enter specified scope. Enter root scope if path is only '/' */
     CscHandler& iterate(ContextSeeker &seeker);            /* Iterate current scope, child scope and their variabels. */
     CscStr            toString();                                               /* Convert ever scopes and variables to a string which can be written to '.csc' file directly. */
@@ -30,6 +35,9 @@ public:
 private:
     Context m_context;
     CommandDrv m_driver;
+
+    bool do_accessible(const PathItems &items, bool v);
+    void do_enter(const PathItems &items);
 };
 
 
