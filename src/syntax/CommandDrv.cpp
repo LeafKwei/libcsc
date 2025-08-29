@@ -14,13 +14,21 @@ void CommandDrv::drive(const CscStr &script, Context &context){
     std::vector<Token> tokens;
 
     while(lexer.valid()){
+        /* Get a token, then check if it is valid. */
         const auto &token = lexer.nextToken();
-        tokens.push_back(token);
 
         if(token.type == TokenType::Unexcepted){
             throw CommandExcept(makeMessage("Unexcepted token at ", lexer.locator()));
         }
 
+        if(token.type == TokenType::Aborted){    /* If reached end of file. */
+            break;
+        }
+        
+        /* Put token into token list. */
+        tokens.push_back(token);
+
+        /* Check if number of token is in range. */
         if(tokens.size() > m_maxTokenNum){
             throw CommandExcept(makeMessage("Unexcepted command at ", lexer.locator()));
         }
@@ -28,6 +36,7 @@ void CommandDrv::drive(const CscStr &script, Context &context){
             continue;
         }
 
+        /* Run command by tokens. */
         for(auto &cmd : m_commands){
             policy = cmd -> run(tokens, context);
             if(policy == Policy::Accepted) break;
