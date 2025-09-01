@@ -208,11 +208,17 @@ void Context::do_setVariable(VariablePtr variable, InitValues values, ValueType 
     }
 }
 
+/**
+ * Iterate a scope(default current scope), passing scope name to ContextSeeker::enterScope, then passing ever varaible's 
+ * name, value and type in the scope to ContextSeeker::values. finally, passing scope name to ContextSeeker::leaveScope when
+ * all variables in the socpe are be iterated. 
+ */
 void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
     if(scope != m_root){                                 //Ignore root name.
         seeker.enterScope(scope -> name);
     }
 
+    /* For ever variables in the scope, passing the variable's name, value and type to ContextSeeker::values */
     auto &variables = scope -> variables;
     if(variables.size() != 0){
         for(auto &variable : variables){
@@ -220,6 +226,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
         }
     }
 
+    /* Iterating child scopes of current scope. */
     auto &scopes = scope -> scopes;
     if(scopes.size() != 0){
         for(auto &scope : scopes){
