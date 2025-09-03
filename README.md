@@ -118,7 +118,93 @@ g++ -I ../include -L ../lib -o main main.cpp -lcsc
 
 # 4.API文档
 
+## 4.1.用户使用的API
 
+以下内容将对**csc/core**下的用户API进行详细说明：
+
+### CscHandler
+
+CscHandler可用于解析csc文件内容并获取其中的变量值，用户需要将保存有csc文件内容的字符串作为构造函数参数交给CscHandler进行解析。CscHandler亦可用于创建csc文件的内容，用户通过默认构造函数创建一个空的CscHandler，然后通过editor函数获取到编辑器对象，随后就可根据自身需要创建作用域及相应的变量，最后调用toString函数获取结果。
+
+```C++
+CscHandler()
+    默认构造函数，创建一个带有根作用域的空CscHandler对象，通常结合editor函数和toString函数来创建csc文件的内容
+CscHandler(ConstStr script)
+    按csc语法解析script中的内容到CscHandler对象中
+bool accessible(ConstStr path, bool v=false)
+    检查给定的路径是否存在，默认将path视为作用域路径，当v为true时，将path视为变量路径。
+CscStr absolutePath()
+    获取从根作用域到当前作用域的绝对路径
+CscHandler& enter(ConstStr path)
+    进入path对应的作用域，当path为"/"时，进入根作用域
+CscHandler& iterate(ContextSeeker &seeker)
+    按DFS算法迭代当前作用域的所有变量以及其中的子作用域，用户需要提供一个ContextSeeker的派生类对象
+CscStr toString()
+    从当前作用域开始，将其中的所有内容字符串化后返回。如果需要从根作用域字符串化，请先调用enter("/")进入根作用域
+CscEditor editor()
+    返回一个CscEditor对象，可用于编辑CscHandler中的内容
+Tp getValue(ConstStr name)
+    获取当前作用域下指定名称的变量值，需要指定该变量值所需转换的类型
+Tp enterAndGet(ConstStr path)
+    获取指定路径下的变量值，需要指定该变量值所需转换的类型
+```
+
+### CscEditor
+
+CscEditor提供了对CscHandler内容的编辑功能。
+
+```C++
+CscEditor& autoEnterOn()
+	开启autoEnter功能，当使用makeScope函数创建作用域后，自动进入该作用域而无需调用enterScope函数
+CscEditor& autoEnterOff()
+	关闭autoEnter功能
+CscEditor& makeScope(ConstStr name)
+	在当前作用域下创建一个指定名称的作用域
+CscEditor& enterScope(ConstStr name)
+	进入当前作用域下指定名称的子作用域
+CscEditor& leaveScope()
+	离开当前作用域，回到它的父作用域。当位于根作用域时，调用此函数将引发异常
+CscEditor& cleanScope(ConstStr name)
+	清除当前作用域下指定名称的作用域
+CscEditor& makeVariable(ConstStr name, InitValues values, ValueType type)
+	在当前作用域中创建指定名称的变量，values用于指定变量值，type指定变量的类型，该类型将提供给getValue函数进行类型检查
+CscEditor& extendValues(ConstStr name, InitValues values)
+	追加当前作用域中指定名称的变量的变量值
+CscEditor& cleanVariable(ConstStr name)
+	清除当前作用域中指定名称的变量
+```
+
+### ContextSeeker
+
+ContextSeeker定义了用于迭代CscHandler内容的相关接口。用户可参考*csc/core/CscStrSeeker*实现自己的迭代功能：
+
+```C++
+void enterScope(const CscStr &name)
+    当进入一个作用域时，将调用此函数
+void leaveScope(const CscStr &name)
+    当离开一个作用域时，将调用此函数
+void values(const CscStr &name, const VariableValues &values)
+    当获取到该作用域中的一个变量时，将调用此函数
+```
+
+
+
+## 4.2.支持类型
+
+getValue和enterAndGet函数支持如下类型：
+
+```
+bool
+int
+long
+double
+CscStr/std::string
+array_bool/std::vector<boo>
+array_int/std::vector<int>
+array_long/std::vector<long>
+array_double/std::vector<double>
+array_string/std::vector<std::string>
+```
 
 
 

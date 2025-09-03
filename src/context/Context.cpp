@@ -240,12 +240,6 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
 }
 
 void Context::do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator){
-    auto current = scope;
-
-    while(!(current -> parent.expired())){
-        
-    }
-
     if(scope -> parent.expired()){   //Don't put root scope's name.
         return;
     }
