@@ -38,6 +38,8 @@ Dummy::
 
 然后，`Dummy::`声明了一个作用域，`Dummy`是作用域名称，不同作用域内的同名变量相互独立，如果在同一个作用域内声明相同的变量，那么后者将覆盖前者。作用域内允许声明另一个作用域，就像`Bar::`一样。在作用域中完成所有变量的声明后，需要使用`::Dummy`和`::Bar`表示退出该作用域。在本例中，像`name = "CSC Sample"`这类没有声明于用户定义的作用域内的变量，将默认处于根作用域中。
 
+csc文件支持注释，注释以分号`;`开始，在分号之后的内容都被视为注释内容而被忽略。
+
 
 
 # 3.使用方式
@@ -64,7 +66,53 @@ cmake -DBUILD_SHARED_LIBS=YES -G "Unix Makefiles" ../libcsc
 
 ## 3.2.使用
 
+以解析sample.csc为例，让我们编写如下程序，并保存为*main.cpp*：
 
+```C++
+#include <iostream>
+#include <fstream>
+#include "csc/core/CscHandler.hpp"
+
+using csc::CscStr;
+using csc::CscHandler;
+
+int main(void){
+    //使用标准库函数读入文件内容到字符串
+	std::ifstream ifs("sample.csc");
+    CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    
+    //创建CscHandler对象，解析文件内容
+    CscHandler handler(str);
+    handler.enter("/");      //进入根作用域
+    std::cout << "name: " << handler.getValue<CscStr>("name") << std::endl;     //获取name变量值
+    handler.enter("/Dummy"); //进入根目录下的Scope作用域
+    std::cout << "Dummy.switch: " << handler.getValue<bool>("switch") << std::endl;//获取Dummy::switch
+    
+    //也可以使用enterAndGet函数直接获取变量值
+	std::cout << handler.enterAndGet<bool>("/Dummy/switch") << std::endl; //路径的最后一部分将被视为变量名称
+}
+```
+
+假设*main.cpp*所在项目结构如下：
+
+```
+/
+---include
+------csc
+---lib
+------libcsc.a
+---src
+------main.cpp
+------sample.csc
+```
+
+其中，include目录下包含了libcsc的所有头文件。我们进入src，然后执行如下命令编译main.cpp：
+
+```shell
+g++ -I ../include -L ../lib -o main main.cpp -lcsc
+```
+
+最后执行编译得到的main.exe即可。
 
 
 

@@ -1,5 +1,5 @@
-#ifndef CSC_STRITERATOR_HPP
-#define CSC_STRITERATOR_HPP
+#ifndef CSC_STRSEEKER_HPP
+#define CSC_STRSEEKER_HPP
 
 #include <iostream>
 #include <sstream>

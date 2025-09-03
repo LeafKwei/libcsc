@@ -3,5 +3,6 @@
 
 #define CSC_BEGIN namespace csc{
 #define CSC_END }
+#define CSC_VERSION_STR "Version: 0.5.0"
 
 #endif

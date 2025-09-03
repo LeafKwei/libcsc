@@ -1,5 +1,5 @@
-#ifndef CSC_CONFIG_HPP
-#define CSC_CONFIG_HPP
+#ifndef CSC_HANDLER_HPP
+#define CSC_HANDLER_HPP
 
 #include "csc/csc.hpp"
 #include "csc/context/Context.hpp"
