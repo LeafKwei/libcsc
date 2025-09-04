@@ -34,7 +34,7 @@ Dummy::
 * 字符串："CSC Sample"
 * 数组：{"A", "B", "C"}、{1, 2, 3}
 
-对于数组而言，其中的所有元素都应该是相同的类型。当字符串中需要出现引号`""`这类特殊字符时，可以使用`\`进行转义。
+对于数组而言，其中的所有元素都应该是相同的类型。当字符串中需要出现引号`"`这类特殊字符时，可以使用`\`进行转义。
 
 然后，`Dummy::`声明了一个作用域，`Dummy`是作用域名称，不同作用域内的同名变量相互独立，如果在同一个作用域内声明相同的变量，那么后者将覆盖前者。作用域内允许声明另一个作用域，就像`Bar::`一样。在作用域中完成所有变量的声明后，需要使用`::Dummy`和`::Bar`表示退出该作用域。在本例中，像`name = "CSC Sample"`这类没有声明于用户定义的作用域内的变量，将默认处于根作用域中。
 
@@ -251,7 +251,17 @@ array_string/std::vector<std::string>
 
 **readers**：统一声明和定义TokenReader的派生类
 
-**TokenReader**：定义了与Token读取相关的接口，供Lexer调用。一个TokenReader的工作流程为：首先检查CharMngr的当前字符是否是Reader的特征字符，如果是，则执行读取(读取前可能会跳过一些无意义的特征字符，例如{和")。在读取过程中，一个字符是否能被读取由canRead函数决定(也有一些比较特殊的TokenReader需要特别实现)，该函数由所有Reader的基类CommonReader类定义。
+**TokenReader**：定义了与Token读取相关的接口，供Lexer调用。一个TokenReader的工作流程为：首先检查CharMngr的当前字符是否是Reader的特征字符，如果是，则执行读取(读取前可能会跳过一些无意义的特征字符，例如{和")
 
 ### syntax
+
+**Command**：Command定义了命令的接口，所谓命令，是指可以识别一组符合条件的Token，并根据Token做出相应操作的对象
+
+**cmds**：统一声明和定义Command的派生类
+
+**CommandDrv**：集成了所有Commnad对象并统一调用。其工作流程为：从Lexer中读取Token到Token列表，并在Token满足最小处理数量时，将Token列表依次传递给每个Command对象识别和处理，并根据Command对象的处理结果决定是否向后继续传递或者报告错误
+
+### utility
+
+**utility**：utility当中定义了一些通用的工具函数
 
