@@ -167,7 +167,8 @@ CscEditor& leaveScope()
 CscEditor& cleanScope(ConstStr name)
 	清除当前作用域下指定名称的作用域
 CscEditor& makeVariable(ConstStr name, InitValues values, ValueType type)
-	在当前作用域中创建指定名称的变量，values用于指定变量值，type指定变量的类型，该类型将提供给getValue函数进行类型检查
+	在当前作用域中创建指定名称的变量，values用于指定变量值，type指定变量的类型，该类型将提供给getValue函数进行类型检查。
+    当创建一个已存在的变量时，将会直接使用values替代该变量中的变量值
 CscEditor& extendValues(ConstStr name, InitValues values)
 	追加当前作用域中指定名称的变量的变量值
 CscEditor& cleanVariable(ConstStr name)
@@ -212,6 +213,45 @@ array_string/std::vector<std::string>
 
 ## 5.1.整体结构
 
+* include：存放libcsc中使用到的头文件
+* legacy：存放libcsc中的遗留代码，这些代码并未使用，但是具有参考价值
+* src：存放libcsc的源码文件
+* README.md：项目的介绍以及使用方式
+* Releaselogs.md：项目的发布信息、版本信息、特性
+
 
 
 ## 5.2.详细说明
+
+### context
+
+**Context**：Context类是libcsc用于保存所有作用域、变量的底层容器，它以字符串的形式保存每个变量的值，并以ValueType标记该变量的类型，以便之后在类型转换时可对变量进行类型检查
+
+**ContextSeeker**：提供一个可以遍历Context内部所有作用域和变量的接口(按DFS算法遍历每个作用域)，用户可通过实现ContextSeeker并调用CscHandler::iterate函数实现遍历功能
+
+**VariableValues**：当一个变量存在多个值时，需要通过Context::getValues函数获取一个VariableValues对象，通过该对象可以按照指定的索引获取到变量的每个值
+
+### core
+
+**CscEditor**：提供给CscHandler的editor函数使用，是对Context的封装，向用户提供一个可以编辑csc文件内容的接口
+
+**CscHandler**：向用户提供解析、编辑、获取csc文件内容的功能
+
+**CscStrSeeker**：提供给CscHandler的toString函数使用，是ContextSeeker的一个实现，可以将Context中的内容全部转换为一个字符串
+
+### lex
+
+**CharMngr**：将一个索引和一个字符串封装，以便获取一个字符时可以同步更新索引，简化索引的维护工作
+
+**Lexer**：将所有TokenReader集成并统一调用，向上提供将字符串分解为单个Token的功能，同时也负责检查和过滤无效token。每次调用Lexer的nextToken函数时，Lexer会遍历每一个TokenReader，调用它们的read函数并传递CharMngr，通过检查read函数返回的Token的type字段，来决定Token的读取操作是否成功
+
+**Locator**：根据给定的字符串和索引，计算当前读取位置所在的行数和列数。一般用于解析出错时获取位置信息
+
+**PureLexer**：Lexer的基类，Lexer集成了一个CharMngr对象，而PureLexer并未集成，需要结合一个CharMngr对象使用，以此提供更为灵活的控制能力(例如出现非预期的字符时，可以直接操作CharMngr对象检查和跳过)
+
+**readers**：统一声明和定义TokenReader的派生类
+
+**TokenReader**：定义了与Token读取相关的接口，供Lexer调用。一个TokenReader的工作流程为：首先检查CharMngr的当前字符是否是Reader的特征字符，如果是，则执行读取(读取前可能会跳过一些无意义的特征字符，例如{和")。在读取过程中，一个字符是否能被读取由canRead函数决定(也有一些比较特殊的TokenReader需要特别实现)，该函数由所有Reader的基类CommonReader类定义。
+
+### syntax
+
