@@ -132,7 +132,7 @@ CscHandler()
 CscHandler(ConstStr script)
     按csc语法解析script中的内容到CscHandler对象中
 bool accessible(ConstStr path, bool v=false)
-    检查给定的路径是否存在，默认将path视为作用域路径，当v为true时，将path视为变量路径。
+    检查给定的路径是否存在，默认将path视为作用域路径，当v为true时，将path视为变量路径
 CscStr absolutePath()
     获取从根作用域到当前作用域的绝对路径
 CscHandler& enter(ConstStr path)
