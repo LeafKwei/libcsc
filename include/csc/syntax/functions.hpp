@@ -6,6 +6,7 @@
 #include "csc/lex/types.hpp"
 #include "csc/core/types.hpp"
 #include "csc/syntax/types.hpp"
+#include "csc/context/types.hpp"
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 

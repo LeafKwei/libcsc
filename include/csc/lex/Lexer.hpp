@@ -12,8 +12,6 @@
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
-using ConverterBranches = std::map<CscStr, TokenType>;
-
 class Lexer : public PureLexer{
 public:
     Lexer();

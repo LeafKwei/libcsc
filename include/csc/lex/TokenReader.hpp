@@ -10,10 +10,6 @@
 #include "csc/lex/CharMngr.hpp"
 CSC_BEGIN
 
-class TokenReader;
-using ReaderPtr = std::shared_ptr<TokenReader>;
-using ReaderBranches = std::vector<ReaderPtr>;
-
 class TokenReader{
 public:
     virtual Token read(CharMngr &mngr) =0;

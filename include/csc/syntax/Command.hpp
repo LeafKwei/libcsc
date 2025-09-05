@@ -11,10 +11,6 @@
 #include "csc/syntax/types.hpp"
 CSC_BEGIN
 
-class Command;
-using CommandPtr = std::shared_ptr<Command>;
-using CommandBranches = std::vector<CommandPtr>;
-
 class Command{
 public:
     virtual int tokenNumber() =0;
