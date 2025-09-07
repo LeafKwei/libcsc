@@ -2,18 +2,25 @@
 #define CSC_EVENTSYSTEM_HPP
 
 #include <map>
-#include <vector>
-#include "csc/event/EventCreator.hpp"
+#include <list>
+#include "csc/event/EventCtl.hpp"
 CSC_BEGIN
 
-class EventSystem : public EventCreator{
+class EventSystem : public EventCtl{
 public:
-    using EventList = std::vector<Event>;
+    using EventList = std::list<Event>;
 
 public:
     EventSystem() =default;
 
-    void pushEvent(const Event &event) override;
+    void process();
+    bool hasEvent(EventType type) override;
+    bool hasHandler(int id) override; 
+    void pushEvent(const Event &event, int priority=-1) override;
+    void pushHandler(const EventHandler &handler,  int priority=-1) override;
+    int    removeEvent(EventType type) override;
+    int    removeHandler(int id) override;
+    
 
 private:
     EventList m_events;

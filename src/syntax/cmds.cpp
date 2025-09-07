@@ -3,21 +3,21 @@
 CSC_BEGIN
 
 //============== CommonCmd =============
-CommonCmd::CommonCmd(std::initializer_list<OperandType> types) : m_typeList(types){}
+CommonCmd::CommonCmd(InitOpTypes types) : m_typeList(types){}
 
 int CommonCmd::tokenNumber(){
     return typeList().size();
 }
 
-Policy CommonCmd::run(const std::vector<Token> &tokens, Context &context){
+Policy CommonCmd::run(ConstTokenList tokens, Context &context){
     return Policy::Missed;
 }
 
-const std::vector<OperandType>& CommonCmd::typeList(){
+CommonCmd::ConstOpTypeList CommonCmd::typeList(){
     return m_typeList;
 }
 
-bool CommonCmd::isThisType(const std::vector<Token> &tokens){
+bool CommonCmd::isThisType(ConstTokenList tokens){
     int index = 0;
     auto types = typeList();
 
@@ -31,7 +31,7 @@ bool CommonCmd::isThisType(const std::vector<Token> &tokens){
     return isLegalToken(tokens);
 }
 
-bool CommonCmd::isLegalToken(const std::vector<Token> &tokens){
+bool CommonCmd::isLegalToken(ConstTokenList tokens){
     return false;
 }
 
@@ -40,7 +40,7 @@ EnterScopeCmd::EnterScopeCmd() : CommonCmd(
     {OperandType::Identifier, OperandType::Operator}
 ){}
 
-Policy EnterScopeCmd::run(const std::vector<Token> &tokens, Context &context){
+Policy EnterScopeCmd::run(ConstTokenList tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
     
     auto &name = tokens[0].buffer;
@@ -55,7 +55,7 @@ Policy EnterScopeCmd::run(const std::vector<Token> &tokens, Context &context){
     return Policy::Accepted;
 }
 
-bool EnterScopeCmd::isLegalToken(const std::vector<Token> &tokens){
+bool EnterScopeCmd::isLegalToken(ConstTokenList tokens){
     return tokens[1].buffer == "::";
 }
 
@@ -64,7 +64,7 @@ ExitScopeCmd::ExitScopeCmd() : CommonCmd(
     {OperandType::Operator, OperandType::Identifier}
 ){}
 
-Policy ExitScopeCmd::run(const std::vector<Token> &tokens, Context &context){
+Policy ExitScopeCmd::run(ConstTokenList tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
     
     auto &name = tokens[1].buffer;
@@ -82,7 +82,7 @@ Policy ExitScopeCmd::run(const std::vector<Token> &tokens, Context &context){
     }
 }
 
-bool ExitScopeCmd::isLegalToken(const std::vector<Token> &tokens){
+bool ExitScopeCmd::isLegalToken(ConstTokenList tokens){
     return tokens[0].buffer == "::";
 }
 
@@ -91,7 +91,7 @@ AssignCmd::AssignCmd() : CommonCmd(
     {OperandType::Identifier, OperandType::Operator, OperandType::Value}
 ){}
 
-Policy AssignCmd::run(const std::vector<Token> &tokens, Context &context){
+Policy AssignCmd::run(ConstTokenList tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
 
     auto vtype = toValueType(tokens[2]);
@@ -101,7 +101,7 @@ Policy AssignCmd::run(const std::vector<Token> &tokens, Context &context){
     return Policy::Accepted;
 }
 
-bool AssignCmd::isLegalToken(const std::vector<Token> &tokens){
+bool AssignCmd::isLegalToken(ConstTokenList tokens){
     return (tokens[1].buffer == "=");
 }
 
@@ -110,7 +110,7 @@ ArrayAssignCmd::ArrayAssignCmd() : CommonCmd(
     {OperandType::Identifier, OperandType::Operator, OperandType::Values}
 ){}
 
-Policy ArrayAssignCmd::run(const std::vector<Token> &tokens, Context &context){
+Policy ArrayAssignCmd::run(ConstTokenList tokens, Context &context){
     if(!isThisType(tokens)) return Policy::Missed;
 
     auto vtype = toValueType(tokens[2]);
@@ -153,7 +153,7 @@ Policy ArrayAssignCmd::run(const std::vector<Token> &tokens, Context &context){
     return Policy::Accepted;
 }
 
-bool ArrayAssignCmd::isLegalToken(const std::vector<Token> &tokens){
+bool ArrayAssignCmd::isLegalToken(ConstTokenList tokens){
     return (tokens[1].buffer == "=");
 }
 

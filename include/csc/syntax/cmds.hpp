@@ -8,51 +8,56 @@ CSC_BEGIN
 
 class CommonCmd : public Command{
 public:
+    using InitOpTypes = std::initializer_list<OperandType>;
+    using OpTypeList = std::vector<OperandType>;
+    using ConstOpTypeList = const OpTypeList&;
+
+public:
     CommonCmd() =default;
-    CommonCmd(std::initializer_list<OperandType> types);
+    CommonCmd(InitOpTypes types);
     
     int tokenNumber() override;
-    Policy run(const std::vector<Token> &tokens, Context &context) override;
+    Policy run(ConstTokenList &tokens, Context &context) override;
 
 protected:
-    virtual const std::vector<OperandType>& typeList();
-    virtual bool isThisType(const std::vector<Token> &tokens);
-    virtual bool isLegalToken(const std::vector<Token> &tokens);
+    virtual ConstOpTypeList typeList();
+    virtual bool isThisType(ConstTokenList &tokens);
+    virtual bool isLegalToken(ConstTokenList &tokens);
 
 private:
-    std::vector<OperandType> m_typeList;
+    OpTypeList m_typeList;
 };
 
 class EnterScopeCmd : public CommonCmd{
 public:
     EnterScopeCmd();
-    Policy run(const std::vector<Token> &tokens, Context &context) override;
+    Policy run(ConstTokenList &tokens, Context &context) override;
 protected:
-    bool isLegalToken(const std::vector<Token> &tokens) override;
+    bool isLegalToken(ConstTokenList &tokens) override;
 };
 
 class ExitScopeCmd : public CommonCmd{
 public:
     ExitScopeCmd();
-    Policy run(const std::vector<Token> &tokens, Context &context) override;
+    Policy run(ConstTokenList &tokens, Context &context) override;
 protected:
-    bool isLegalToken(const std::vector<Token> &tokens) override;
+    bool isLegalToken(ConstTokenList &tokens) override;
 };
 
 class AssignCmd : public CommonCmd{
 public:
     AssignCmd();
-    Policy run(const std::vector<Token> &tokens, Context &context) override;
+    Policy run(ConstTokenList &tokens, Context &context) override;
 protected:
-    bool isLegalToken(const std::vector<Token> &tokens) override;
+    bool isLegalToken(ConstTokenList &tokens) override;
 };
 
 class ArrayAssignCmd : public CommonCmd{
 public:
     ArrayAssignCmd();
-    Policy run(const std::vector<Token> &tokens, Context &context) override;
+    Policy run(ConstTokenList &tokens, Context &context) override;
 protected:
-    bool isLegalToken(const std::vector<Token> &tokens) override;
+    bool isLegalToken(ConstTokenList &tokens) override;
 };
 
 CSC_END
