@@ -49,6 +49,7 @@
         "cassert": "cpp",
         "cstring": "cpp",
         "sstream": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "list": "cpp"
     }
 }

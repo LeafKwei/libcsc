@@ -10,15 +10,15 @@ public:
     enum SeekOption{Set, Cur, End};
     CharMngr(const CscStr &str, int index=0);
     
-    int index() const;
-    int length() const;
-    bool valid() const;
+    int         index() const;
+    int         length() const;
+    bool      valid() const;
     CscChar at(int index) const;
     CscChar getch() const;
     CscChar forward();
     CscChar backward();
     const CscStr& str() const;
-    void seek(SeekOption option, int offset);
+    void       seek(SeekOption option, int offset);
 
 private:
     int m_index;

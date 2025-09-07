@@ -32,5 +32,4 @@ int main(int argc, char *argv[]){
     std::cout << handler.enter("/").enter("custom").enter("tom").getValue<bool>("isHappy") << std::endl;
     std::cout << handler.enter("/").toString() << std::endl;
     handler.enter("/").iterate(seeker);
-
 }

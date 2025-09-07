@@ -63,9 +63,10 @@ protected:
     bool canRead(CscChar ch) override;
 
 private:
-    int m_type;        //0 general, 1 float, 2 hex
+    int m_num;        //Realy reading number of character.
+    int m_type;        //0 int/float, 1 hex
 
-    bool isHex(CharMngr &mngr);
+    void readPrefix(Token &token, CharMngr &mngr);
     void readHex(Token &token, CharMngr &mngr);
     void readNumber(Token &token, CharMngr &mngr);
 };
