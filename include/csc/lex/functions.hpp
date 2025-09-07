@@ -14,7 +14,7 @@ inline bool isNumber(CscChar ch) noexcept{
 }
 
 inline bool isHexNumber(CscChar ch) noexcept{
-    return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <='F');
+    return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <='F') || (ch >= 'a' && ch <= 'f');
 }
 
 inline bool isUnvisible(CscChar ch) noexcept{

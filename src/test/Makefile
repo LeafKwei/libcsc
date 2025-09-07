@@ -25,6 +25,8 @@ test_lexer.exe: $(test_lexer.exe.src)
 	g++ $(extra) -o test_lexer -I $(incl) $(test_lexer.exe.src)
 
 clean:
+	del test_editor.exe
+	del test_handler.exe
 	del test_func.exe
 	del test_iterator.exe
 	del test_drv.exe

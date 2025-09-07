@@ -100,21 +100,35 @@ Token NumberReader::read(CharMngr &mngr){
     Token token{TokenType::Aborted};
     if(!isThisType(mngr)) return token;
 
-    if(m_type == 2) readHex(token, mngr);
+    readPrefix(token, mngr);
+
+    m_num = 0;
+    token.type = TokenType::Number;
+    if(m_type == 1) readHex(token, mngr);
     if(m_type == 0) readNumber(token, mngr);
+
+    //If no valid number character was read.
+    if(m_num == 0){
+        token.type = TokenType::Unexcepted;
+    }
+
+    //If this number is not ending with blank or separator.
+    if(mngr.valid() && (!isBlank(mngr.getch()) && !(isSeparator(mngr.getch())))){
+       token.type = TokenType::Unexcepted;
+    }
+
     return token;
 }
 
 bool NumberReader::isThisType(CharMngr &mngr){
-    if(isHex(mngr)){
-        m_type = 2;
-        return true;
-    }
+    if(mngr.valid() && isNumber(mngr.getch())) return true;
+    
+    /* Check if this token has +- as prefix. */
+    if(mngr.valid() && (mngr.getch() == '+' || mngr.getch() == '-')) return true;
 
-    if(mngr.valid() && isNumber(mngr.getch())){
-        m_type = 0;
-        return true;
-    }
+    /* Check if this token has 0x as prefix. */
+    if(mngr.index() + 1 >= mngr.length()) return false;
+    if(mngr.at(mngr.index()) == '0' && mngr.at(mngr.index() + 1) == 'x') return true;
 
     return false;
 }
@@ -127,55 +141,44 @@ bool NumberReader::canRead(CscChar ch){
     return false;
 }
 
-bool NumberReader::isHex(CharMngr &mngr){
-    auto idx = mngr.index();
-
-    if((mngr.valid() && mngr.forward() == '0') && (mngr.valid() && mngr.forward() == 'x')){
-        mngr.seek(CharMngr::Set, idx);
-        return true;
-    }
-
-    mngr.seek(CharMngr::Set, idx);
-    return false;
-}
-
-void NumberReader::readNumber(Token &token, CharMngr &mngr){
-    token.type = TokenType::Number;
-
-read:
-    while(mngr.valid()){
-        if(!isNumber(mngr.getch())) break;
-        token.buffer.push_back(mngr.forward());
-    }
-
-    //Read it as float If there is a dot.
-    if(mngr.valid() && isDot(mngr.getch()) && m_type == 0){
-        token.buffer.push_back(mngr.forward());  //Push dot.
+void NumberReader::readPrefix(Token &token, CharMngr &mngr){
+    /* Checking for hex is must be first, because the prefix '0x' contain number 0. */
+    if(mngr.at(mngr.index()) == '0' && mngr.at(mngr.index() + 1) == 'x'){
         m_type = 1;
-        goto read;
+        token.buffer.push_back(mngr.forward());
+        token.buffer.push_back(mngr.forward());
+        return;
     }
 
-    //If this number is not ending with blank or separator.
-    if(mngr.valid() && (!isBlank(mngr.getch()) && !(isSeparator(mngr.getch())))){
-        token.type = TokenType::Unexcepted;
+    if(mngr.valid() && isNumber(mngr.getch())){
+        m_type = 0;
+        return;
+    }
+    
+    if(mngr.valid() && (mngr.getch() == '+' || mngr.getch() == '-')){
+        m_type = 0;
+        token.buffer.push_back(mngr.forward());
+        return;
     }
 }
 
 void NumberReader::readHex(Token &token, CharMngr &mngr){
-    token.type = TokenType::Number;
-
-    //Put 0x
-    token.buffer.push_back(mngr.forward());
-    token.buffer.push_back(mngr.forward());
-
-    //Put other
     while(mngr.valid()){
         if(!isHexNumber(mngr.getch())) break;
         token.buffer.push_back(mngr.forward());
+        m_num++;
     }
+}
 
-    if(mngr.valid() && (!isBlank(mngr.getch()) && !isSeparator(mngr.getch()))){
-        token.type = TokenType::Unexcepted;
+void NumberReader::readNumber(Token &token, CharMngr &mngr){
+    bool dot = true;
+
+    while(mngr.valid()){
+        auto ch = mngr.getch();
+        if(!isNumber(ch) && !(dot && ch == '.')) break;  //If ch neither number nor first dot.
+        if(ch == '.') dot = false;
+        token.buffer.push_back(mngr.forward());
+        m_num++;
     }
 }
 
