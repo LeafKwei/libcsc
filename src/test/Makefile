@@ -1,4 +1,4 @@
-extra=-g
+extra=-g -Wall
 incl=../../include
 test_editor.exe.src=test_editor.cpp ../context/Context.cpp ../core/CscStrSeeker.cpp ../core/CscHandler.cpp ../core/CscEditor.cpp  ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp ../utility/utility.cpp
 test_handler.exe.src=test_handler.cpp ../context/Context.cpp ../core/CscStrSeeker.cpp ../core/CscHandler.cpp ../core/CscEditor.cpp  ../lex/CharMngr.cpp ../lex/Lexer.cpp ../lex/Locator.cpp ../lex/readers.cpp ../lex/PureLexer.cpp ../syntax/cmds.cpp ../syntax/CommandDrv.cpp ../utility/utility.cpp

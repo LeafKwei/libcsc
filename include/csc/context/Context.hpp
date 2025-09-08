@@ -45,9 +45,11 @@ public:
     void iterate(ContextSeeker &seeker);                                   /* From current scope, iterate all variables and child scopes with DFS. */
 
 private:
+    UID         m_idCounter;
     ScopePtr m_root;
     ScopePtr m_current;
 
+    inline int nextID() noexcept;
     void do_makeScope(ConstStr name);
     void do_enterScope(ConstStr name);
     void do_leaveScope();
@@ -58,6 +60,10 @@ private:
     void do_iterate(ScopePtr scope, ContextSeeker &seeker);
     void do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator);
 };
+
+inline int Context::nextID() noexcept{
+    return m_idCounter++;
+}
 
 CSC_END
 #endif

@@ -4,13 +4,13 @@ CSC_BEGIN
 
 CscStrSeeker::CscStrSeeker() : m_nest(0){}
 
-void CscStrSeeker::enterScope(const CscStr &name){
+void CscStrSeeker::enterScope(UID id, const CscStr &name){
     writeIndent();
     m_buffer << name << "::" << std::endl;
     ++m_nest;
 }
 
-void CscStrSeeker::leaveScope(const CscStr &name){
+void CscStrSeeker::leaveScope(UID id, const CscStr &name){
     --m_nest;
     writeIndent();
     m_buffer << "::" << name << std::endl;

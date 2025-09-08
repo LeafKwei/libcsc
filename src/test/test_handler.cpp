@@ -5,12 +5,12 @@ using namespace csc;
 
 class AnySeeker : public ContextSeeker{
 public:
-    void enterScope(const CscStr &name){
-        std::cout << "enter: " << name << std::endl;
+    void enterScope(UID id, const CscStr &name){
+        std::cout << "enter: " << name << ", ID = " << id << std::endl;
     }
 
-    void leaveScope(const CscStr &name){
-        std::cout << "leave: " << name << std::endl;
+    void leaveScope(UID id, const CscStr &name){
+        std::cout << "leave: " << name << ", ID = " << id << std::endl;
     }
 
     void values(const CscStr &name, const VariableValues &values){
