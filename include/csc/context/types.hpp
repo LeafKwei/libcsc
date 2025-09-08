@@ -31,6 +31,7 @@ struct Variable{
 };
 
 struct Scope{
+    UID id;
     CscStr name;
     ScopeWkr parent;
     VariableKeeper variables;

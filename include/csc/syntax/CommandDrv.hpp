@@ -11,8 +11,8 @@ public:
     void drive(const CscStr &script, Context &context);
 
 private:
-    int m_minTokenNum;
-    int m_maxTokenNum;
+    size_t m_minTokenNum;
+    size_t m_maxTokenNum;
     CommandBranches m_commands;
 
     void installCommands();

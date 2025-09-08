@@ -84,7 +84,7 @@ bool CscHandler::do_accessibleVariable(ConstStr path){
 }
 
 void CscHandler::do_enter(const PathItems &items){
-    for(int index = 0; index < items.size(); index++){
+    for(size_t index = 0; index < items.size(); index++){
         const auto &item = items.at(index);
         if(index == 0 && item == "/"){             //If path is absolute, go to root scope.
             m_context.restart();

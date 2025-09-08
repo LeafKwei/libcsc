@@ -3,7 +3,7 @@
 #include "csc/context/Context.hpp"
 CSC_BEGIN
 
-Context::Context(){
+Context::Context() : m_idCounter(0){
     clean();
 }
 
@@ -166,6 +166,7 @@ void Context::iterate(ContextSeeker &seeker){
 
 void Context::do_makeScope(ConstStr name){
     auto scope = std::make_shared<Scope>();
+    scope -> id = nextID();
     scope -> name = name;
     scope -> parent = m_current;
     m_current -> scopes.insert({name, scope});
@@ -215,7 +216,7 @@ void Context::do_setVariable(VariablePtr variable, InitValues values, ValueType 
  */
 void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
     if(scope != m_root){                                 //Ignore root name.
-        seeker.enterScope(scope -> name);
+        seeker.enterScope(scope -> id, scope -> name);
     }
 
     /* For ever variables in the scope, passing the variable's name, value and type to ContextSeeker::values */
@@ -235,7 +236,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
     }
 
     if(scope != m_root){
-        seeker.leaveScope(scope -> name);
+        seeker.leaveScope(scope -> id, scope -> name);
     }
 }
 

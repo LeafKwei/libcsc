@@ -180,12 +180,12 @@ CscEditor& cleanVariable(ConstStr name)
 ContextSeeker定义了用于迭代CscHandler内容的相关接口。用户可参考*csc/core/CscStrSeeker*实现自己的迭代功能：
 
 ```C++
-void enterScope(const CscStr &name)
-    当进入一个作用域时，将调用此函数
-void leaveScope(const CscStr &name)
-    当离开一个作用域时，将调用此函数
+void enterScope(UID id, const CscStr &name)
+    当进入一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
+void leaveScope(UID id, const CscStr &name)
+    当离开一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
 void values(const CscStr &name, const VariableValues &values)
-    当获取到该作用域中的一个变量时，将调用此函数
+    当获取到该作用域中的一个变量时，将调用此函数。name是变量名称，values是变量值列表
 ```
 
 
@@ -194,7 +194,7 @@ void values(const CscStr &name, const VariableValues &values)
 
 getValue和enterAndGet函数支持如下类型：
 
-```
+```C++
 bool
 int
 long

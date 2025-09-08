@@ -62,7 +62,7 @@ void CommandDrv::installCommands(){
 }
 
 void CommandDrv::setTokenRange(){
-    int index = 1;
+    size_t index = 1;
     int min = 0, max = 0;
     
     if(m_commands.size() == 0){

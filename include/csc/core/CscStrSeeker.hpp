@@ -9,8 +9,8 @@ CSC_BEGIN
 class CscStrSeeker : public ContextSeeker{
 public:
     CscStrSeeker();
-    void enterScope(const CscStr &name) override;
-    void leaveScope(const CscStr &name) override;
+    void enterScope(UID id, const CscStr &name) override;
+    void leaveScope(UID id, const CscStr &name) override;
     void values(const CscStr &name, const VariableValues &values) override;
     CscStr toString();
 

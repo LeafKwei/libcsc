@@ -9,7 +9,7 @@ CSC_BEGIN
 
 inline std::vector<CscStr> splitPath(ConstStr path){
     std::vector<CscStr> items;
-    auto pos = 0;
+    size_t pos = 0;
 
     if(pos == path.find('/')){                  //If path is starting with '/'
         items.push_back("/");
