@@ -64,12 +64,16 @@ ConstStr Context::scopeName(){
     return m_current -> name;
 }
 
+UID Context::scopeID(){
+    return m_current -> id;
+}
+
 Context::Pos Context::postion(){
     return Pos{m_current};
 }
 void Context::setPostion(const Pos &pos){
     if(pos.scope.expired()){
-        throw ContextExcept(std::string("Invalid scope postion."));
+        throw ContextExcept(std::string("Expired scope postion."));
     }
 
     m_current = pos.scope.lock();
@@ -156,6 +160,7 @@ void Context::clean(){
     m_current = nullptr;
 
     m_root = std::make_shared<Scope>();
+    m_root -> id = nextID();
     m_root -> name = "/";
     m_current = m_root;
 }

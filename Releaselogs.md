@@ -1,3 +1,8 @@
+**0.5.3**
+
+1. 添加了Context::scopeID函数，用于获取当前Scope的ID
+2. Bug修复：修复了Context在创建或clean后，根作用域的ID字段未被赋值的问题
+
 **0.5.2**
 
 1. 为Scope添加了ID字段，现在每个Scope都拥有了唯一的标识

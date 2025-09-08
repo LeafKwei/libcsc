@@ -27,7 +27,8 @@ public:
     Context& cleanScope(ConstStr name);                                 /* Delete a scope and all variables in it. */
     bool         probeScope(ConstStr name);                                /* Return true if a scope in current scope exists. */
     bool         isAtRootScope();                                                   /* Return true if there is root scope. */
-    ConstStr   scopeName();                                                        /* Get current scope's name. */                                    
+    ConstStr   scopeName();                                                        /* Get current scope's name. */
+    UID           scopeID();                                                             /* Get current scope's id. */                         
     Pos           postion();                                                               /* Get postion of current scope. */
     void          setPostion(const Pos &pos);                                /* Set a scope which is specified by pos to current scope. */
     CscStr       relation(ConstStr separator=" ");                          /* Get relation during root scope to current scope. */
@@ -49,7 +50,7 @@ private:
     ScopePtr m_root;
     ScopePtr m_current;
 
-    inline int nextID() noexcept;
+    inline UID nextID() noexcept;
     void do_makeScope(ConstStr name);
     void do_enterScope(ConstStr name);
     void do_leaveScope();
@@ -61,7 +62,7 @@ private:
     void do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator);
 };
 
-inline int Context::nextID() noexcept{
+inline UID Context::nextID() noexcept{
     return m_idCounter++;
 }
 
