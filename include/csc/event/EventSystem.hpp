@@ -14,13 +14,8 @@ public:
     EventSystem() =default;
 
     void process();
-    bool hasEvent(EventType type) override;
-    bool hasHandler(int id) override; 
     void pushEvent(const Event &event, int priority=-1) override;
     void pushHandler(const EventHandler &handler,  int priority=-1) override;
-    int    removeEvent(EventType type) override;
-    int    removeHandler(int id) override;
-    
 
 private:
     EventList m_events;
