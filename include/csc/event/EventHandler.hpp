@@ -10,8 +10,8 @@ CSC_BEGIN
 class EventHandler{
 public:
     virtual bool isThisType(const Event &event) =0;  //Check if this handler can be used to process the event.
-    virtual bool discard() =0;                                       //Is this handler can be removed.
-    virtual bool process(const Event &event, Context &context) =0; //Process event. If return true, the event will continue to be passed back.
+    virtual bool discarded() =0;                                   //should this handler be removed.
+    virtual bool process(const Event &event, Context &context) =0; //Process event. If return false, the event will continue to be passed.
 };
 
 CSC_END

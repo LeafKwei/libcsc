@@ -10,6 +10,7 @@ enum class EventType{
 };
 
 struct Event{
+    int priority;
     EventType type;
     std::any extraData;
 };

@@ -9,13 +9,14 @@ CSC_BEGIN
 class EventSystem : public EventCtl{
 public:
     using EventList = std::list<Event>;
+    using HandlerList = std::list<EventHandler>;
 
 public:
     EventSystem() =default;
 
-    void process();
+    void process(Context &context);                                                               /* Process events with context.*/
     void pushEvent(const Event &event, int priority=-1) override;
-    void pushHandler(const EventHandler &handler,  int priority=-1) override;
+    void pushHandler(const EventHandler &handler) override;
 
 private:
     EventList m_events;

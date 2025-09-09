@@ -7,8 +7,8 @@ CSC_BEGIN
 
 class EventCtl{
 public:
-    virtual void pushEvent(const Event &event, int priority=-1) =0;                       //Push an event to event list.
-    virtual void pushHandler(const EventHandler &handler,  int priority=-1) =0;  //Push an event handler to handler list.
+    virtual void pushEvent(const Event &event, int priority=-1) =0;     //Push an event to event list.
+    virtual void pushHandler(const EventHandler &handler) =0;          //Push an event handler to handler list.
 };
 
 CSC_END
