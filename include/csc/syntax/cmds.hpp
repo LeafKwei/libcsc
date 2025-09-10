@@ -25,7 +25,7 @@ protected:
     virtual bool isLegalToken(ConstTokenList &tokens);
 
 private:
-    OpTypeList m_typeList;
+    OpTypeList m_types;
 };
 
 class EnterScopeCmd : public CommonCmd{

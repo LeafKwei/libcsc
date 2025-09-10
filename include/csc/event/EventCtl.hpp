@@ -7,8 +7,8 @@ CSC_BEGIN
 
 class EventCtl{
 public:
-    virtual void pushEvent(const Event &event, int priority=-1) =0;     //Push an event to event list.
-    virtual void pushHandler(const EventHandler &handler) =0;          //Push an event handler to handler list.
+    virtual void pushEvent(const Event &event) =0;              /* Push an event to event list. */
+    virtual void pushData(const HandlerData &data) =0;     /* Push a Handler data. System will use handler which is matched by type in the data to process event with the data. */
 };
 
 CSC_END

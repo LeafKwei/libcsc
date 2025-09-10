@@ -9,9 +9,18 @@ enum class EventType{
     EnterScope, LeaveScope, MakeVariable
 };
 
+enum class HandlerType{
+    Action_genidx
+};
+
 struct Event{
-    int priority;
     EventType type;
+    std::any extraData;
+};
+
+struct HandlerData{
+    bool discarded;
+    HandlerType type;
     std::any extraData;
 };
 

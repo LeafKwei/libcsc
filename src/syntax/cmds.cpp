@@ -3,7 +3,7 @@
 CSC_BEGIN
 
 //============== CommonCmd =============
-CommonCmd::CommonCmd(InitOpTypes types) : m_typeList(types){}
+CommonCmd::CommonCmd(InitOpTypes types) : m_types(types){}
 
 int CommonCmd::tokenNumber(){
     return typeList().size();
@@ -14,7 +14,7 @@ Policy CommonCmd::run(ConstTokenList tokens, Context &context){
 }
 
 CommonCmd::ConstOpTypeList CommonCmd::typeList(){
-    return m_typeList;
+    return m_types;
 }
 
 bool CommonCmd::isThisType(ConstTokenList tokens){

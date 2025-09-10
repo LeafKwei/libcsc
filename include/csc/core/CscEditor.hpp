@@ -11,8 +11,8 @@ public:
 public:
     CscEditor(Context &context);
 
-    CscEditor& autoEnterOn();                  //Enable auto-enter. Enter scope automatically when it was made.
-    CscEditor& autoEnterOff();                  //Disable auto-enter.
+    CscEditor& autoEnterOn();                  /* Enable auto-enter. Enter scope automatically when it was made. */
+    CscEditor& autoEnterOff();                  /* Disable auto-enter. */
     CscEditor& makeScope(ConstStr name);
     CscEditor& enterScope(ConstStr name);
     CscEditor& leaveScope();
