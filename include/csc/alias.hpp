@@ -6,6 +6,8 @@
 #include <map>
 CSC_BEGIN
 
+ /* 声明一些通用的别名 */
+
 //===================== Alias ===================
 using CscChar = char;
 using CscStr = std::string;

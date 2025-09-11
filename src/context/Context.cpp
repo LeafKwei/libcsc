@@ -215,16 +215,18 @@ void Context::do_setVariable(VariablePtr variable, InitValues values, ValueType 
 }
 
 /**
- * Iterate a scope(default current scope), passing scope name to ContextSeeker::enterScope, then passing ever varaible's 
- * name, value and type in the scope to ContextSeeker::values. finally, passing scope name to ContextSeeker::leaveScope when
- * all variables in the socpe are be iterated. 
+ * 迭代指定的作用域scope。此函数将按DFS算法对作用域进行迭代，即：
+ * 1.传递当前作用域的名称和id到enterScope函数
+ * 2.迭代作用域中的每个变量，传递变量信息到values函数
+ * 3.检查当前作用域是否有子作用域，如有则将子作用域传递给do_iterate递归
+ * 4.迭代所有子作用域后，再将当前作用域的名称和id传递给leaveScope函数
  */
 void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
-    if(scope != m_root){                                 //Ignore root name.
+    if(scope != m_root){                                 //不传递根作用域的名称
         seeker.enterScope(scope -> id, scope -> name);
     }
 
-    /* For ever variables in the scope, passing the variable's name, value and type to ContextSeeker::values */
+    /* 迭代作用域中的每个变量，将变量名称、值列表、类型传递给values函数 */
     auto &variables = scope -> variables;
     if(variables.size() != 0){
         for(auto &variable : variables){
@@ -232,7 +234,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
         }
     }
 
-    /* Iterating child scopes of current scope. */
+    /* 迭代所有子作用域 */
     auto &scopes = scope -> scopes;
     if(scopes.size() != 0){
         for(auto &scope : scopes){
@@ -246,7 +248,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker){
 }
 
 void Context::do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator){
-    if(scope -> parent.expired()){   //Don't put root scope's name.
+    if(scope -> parent.expired()){   //忽略根作用域的名称
         return;
     }
 

@@ -6,6 +6,8 @@
 #include "csc/alias.hpp"
 CSC_BEGIN
 
+/* 对异常的通用的类型进行声明定义 */
+
 class CscExcept : public std::logic_error{
 public:
     CscExcept(const std::string &msg) : logic_error(msg){}

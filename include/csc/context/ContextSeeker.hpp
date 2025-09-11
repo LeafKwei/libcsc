@@ -5,6 +5,10 @@
 #include "csc/context/VariableValues.hpp"
 CSC_BEGIN
 
+/**
+ * ContextSeeker需要结合Context::iterate函数使用，用户可通过实现自己的ContextSeeker派生类从而实现自定义的
+ * 对Context中的作用域和变量进行迭代的功能。
+ */
 class ContextSeeker{
 public:
     virtual ~ContextSeeker() =default;
