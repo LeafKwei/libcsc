@@ -12,9 +12,12 @@
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
-using ConverterBranches = std::map<CscStr, TokenType>;
-
 class  PureLexer{
+public:
+    using ConverterBranches = std::map<CscStr, TokenType>;
+    using ReaderPtr = std::shared_ptr<TokenReader>;
+    using ReaderBranches = std::vector<ReaderPtr>;
+
 public:
     PureLexer();
     Token nextTokenFrom(CharMngr &mngr);

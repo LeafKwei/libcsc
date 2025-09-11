@@ -11,14 +11,14 @@
 #include "csc/syntax/types.hpp"
 CSC_BEGIN
 
-class Command;
-using CommandPtr = std::shared_ptr<Command>;
-using CommandBranches = std::vector<CommandPtr>;
-
 class Command{
 public:
+    using TokenList = std::vector<Token>;
+    using ConstTokenList = const TokenList&;
+
+public:
     virtual int tokenNumber() =0;
-    virtual Policy run(const std::vector<Token> &tokens, Context &context) =0; 
+    virtual Policy run(ConstTokenList tokens, Context &context) =0; 
 };
 
 CSC_END

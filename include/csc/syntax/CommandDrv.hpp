@@ -7,6 +7,10 @@ CSC_BEGIN
 
 class CommandDrv{
 public:
+    using CommandPtr = std::shared_ptr<Command>;
+    using CommandBranches = std::vector<CommandPtr>;
+
+public:
     CommandDrv();
     void drive(const CscStr &script, Context &context);
 
