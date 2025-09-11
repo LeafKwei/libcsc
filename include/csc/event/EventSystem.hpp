@@ -17,9 +17,7 @@ public:
 public:
     EventSystem() =default;
 
-    void process(Context &context);                              /* Process events with context.*/
-    void pushEvent(const Event &event) override;
-    void pushData(const HandlerData &data) override;
+    void process(Context &context);
 
 private:
     EventList m_events;
