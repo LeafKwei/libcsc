@@ -20,16 +20,16 @@ void CscStrSeeker::values(const CscStr &name, const VariableValues &values){
     writeIndent();
     
     auto vtype = arrayToValue(values.type());
-    if(vtype == ValueType::Unknown){                //If the value is not in array.
+    if(vtype == ValueType::Unknown){                //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
         m_buffer << name << " = ";
         writeValue(values.str(), values.type());
         m_buffer << std::endl;
         return;
     }
 
-    m_buffer << name << " = " << "{";
+    m_buffer << name << " = " << "{";            //否则按照数组格式处理
 
-    /* "index = 1" is for skipping first empty element. */
+    /* ArrayAssignCommand在处理对数组的赋值时，会首先保存一个空字符串作为占位元素(目的是省去Context对空变量的检查)，因此此处需要让index为1忽略首个数组值 */
     for(int index = 1; index < values.size(); index++){
         if(index > 1) m_buffer << ", ";
         writeValue(values.str(index), vtype);

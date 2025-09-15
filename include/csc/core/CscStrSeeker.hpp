@@ -6,6 +6,7 @@
 #include "csc/context/ContextSeeker.hpp"
 CSC_BEGIN
 
+/* CscStrSeeker是对ContextSeeker的实现，它主要提供给CscHandler::toString函数使用，可以按照csc配置文件规则将Context内部的内容转换为csc格式的字符串 */
 class CscStrSeeker : public ContextSeeker{
 public:
     CscStrSeeker();
