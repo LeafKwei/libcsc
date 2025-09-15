@@ -11,6 +11,10 @@
 
 CSC_BEGIN
 
+/**
+ * CscHandler是提供给用户使用的顶层接口，它的主要功能是以路径化访问的形式对作用域、变量的访问进行简化。同时，CscHandler也向用户提供了编辑Context的功能，
+ * 并使用了CscEditor对其进行了封装。待编辑完成后，用户可通过调用toString函数得到字符串化的csc配置内容，并可将其写入文件实现持久化。
+ */
 class CscHandler{
 public:
     using PathItems = decltype(splitPath(""));
@@ -19,17 +23,17 @@ public:
     CscHandler() =default;
     CscHandler(ConstStr script);
 
-    bool               accessible(ConstStr path, bool v=false); /* Check if a scope path is accessiable. Check path as variable's path if v is true. */
-    CscStr            absolutePath();                                       /* Return a path from root scope to current scope. */
-    CscHandler& enter(ConstStr path);                              /* Enter specified scope. Enter root scope if path is only '/' */
-    CscHandler& iterate(ContextSeeker &seeker);            /* Iterate current scope, child scope and their variabels. */
-    CscStr            toString();                                               /* Convert ever scopes and variables to a string which can be written to '.csc' file directly. */
-    CscEditor       editor();                                                  /* Get an editor, which can be used to edit scopes and variables. */
+    bool               accessible(ConstStr path, bool v=false); /* 检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称 */
+    CscStr            absolutePath();                                       /* 返回从根作用域到当前作用域的绝对路径 */
+    CscHandler& enter(ConstStr path);                              /* 进入给定路径对应的作用域，如果路径为“/”，则进入根作用域 */
+    CscHandler& iterate(ContextSeeker &seeker);            /* 从当前作用域开始，迭代其及所有子作用域的所有变量 */
+    CscStr            toString();                                               /* 从当前作用域开始，将其及子作用域、变量转换为字符串 */
+    CscEditor       editor();                                                  /* 获取一个编辑器对象，可以编辑Context中的内容 */
 
-    template<typename Tp>                                            /* Get a specified variable's value in current scope. */
+    template<typename Tp>                                            /* 获取当前作用域中给定名称的变量值，类型参数Tp所支持的类型参见文档 */
     Tp getValue(ConstStr name);
 
-    template<typename Tp>                                           /* Enter scope then get value. equivalent to enter(prefix).getValue<tp>(name) */
+    template<typename Tp>                                           /* 获取给定路径下的变量值，路径的最后一部分将被视为变量名称 */
     Tp enterAndGet(ConstStr path);
 
 private:

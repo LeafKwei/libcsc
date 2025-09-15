@@ -65,7 +65,7 @@ bool CscHandler::do_accessibleVariable(ConstStr path){
     const auto &items = detachName(path);
     const auto pos = m_context.postion();
 
-    if(items.first.size() != 0){      //If scope path is not empty.
+    if(items.first.size() != 0){      //如果path除变量名外还包含作用域路径，则进入到作用域中
         try{
             enter(items.first);
         }
@@ -86,7 +86,7 @@ bool CscHandler::do_accessibleVariable(ConstStr path){
 void CscHandler::do_enter(const PathItems &items){
     for(size_t index = 0; index < items.size(); index++){
         const auto &item = items.at(index);
-        if(index == 0 && item == "/"){             //If path is absolute, go to root scope.
+        if(index == 0 && item == "/"){             //如果是绝对路径，则先回到根作用域
             m_context.restart();
             continue;
         }

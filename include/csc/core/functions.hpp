@@ -11,19 +11,19 @@ inline std::vector<CscStr> splitPath(ConstStr path){
     std::vector<CscStr> items;
     size_t pos = 0;
 
-    if(pos == path.find('/')){                  //If path is starting with '/'
+    if(pos == path.find('/')){                  //如果path的首个字符为/，即path为绝对路径时
         items.push_back("/");
         ++pos;
     }
 
     while(pos < path.size()){
         auto nxpos = path.find('/', pos);
-        if(nxpos == CscStr::npos){       //If there is no more '/'
+        if(nxpos == CscStr::npos){       //如果path没有更多/时，那么剩余的部分就直接作为作用域或变量名称
             items.push_back(path.substr(pos, path.size() - pos));
             break;
         }
 
-        if(nxpos == pos){                     //If there is a continuous '//'
+        if(nxpos == pos){                     //如果出现连续的/
             items.push_back("");
             pos = nxpos + 1;
             continue;
@@ -39,19 +39,19 @@ inline std::vector<CscStr> splitPath(ConstStr path){
 inline std::pair<CscStr, CscStr> detachName(ConstStr path){
     auto pos = path.rfind('/');
 
-    if(pos == CscStr::npos){                       //If path is just variable name. e.g. 'age'
+    if(pos == CscStr::npos){                       //当path不包含任何/，即path仅是作用域或变量名时
         return {"", path};
     }
 
-    if(pos != 0 && pos != path.size() - 1){  //If pos is inside of path.
+    if(pos != 0 && pos != path.size() - 1){  //如果/不在path开头或结尾时，直接从/所在的位置分割
          return {path.substr(0, pos), path.substr(pos + 1)};
     }
 
-    if(pos == 0 && path.size() > 1){          //If pos is only at start of path.
+    if(pos == 0 && path.size() > 1){          //如果/仅存在于path开头
         return {"/", path.substr(pos + 1)};
     }
 
-    if(pos == path.size() - 1 && path.size() > 1){  //If pos is at end of path.
+    if(pos == path.size() - 1 && path.size() > 1){  //如果/存在于末尾
         return {path.substr(0, pos), ""};
     }
 
