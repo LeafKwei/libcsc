@@ -1,0 +1,6 @@
+#ifndef CSC_SYNTAX_COMMANDS_HPP
+#define CSC_SYNTAX_COMMANDS_HPP
+
+
+
+#endif
