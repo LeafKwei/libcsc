@@ -5,14 +5,15 @@
 #include <vector>
 #include <memory>
 #include "csc/csc.hpp"
-#include "csc/syntax/Command.hpp"
 #include "csc/syntax/types.hpp"
 CSC_BEGIN
 
+struct Command;
 struct ContNode;
 using CommandPtr = std::shared_ptr<Command>;
+using ContNodePtr = std::shared_ptr<ContNode>;
 using CommandList = std::vector<CommandPtr>;
-using ContNodeMap = std::map<OperandType, ContNode>;
+using ContNodeMap = std::map<OperandType, ContNodePtr>;
 
 struct ContNode{
     ContNodeMap nodes;

@@ -1,7 +1,6 @@
 #ifndef CSC_CONTEXT_TYPES_HPP
 #define CSC_CONTEXT_TYPES_HPP
 
-#include <any>
 #include <map>
 #include <vector>
 #include <memory>

@@ -21,8 +21,8 @@ public:
     void       seek(SeekOption option, int offset);
 
 private:
-    CscStr      m_str;
-    size_t m_index;
+    CscStr m_str;
+    Size_t m_index;
 };
 
 CSC_END

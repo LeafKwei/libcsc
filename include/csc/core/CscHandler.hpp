@@ -7,7 +7,7 @@
 #include "csc/core/types.hpp"
 #include "csc/core/CscEditor.hpp"
 #include "csc/core/functions.hpp"
-#include "csc/syntax/CommandDrv.hpp"
+#include "csc/syntax/CmdDriver.hpp"
 
 CSC_BEGIN
 

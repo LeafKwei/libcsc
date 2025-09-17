@@ -9,7 +9,7 @@ PureLexer::PureLexer() : m_autoSkipBlank(true){
 
 Token PureLexer::nextTokenFrom(CharMngr &mngr){
     Token token;
-    size_t idx = 0;
+    Size_t idx = 0;
 
     while(mngr.valid() && idx < m_readers.size()){
         auto &reader = m_readers.at(idx);

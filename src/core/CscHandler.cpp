@@ -84,7 +84,7 @@ bool CscHandler::do_accessibleVariable(ConstStr path){
 }
 
 void CscHandler::do_enter(const PathItems &items){
-    for(size_t index = 0; index < items.size(); index++){
+    for(Size_t index = 0; index < items.size(); index++){
         const auto &item = items.at(index);
         if(index == 0 && item == "/"){             //如果是绝对路径，则先回到根作用域
             m_context.restart();

@@ -9,7 +9,7 @@ CSC_BEGIN
 
 inline std::vector<CscStr> splitPath(ConstStr path){
     std::vector<CscStr> items;
-    size_t pos = 0;
+    Size_t pos = 0;
 
     if(pos == path.find('/')){                  //如果path的首个字符为/，即path为绝对路径时
         items.push_back("/");
