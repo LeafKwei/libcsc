@@ -1,18 +1,19 @@
 #include "csc/types.hpp"
 #include "csc/syntax/Command.hpp"
-#include "csc/syntax/CmdContainer.hpp"
+#include "csc/syntax/CmdExecutor.hpp"
 CSC_BEGIN
 
-CmdContainer::CmdContainer(){
+CmdExecutor::CmdExecutor(){
     m_root = std::make_shared<ContNode>();
 }
 
-void CmdContainer::addCommand(CmdPtr cmd){
+void CmdExecutor::addCommand(CmdPtr cmd){
     if(cmd == nullptr || cmd -> sizeofTokens() == 0) throw CommandExcept("Invalid Command.");
     do_addCommand(m_root, cmd, 0);
 }
 
-void CmdContainer::do_addCommand(NodePtr node, CmdPtr cmd, Size_t opidx){
+/* 根据Command对象所需的OperandType找到或创建对应的Node，然后将Command对象保存到Node中 */
+void CmdExecutor::do_addCommand(NodePtr node, CmdPtr cmd, Size_t opidx){
     /* 查找当前Node是否存在以opidx对应的OpType为key的Node，如果不存在则创建该Node */
     auto pos = node -> nodes.find(cmd ->opTypeAt(opidx));
     if(pos == node -> nodes.end()){
