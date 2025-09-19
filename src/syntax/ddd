@@ -1,0 +1,10 @@
+void CmdExecutor::updateCurrentNode(OperandType op){
+    /** 
+     * 将Token类型转换为操作数类型，然后使用该类型查找当前Node中是否有匹配的子Node，如果有则更新m_current字段
+     * 为该Node，使得当前Node中的命令对象始终匹配Token列表 
+     */
+     auto pos = m_current -> nodes.find(OperandTypeof(token));
+    if(pos != m_current -> nodes.end()){
+        m_current = pos -> second;
+    }
+}
