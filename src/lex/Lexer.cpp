@@ -17,8 +17,8 @@ const CscStr& Lexer::str() const{
     return m_mngr.str();
 }
 
-Locator Lexer::locator() const{
-    return Locator(m_mngr.str(), m_mngr.index());
+Locator Lexer::locator(int offset) const{
+    return Locator(m_mngr.str(), m_mngr.index() + offset);
 }
 
 CSC_END

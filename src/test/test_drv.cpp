@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <iostream>
 #include <fstream>
-#include "csc/syntax/CommandDrv.hpp"
+#include "csc/syntax/CmdDriver.hpp"
 using namespace csc;
 
 int main(void){
@@ -9,7 +9,7 @@ int main(void){
     CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
     Context context;
-    CommandDrv drv;
+    CmdDriver drv;
     drv.drive(str, context);
     context.enterScope("custom").enterScope("tom");
     std::cout << context.getValue("name").str << std::endl;

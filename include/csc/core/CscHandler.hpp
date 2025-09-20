@@ -8,6 +8,7 @@
 #include "csc/core/CscEditor.hpp"
 #include "csc/core/functions.hpp"
 #include "csc/syntax/CmdDriver.hpp"
+#include "csc/utility/utility.hpp"
 
 CSC_BEGIN
 
@@ -37,8 +38,8 @@ public:
     Tp enterAndGet(ConstStr path);
 
 private:
-    Context m_context;
-    CommandDrv m_driver;
+    Context      m_context;
+    CmdDriver m_driver;
 
     bool do_accessibleScope(ConstStr path);
     bool do_accessibleVariable(ConstStr path);
@@ -106,7 +107,7 @@ inline array_bool CscHandler::getValue<array_bool>(ConstStr name){
         throw CscExcept("Incompatible type.");
     }
 
-    for(int i = 1; i < values.size(); i++){
+    for(Size_t i = 1; i < values.size(); i++){
         auto r = values.str(i) == "true" ? true : false;
         array.push_back(r);
     }
@@ -121,7 +122,7 @@ inline array_int CscHandler::getValue<array_int>(ConstStr name){
         throw CscExcept("Incompatible type.");
     }
 
-    for(int i = 1; i < values.size(); i++){
+    for(Size_t i = 1; i < values.size(); i++){
         const auto &v = values.str(i);
         auto r = static_cast<int>(std::strtol(v.c_str(), NULL, baseOf(v)));
         array.push_back(r);
@@ -137,7 +138,7 @@ inline array_long CscHandler::getValue<array_long>(ConstStr name){
         throw CscExcept("Incompatible type.");
     }
 
-    for(int i = 1; i < values.size(); i++){
+    for(Size_t i = 1; i < values.size(); i++){
         const auto &v = values.str(i);
         auto r = std::strtol(v.c_str(), NULL, baseOf(v));
         array.push_back(r);
@@ -153,7 +154,7 @@ inline array_double CscHandler::getValue<array_double>(ConstStr name){
         throw CscExcept("Incompatible type.");
     }
 
-    for(int i = 1; i < values.size(); i++){
+    for(Size_t i = 1; i < values.size(); i++){
         const auto &v = values.str(i);
         auto r = std::strtol(v.c_str(), NULL, baseOf(v));
         array.push_back(r);
@@ -169,7 +170,7 @@ inline array_string CscHandler::getValue<array_string>(ConstStr name){
         throw CscExcept("Incompatible type.");
     }
 
-    for(int i = 1; i < values.size(); i++){
+    for(Size_t i = 1; i < values.size(); i++){
         const auto &v = values.str(i);
         array.push_back(v);
     }

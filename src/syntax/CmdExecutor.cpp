@@ -1,6 +1,7 @@
 #include "csc/types.hpp"
 #include "csc/syntax/Command.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
+#include "csc/syntax/functions.hpp"
 CSC_BEGIN
 
 CmdExecutor::CmdExecutor(){
@@ -23,7 +24,22 @@ bool CmdExecutor::executable() const noexcept{
 }
 
 bool CmdExecutor::execute(Context &context){
+    auto &commands = m_current -> commands;
+    assert(commands.size() > 0);
 
+    /* 本例当前Node中的所有Command，通过runnable函数决定该Command是否可以处理当前的Token序列 */
+    for(auto &cmd : commands){
+        if(!cmd -> runnable(m_tokens)){
+            continue;
+        }
+
+        /* 执行Command，随后清空Token列表和重设m_current为m_root  */
+        cmd -> run(m_tokens, context);
+        reset();
+        return true;
+    }
+
+    return false;
 }
 
 void CmdExecutor::addCommand(CmdPtr cmd){
@@ -60,28 +76,9 @@ void CmdExecutor::updateCurrentNode(OperandType op){
     m_current = pos -> second;
 }
 
-CmdExecutor::OpType CmdExecutor::operandTypeof(const Token &token){
-    switch(token.type){
-        case TokenType::Identifier:
-            return OperandType::Identifier;
-
-        case TokenType::Keyword:
-            if(token.buffer == "true" || token.buffer == "false")
-                return OperandType::Value;
-            return OperandType::Unexcepted;
-
-        case TokenType::Operator:
-            return OperandType::Operator;
-
-        case TokenType::Number:
-        case TokenType::String:
-            return OperandType::Value;
-        case TokenType::Array:
-            return OperandType::Values;
-
-        default:
-            return OperandType::Unexcepted;
-    }
+void CmdExecutor::reset(){
+    m_tokens.clear();
+    m_current = m_root;
 }
 
 CSC_END

@@ -30,7 +30,7 @@ void CscStrSeeker::values(const CscStr &name, const VariableValues &values){
     m_buffer << name << " = " << "{";            //否则按照数组格式处理
 
     /* ArrayAssignCommand在处理对数组的赋值时，会首先保存一个空字符串作为占位元素(目的是省去Context对空变量的检查)，因此此处需要让index为1忽略首个数组值 */
-    for(int index = 1; index < values.size(); index++){
+    for(Size_t index = 1; index < values.size(); index++){
         if(index > 1) m_buffer << ", ";
         writeValue(values.str(index), vtype);
     }

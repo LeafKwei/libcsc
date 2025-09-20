@@ -5,6 +5,8 @@
 
 #define CSC_BEGIN namespace csc{
 #define CSC_END }
+#define CSC_INNER_BEGIN namespace csc_inner{
+#define CSC_INNER_END }
 #define CSC_VERSION_STR "Version: 0.6.0"
 
 #endif

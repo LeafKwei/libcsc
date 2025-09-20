@@ -28,13 +28,13 @@ public:
     void addCommand(CmdPtr cmd);        /* 添加一个Command对象到Node树中 */
 
 private:
-    NodePtr m_root;
-    NodePtr m_current;
+    NodePtr  m_root;
+    NodePtr  m_current;
     TokenList m_tokens;
 
-    void       do_addCommand(NodePtr node, CmdPtr cmd, Size_t opidx);
-    OpType  operandTypeof(const Token &token);
-    void       updateCurrentNode(OperandType op);
+    void do_addCommand(NodePtr node, CmdPtr cmd, Size_t opidx);
+    void updateCurrentNode(OperandType op);
+    void reset();
 };
 
 CSC_END

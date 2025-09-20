@@ -17,7 +17,7 @@ public:
     Lexer();
     Lexer(const CscStr &str);
     Token nextToken();
-    Locator locator() const;
+    Locator locator(int offset=0) const;
     bool valid() const;
     const CscStr& str() const;
 
