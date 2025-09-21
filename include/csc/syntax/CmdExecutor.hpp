@@ -7,8 +7,16 @@
 #include "csc/lex/types.hpp"
 #include "csc/context/Context.hpp"
 #include "csc/syntax/node.hpp"
+#include "csc/action/ActionHub.hpp"
 CSC_BEGIN
 
+/**
+ * CmdExecutor负责匹配和执行Command，其内部存在token序列的缓冲区，并提供了pushToken函数以便外部压入token。每当压入一个token，CmdExecutor
+ * 会更新m_current指针，使其指向匹配该token类型的Node
+ * 
+ * CmdExecutor也负责保存所有的Command对象，对于每个添加到其中的Command对象，CmdExecutor会根据该对象的OperandType列表，将其保存到一个合适
+ * 的Node
+ */
 class CmdExecutor{
 public:
     using CmdPtr  = CommandPtr;
@@ -31,6 +39,7 @@ private:
     NodePtr  m_root;
     NodePtr  m_current;
     TokenList m_tokens;
+    ActionHub     m_actionhub;
 
     void do_addCommand(NodePtr node, CmdPtr cmd, Size_t opidx);
     void updateCurrentNode(OperandType op);

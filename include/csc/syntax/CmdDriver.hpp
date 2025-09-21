@@ -8,6 +8,7 @@
 
 CSC_BEGIN
 
+/* CmdDriver集成了CmdExecutor，负责将外部输入的配置文件内容(script)解析到Context中 */
 class CmdDriver{
 public:
     CmdDriver();
@@ -18,7 +19,6 @@ public:
 
 private:
     CmdExecutor m_executor;
-    ActionHub     m_actionhub;
 
     void    installCommands();
     CscStr makeExceptMessage(ConstStr script, const Locator &locator);

@@ -78,7 +78,13 @@ bool ArrayAssignCmd::runnable(const TokenList &tokens){
     return tokens.at(1).buffer == "=";
 }
 
+/**
+ * token序列中的第三个token即数组字符串，此函数首先会通过数组字符串中的首个元素判断出数组的类型，然后通过PureLexer
+ * 依次读取数组字符串中的每个元素，并将其追加到Context的变量中。每个被读入的元素都会被判断类型，如果类型和第一个元素
+ * 不同，则视为出错
+ */
 void ArrayAssignCmd::run(const TokenList &tokens, Context &context){
+    /* 获取首个元素的类型并将之作为数组的类型 */
     auto vtype = valueTypeof(tokens[2]);
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
     context.makeVariable(tokens[0].buffer, "", vtype);
@@ -88,6 +94,7 @@ void ArrayAssignCmd::run(const TokenList &tokens, Context &context){
     CharMngr mngr(tokens[2].buffer);
     PureLexer lexer;
 
+    /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
     while(mngr.valid()){
         auto token = lexer.nextTokenFrom(mngr);
 
