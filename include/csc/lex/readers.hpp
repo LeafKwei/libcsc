@@ -8,8 +8,8 @@ CSC_BEGIN
 
 class CommonReader : public TokenReader{
 public:
+    bool readable(CharMngr &mngr) override;
     Token read(CharMngr &mngr) override;
-    bool isThisType(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -18,7 +18,7 @@ protected:
 
 class BlankReader : public CommonReader{
 public:
-    bool isThisType(CharMngr &mngr) override;
+    bool readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -27,8 +27,7 @@ protected:
 
 class DescriptionReader : public CommonReader{
 public:
-    Token read(CharMngr &mngr) override;
-    bool isThisType(CharMngr &mngr) override;
+    bool readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -37,7 +36,7 @@ protected:
 
 class IdentifierReader : public CommonReader{
 public:
-    bool isThisType(CharMngr &mngr) override;
+    bool readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -46,7 +45,7 @@ protected:
 
 class OperatorReader: public CommonReader{
 public:
-    bool isThisType(CharMngr &mngr) override;
+    bool readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -55,8 +54,8 @@ protected:
 
 class NumberReader : public CommonReader{
 public:
+    bool readable(CharMngr &mngr) override;
     Token read(CharMngr &mngr) override;
-    bool isThisType(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -73,8 +72,8 @@ private:
 
 class StringReader : public CommonReader{
 public:
+    bool readable(CharMngr &mngr) override;
     Token read(CharMngr &mngr) override;
-    bool isThisType(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -86,8 +85,8 @@ private:
 
 class ArrayReader : public CommonReader{
 public:
+    bool readable(CharMngr &mngr) override;
     Token read(CharMngr &mngr) override;
-    bool isThisType(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:

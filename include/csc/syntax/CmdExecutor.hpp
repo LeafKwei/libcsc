@@ -1,5 +1,5 @@
-#ifndef CSC_CMDCONTAINER_HPP
-#define CSC_CMDCONTAINER_HPP
+#ifndef CSC_CMDEXECUTOR_HPP
+#define CSC_CMDEXECUTOR_HPP
 
 #include <iostream>
 #include <csc/alias.hpp>
@@ -36,10 +36,10 @@ public:
     void addCommand(CmdPtr cmd);        /* 添加一个Command对象到Node树中 */
 
 private:
-    NodePtr  m_root;
-    NodePtr  m_current;
-    TokenList m_tokens;
-    ActionHub     m_actionhub;
+    NodePtr     m_root;
+    NodePtr     m_current;
+    TokenList    m_tokens;
+    //ActionHub m_actionhub;
 
     void do_addCommand(NodePtr node, CmdPtr cmd, Size_t opidx);
     void updateCurrentNode(OperandType op);

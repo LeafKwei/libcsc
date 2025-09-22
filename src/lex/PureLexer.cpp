@@ -13,12 +13,12 @@ Token PureLexer::nextTokenFrom(CharMngr &mngr){
 
     while(mngr.valid() && idx < m_readers.size()){
         auto &reader = m_readers.at(idx);
-        token = reader -> read(mngr);
-        
-        if(token.type == TokenType::Aborted){
-            ++idx;
+        if(!(reader -> readable(mngr))){
+            ++idx; 
             continue;
         }
+
+        token = reader -> read(mngr);
 
         if(isIgnoredToken(token.type)){
             idx = 0;

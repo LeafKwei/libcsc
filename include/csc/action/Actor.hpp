@@ -6,6 +6,10 @@ CSC_BEGIN
 
 class Actor{
 public:
+    bool processable(ConstAction action);
+    bool process(ConstAction action);
+
+private:
 
 };
 
