@@ -34,12 +34,76 @@ Size_t ActionHub::sizeofActions(){
 }
 
 void ActionHub::distributeAction(Context &context){
+    auto beg = m_actions.begin();
+    auto end = m_actions.end();
 
+    while(beg != end){
+        if(beg -> type() == ActionType::Inner){
+            ++beg;
+            continue;
+        }
+
+        auto bak = context.postion();
+        callActor(*beg);
+        context.setPostion(bak);
+        
+        auto delpos = beg++;
+        m_actions.erase(delpos);
+    }
 }
 
 void ActionHub::processInnerAction(Context &context){
+    auto beg = m_actions.begin();
+    auto end = m_actions.end();
 
+    while(beg != end){
+        if(beg -> type() != ActionType::Inner){
+            ++beg;
+            continue;
+        }
+
+        do_processInnerAction(*beg);
+        auto delpos = beg++;
+        m_actions.erase(delpos);
+    }
 }
 
+void ActionHub::do_processInnerAction(ConstAction action){
+    switch(std::any_cast<InnerAction>(action.extraData())){
+        case InnerAction::ExitScope:
+            processExitScope(action);
+            break;
+    }
+}
+
+void ActionHub::processExitScope(ConstAction action){
+    if(m_actors.find(action.scopeID()) == m_actors.end()) return;
+    m_actors.erase(action.scopeID());
+}
+
+void ActionHub::callActor(ConstAction action){
+    auto id = action.scopeID();
+    auto &actors = m_actors.at(id);
+    if(actors.size() == 0){
+        return;
+    }
+
+    auto beg = actors.begin();
+    auto end = actors.end();
+
+    while(beg != end){
+        if(!(beg -> processable(action))){
+            ++beg;
+            continue;
+        }
+
+        beg -> process(action);
+
+        auto delpos = beg++;
+        if(beg -> livetime() == Livetime::Oneshot){
+            actors.erase(delpos);
+        }
+    }
+}
 
 CSC_END

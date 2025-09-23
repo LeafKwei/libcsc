@@ -27,6 +27,10 @@ private:
     Size_t        m_threshold;  //当Action列表中的Action数量达到多少时，开始分发Action
     ActionList m_actions;
     ActorMap m_actors;
+
+    void do_processInnerAction(ConstAction action);
+    void processExitScope(ConstAction action);
+    void callActor(ConstAction action);
 };
 
 CSC_END

@@ -6,7 +6,6 @@
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
-#include "csc/context/Contexter.hpp"
 #include "csc/context/ContextSeeker.hpp"
 CSC_BEGIN
 
@@ -19,10 +18,11 @@ CSC_BEGIN
  * 当创建一个Context对象时，会默认创建一个根作用域，将其指针保存到成员m_root中，同时m_current也被设置为m_root，表示当前作用域
  * 为根作用域。Context中的所有操作都是基于当前作用域(m_current)进行。
  */
-class Context : public Contexter{
+class Context{
 public:
     using Value        = VariableValue;
     using Values      = VariableValues;
+    using Pos           = ScopePos;
     using InitValues = std::initializer_list<CscStr>;
 
 public:
