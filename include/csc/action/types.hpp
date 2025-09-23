@@ -7,11 +7,11 @@ CSC_BEGIN
 
 class Action;
 using ConstAction = const Action&;
-using ActorFoo  = std::function<bool(ConstAction)>;
-using ActorFunc = std::function<bool(ConstAction)>;
+using ActProcessable  = std::function<bool(ConstAction)>;
+using ActProcessor = std::function<bool(ConstAction)>;
 
 enum class Livetime{
-    OneShot, Scoped
+    Oneshot, Scoped
 };
 
 enum class ActionType{

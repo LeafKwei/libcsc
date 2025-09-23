@@ -11,10 +11,10 @@ public:
         m_type(type), m_extraData(extraData),
         m_pos(context.postion()), m_scopeid(context.scopeID()) {}
 
-    ActionType                type() const noexcept { return m_type; }
+    ActionType                type() const noexcept          { return m_type; }
     const std::any&         extraData() const noexcept { return m_extraData; }
-    const Context::Pos&  postion() const noexcept { return m_pos; }         
-    UID                            scopeID() const noexcept { return m_scopeid; }    
+    const Context::Pos&  postion() const noexcept    { return m_pos; }         
+    UID                            scopeID() const noexcept   { return m_scopeid; }    
 
 private:
     ActionType   m_type;

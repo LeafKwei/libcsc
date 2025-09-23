@@ -9,9 +9,9 @@ CSC_BEGIN
 
 class ActionCtl{
 public:
-    virtual void makeActor(UID scopeid, ActorFunc func, Livetime=Livetime::Scoped) =0;
-    virtual void sendAction(UID scopeid, ActionType type, std::any extraData) =0;
-    virtual void sendInnerAction(UID scopeid, std::any extraData) =0;
+    virtual void makeActor(const ActProcessable &proable, const ActProcessor &process, Livetime=Livetime::Scoped, const Context &context) =0;
+    virtual void sendAction(ActionType type, std::any extraData, const Context &context) =0;
+    virtual void sendInnerAction(std::any extraData, const Context &context) =0;
 };
 
 CSC_END

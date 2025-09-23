@@ -6,11 +6,19 @@ CSC_BEGIN
 
 class Actor{
 public:
-    bool processable(ConstAction action);
-    bool process(ConstAction action);
+    Actor(const ActProcessable &proable, const ActProcessor &process, UID scopeid, Livetime livetime=Livetime::Scoped) :
+        m_scopeid(scopeid), m_livetime(livetime), m_processable(proable), m_processor(process){}
+
+    UID        scopeID()                                      { return m_scopeid; }
+    Livetime livetime()                                      { return m_livetime; }
+    bool       processable(ConstAction action) { return m_processable(action); }
+    bool       process(ConstAction action)        { return m_processor(action); }
 
 private:
-
+    UID                   m_scopeid;
+    Livetime            m_livetime;
+    ActProcessable m_processable;
+    ActProcessor    m_processor;
 };
 
 CSC_END

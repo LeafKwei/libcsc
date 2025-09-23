@@ -56,7 +56,7 @@ bool Context::probeScope(ConstStr name) const{
     return (m_current -> scopes.find(name)) != (m_current -> scopes.end());
 }   
 
-bool Context::isAtRootScope() const{
+bool Context::isRootScope() const{
     return !(m_current -> parent.expired());
 }   
 

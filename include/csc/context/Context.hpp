@@ -6,6 +6,7 @@
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
+#include "csc/context/Contexter.hpp"
 #include "csc/context/ContextSeeker.hpp"
 CSC_BEGIN
 
@@ -18,12 +19,11 @@ CSC_BEGIN
  * 当创建一个Context对象时，会默认创建一个根作用域，将其指针保存到成员m_root中，同时m_current也被设置为m_root，表示当前作用域
  * 为根作用域。Context中的所有操作都是基于当前作用域(m_current)进行。
  */
-class Context{
+class Context : public Contexter{
 public:
     using Value        = VariableValue;
     using Values      = VariableValues;
     using InitValues = std::initializer_list<CscStr>;
-    using Pos           = ScopePos;
 
 public:
     Context();
@@ -35,7 +35,7 @@ public:
     Context& leaveScope();                                                         /* 离开当前作用域，返回到它的父作用域中 */
     Context& cleanScope(ConstStr name);                                 /* 删除当前作用域的一个子作用域，同时也删除其中的所有变量及该子作用域的子作用域 */
     bool         probeScope(ConstStr name) const;                      /* 如果当前作用域中存在指定名称的子作用域，则返回true */
-    bool         isAtRootScope() const;                                          /* 如果当前作用域是根作用域，返回true */
+    bool         isRootScope() const;                                             /* 如果当前作用域是根作用域，返回true */
     ConstStr   scopeName() const noexcept;                              /* 获取当前作用域的名称 */
     UID           scopeID() const noexcept;                                    /* 获取当前作用域的id */                         
     Pos           postion() const;                                                     /* 获取当前作用域的Pos对象(对指针的包装) */

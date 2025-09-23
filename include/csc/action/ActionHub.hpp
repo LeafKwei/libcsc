@@ -11,12 +11,12 @@ class ActionHub : public ActionCtl{
 public:
     using ActionList = std::list<Action>;
     using ActorList = std::list<Actor>;
-    using ActorMap = std::map<UID, ActionList>;
+    using ActorMap = std::map<UID, ActorList>;
 
 public:
-    void   makeActor(UID scopeid, ActorFunc func, Livetime=Livetime::Scoped) override;
-    void   sendAction(UID scopeid, ActionType type, std::any extraData) override;
-    void   sendInnerAction(UID scopeid, std::any extraData) override;
+    void   makeActor(const ActProcessable &proable, const ActProcessor &process, Livetime=Livetime::Scoped, const Context &context) override;
+    void   sendAction(ActionType type, std::any extraData, const Context &context) override;
+    void   sendInnerAction(std::any extraData, const Context &context) override;
     Size_t threshold();
     void   setThreshold(int threshold);
     Size_t sizeofActions();

@@ -23,9 +23,9 @@ public:
     CommandExcept(const std::string &msg) : CscExcept(msg){}
 };
 
-class EventExcept : public CscExcept{
+class ActionExcept : public CscExcept{
 public:
-    EventExcept(const std::string &msg) : CscExcept(msg){}
+    ActionExcept(const std::string &msg) : CscExcept(msg){}
 };
 
 CSC_END
