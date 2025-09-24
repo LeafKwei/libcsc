@@ -12,9 +12,9 @@ CSC_BEGIN
 class ContextSeeker{
 public:
     virtual ~ContextSeeker() =default;
-    virtual void enterScope(UID id, const CscStr &name) =0;
-    virtual void leaveScope(UID id, const CscStr &name) =0;
-    virtual void values(const CscStr &name, const VariableValues &values) =0;
+    virtual void enterScope(UID id, crString name) =0;
+    virtual void leaveScope(UID id, crString name) =0;
+    virtual void values(crString name, const VariableValues &values) =0;
 };
 
 CSC_END

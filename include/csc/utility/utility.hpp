@@ -13,37 +13,37 @@
 
 CSC_BEGIN
 
-CscStr join(CscStr splitor, const std::vector<CscStr> &elements, const std::initializer_list<CscStr> &filters={});
-int baseOf(const CscStr &str);
-CscStr toEscapingString(const CscStr &str);
+String join(String splitor, const std::vector<String> &elements, const std::initializer_list<String> &filters={});
+int      baseOf(crString str);
+String toEscapingString(crString str);
 
 //============= Templates =============
 template <typename Tp>
-inline CscStr toString(const Tp &v){
+inline String toString(const Tp &v){
     throw CscExcept("Unsupported type.");
 };
 
 template<>
-inline CscStr toString<bool>(const bool &v){
+inline String toString<bool>(const bool &v){
     return v ? "true" : "false";
 }
 
 template<>
-inline CscStr toString<int>(const int &v){
+inline String toString<int>(const int &v){
     std::stringstream stream;
     stream << v;
     return stream.str();
 }
 
 template<>
-inline CscStr toString<long>(const long &v){
+inline String toString<long>(const long &v){
     std::stringstream stream;
     stream << v;
     return stream.str();
 }
 
 template<>
-inline CscStr toString<double>(const double &v){
+inline String toString<double>(const double &v){
     std::stringstream stream;
     stream << v;
     return stream.str();

@@ -4,8 +4,8 @@
 
 CSC_BEGIN
 
-CscStr join(CscStr splitor, const std::vector<CscStr> &elements, const std::initializer_list<CscStr> &filters){
-    CscStr result;
+String join(String splitor, const std::vector<String> &elements, const std::initializer_list<String> &filters){
+    String result;
 
     for(Size_t idx = 0; idx < elements.size(); idx++){
         auto &e = elements.at(idx);
@@ -18,16 +18,16 @@ CscStr join(CscStr splitor, const std::vector<CscStr> &elements, const std::init
     return result;
 }
 
-int baseOf(const CscStr &str){
+int baseOf(crString str){
     if(str.substr(0, 2) == "0x") return 16;
     return 10;
 }
 
-CscStr toEscapingString(const CscStr &str){
-    CscStr tmp(str);
+String toEscapingString(crString str){
+    String tmp(str);
 
     auto pos = tmp.find('\"');
-    while(pos != CscStr::npos){
+    while(pos != String::npos){
         tmp.insert(pos, {'\\'});          //Insert escaping symbol.
         pos = tmp.find('\"', pos+2);
     }

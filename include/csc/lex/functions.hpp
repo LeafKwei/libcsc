@@ -5,43 +5,43 @@
 #include "csc/alias.hpp"
 CSC_BEGIN
 
-inline bool isAlpha(CscChar ch) noexcept{
+inline bool isAlpha(Char ch) noexcept{
     return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
 }
 
-inline bool isNumber(CscChar ch) noexcept{
+inline bool isNumber(Char ch) noexcept{
     return (ch >= '0' && ch <= '9');
 }
 
-inline bool isHexNumber(CscChar ch) noexcept{
+inline bool isHexNumber(Char ch) noexcept{
     return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <='F') || (ch >= 'a' && ch <= 'f');
 }
 
-inline bool isUnvisible(CscChar ch) noexcept{
+inline bool isUnvisible(Char ch) noexcept{
     return ch <= 32;
 }
 
-inline bool isNewLine(CscChar ch) noexcept{
+inline bool isNewLine(Char ch) noexcept{
     return ch == '\n';
 }
 
-inline bool isEscape(CscChar ch) noexcept{
+inline bool isEscape(Char ch) noexcept{
     return ch == '\\';
 }
 
-inline bool isDot(CscChar ch) noexcept{
+inline bool isDot(Char ch) noexcept{
     return ch == '.';
 }
 
-inline bool isBlank(CscChar ch) noexcept{
+inline bool isBlank(Char ch) noexcept{
     return (ch == '\n') || (ch == '\t' || (ch == ' '));
 }
 
-inline bool isIdentifier(CscChar ch) noexcept{
+inline bool isIdentifier(Char ch) noexcept{
     return isAlpha(ch) || isNumber(ch) || ch == '_';
 }
 
-inline bool isOperator(CscChar ch) noexcept{
+inline bool isOperator(Char ch) noexcept{
     switch(ch){
         case ':'   :
         case '=' :
@@ -51,7 +51,7 @@ inline bool isOperator(CscChar ch) noexcept{
     }
 }
 
-inline bool isDelimitor(CscChar ch) noexcept{
+inline bool isDelimitor(Char ch) noexcept{
     switch(ch){
         case '\''  :
         case '\"' :
@@ -63,7 +63,7 @@ inline bool isDelimitor(CscChar ch) noexcept{
     }
 }
 
-inline bool isSeparator(CscChar ch) noexcept{
+inline bool isSeparator(Char ch) noexcept{
     switch(ch){
         case ',' :
             return true;
@@ -72,7 +72,7 @@ inline bool isSeparator(CscChar ch) noexcept{
     }
 }
 
-inline CscChar escapeTo(CscChar ch) noexcept{
+inline Char escapeTo(Char ch) noexcept{
     switch(ch){
         case '0' :
             return '\0';

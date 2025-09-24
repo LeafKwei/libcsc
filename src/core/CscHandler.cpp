@@ -2,19 +2,19 @@
 #include "csc/core/CscStrSeeker.hpp"
 CSC_BEGIN
 
-CscHandler::CscHandler(ConstStr script){
+CscHandler::CscHandler(crString script){
     m_driver.drive(script, m_context);
 }
 
-bool CscHandler::accessible(ConstStr path, bool v){
+bool CscHandler::accessible(crString path, bool v){
     return v ? do_accessibleVariable(path) : do_accessibleScope(path);
 }
 
-CscStr CscHandler::absolutePath(){
-    return CscStr("/") + m_context.relation("/");
+String CscHandler::absolutePath(){
+    return String("/") + m_context.relation("/");
 }
 
-CscHandler& CscHandler::enter(ConstStr path){
+CscHandler& CscHandler::enter(crString path){
     const auto &items = splitPath(path);
     if(items.size() == 0){
         throw CscExcept(std::string("Invalid path: ") + path);
@@ -35,7 +35,7 @@ CscHandler& CscHandler::iterate(ContextSeeker &seeker){
     return *this;
 }
 
-CscStr CscHandler::toString(){
+String CscHandler::toString(){
     CscStrSeeker seeker;
     m_context.iterate(seeker);
     return seeker.toString();
@@ -45,7 +45,7 @@ CscEditor CscHandler::editor(){
     return CscEditor(m_context);
 }
 
-bool CscHandler::do_accessibleScope(ConstStr path){
+bool CscHandler::do_accessibleScope(crString path){
     auto result = true;
     const auto pos = m_context.postion();
     
@@ -60,7 +60,7 @@ bool CscHandler::do_accessibleScope(ConstStr path){
     return result;
 }
 
-bool CscHandler::do_accessibleVariable(ConstStr path){
+bool CscHandler::do_accessibleVariable(crString path){
     auto result = true;
     const auto &items = detachName(path);
     const auto pos = m_context.postion();

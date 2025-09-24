@@ -42,7 +42,7 @@ inline ValueType valueTypeofHelper(const Token &token){
 
     //Integer/Double
     if(token.type == TokenType::Number){
-        if(token.buffer.find('.') != CscStr::npos){
+        if(token.buffer.find('.') != String::npos){
             return ValueType::Double;
         }
 

@@ -22,39 +22,39 @@ public:
 
 public:
     CscHandler() =default;
-    CscHandler(ConstStr script);
+    CscHandler(crString script);
 
-    bool               accessible(ConstStr path, bool v=false); /* 检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称 */
-    CscStr            absolutePath();                                       /* 返回从根作用域到当前作用域的绝对路径 */
-    CscHandler& enter(ConstStr path);                              /* 进入给定路径对应的作用域，如果路径为“/”，则进入根作用域 */
+    bool               accessible(crString path, bool v=false); /* 检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称 */
+    String            absolutePath();                                       /* 返回从根作用域到当前作用域的绝对路径 */
+    CscHandler& enter(crString path);                              /* 进入给定路径对应的作用域，如果路径为“/”，则进入根作用域 */
     CscHandler& iterate(ContextSeeker &seeker);            /* 从当前作用域开始，迭代其及所有子作用域的所有变量 */
-    CscStr            toString();                                               /* 从当前作用域开始，将其及子作用域、变量转换为字符串 */
+    String            toString();                                               /* 从当前作用域开始，将其及子作用域、变量转换为字符串 */
     CscEditor       editor();                                                  /* 获取一个编辑器对象，可以编辑Context中的内容 */
 
     template<typename Tp>                                            /* 获取当前作用域中给定名称的变量值，类型参数Tp所支持的类型参见文档 */
-    Tp getValue(ConstStr name);
+    Tp getValue(crString name);
 
     template<typename Tp>                                           /* 获取给定路径下的变量值，路径的最后一部分将被视为变量名称 */
-    Tp enterAndGet(ConstStr path);
+    Tp enterAndGet(crString path);
 
 private:
     Context      m_context;
     CmdDriver m_driver;
 
-    bool do_accessibleScope(ConstStr path);
-    bool do_accessibleVariable(ConstStr path);
+    bool do_accessibleScope(crString path);
+    bool do_accessibleVariable(crString path);
     void do_enter(const PathItems &items);
 };
 
 
 //============= Templates =============
 template<typename Tp>
-inline Tp getValue(ConstStr name){
+inline Tp getValue(crString name){
     throw CscExcept("Unsupported type.");
 }
 
 template<>
-inline bool CscHandler::getValue<bool>(ConstStr name){
+inline bool CscHandler::getValue<bool>(crString name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Bool){
         throw CscExcept("Incompatible type.");
@@ -64,7 +64,7 @@ inline bool CscHandler::getValue<bool>(ConstStr name){
 }
 
 template<>
-inline int CscHandler::getValue<int>(ConstStr name){
+inline int CscHandler::getValue<int>(crString name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Integer){
         throw CscExcept("Incompatible type.");
@@ -74,7 +74,7 @@ inline int CscHandler::getValue<int>(ConstStr name){
 }
 
 template<>
-inline long CscHandler::getValue<long>(ConstStr name){
+inline long CscHandler::getValue<long>(crString name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Integer){
         throw CscExcept("Incompatible type.");
@@ -84,7 +84,7 @@ inline long CscHandler::getValue<long>(ConstStr name){
 }
 
 template<>
-inline double CscHandler::getValue<double>(ConstStr name){
+inline double CscHandler::getValue<double>(crString name){
     const auto &value = m_context.getValue(name);
     if(value.type != ValueType::Double){
         throw CscExcept("Incompatible type.");
@@ -94,12 +94,12 @@ inline double CscHandler::getValue<double>(ConstStr name){
 }
 
 template<>
-inline CscStr CscHandler::getValue<CscStr>(ConstStr name){
+inline String CscHandler::getValue<String>(crString name){
     return m_context.getValue(name).str;
 }
 
 template<>
-inline array_bool CscHandler::getValue<array_bool>(ConstStr name){
+inline array_bool CscHandler::getValue<array_bool>(crString name){
     array_bool array;
 
     auto values = m_context.getValues(name);
@@ -114,7 +114,7 @@ inline array_bool CscHandler::getValue<array_bool>(ConstStr name){
 }
 
 template<>
-inline array_int CscHandler::getValue<array_int>(ConstStr name){
+inline array_int CscHandler::getValue<array_int>(crString name){
     array_int array;
 
     auto values = m_context.getValues(name);
@@ -130,7 +130,7 @@ inline array_int CscHandler::getValue<array_int>(ConstStr name){
 }
 
 template<>
-inline array_long CscHandler::getValue<array_long>(ConstStr name){
+inline array_long CscHandler::getValue<array_long>(crString name){
     array_long array;
 
     auto values = m_context.getValues(name);
@@ -146,7 +146,7 @@ inline array_long CscHandler::getValue<array_long>(ConstStr name){
 }
 
 template<>
-inline array_double CscHandler::getValue<array_double>(ConstStr name){
+inline array_double CscHandler::getValue<array_double>(crString name){
     array_long array;
 
     auto values = m_context.getValues(name);
@@ -162,7 +162,7 @@ inline array_double CscHandler::getValue<array_double>(ConstStr name){
 }
 
 template<>
-inline array_string CscHandler::getValue<array_string>(ConstStr name){
+inline array_string CscHandler::getValue<array_string>(crString name){
     array_string array;
 
     auto values = m_context.getValues(name);
@@ -177,7 +177,7 @@ inline array_string CscHandler::getValue<array_string>(ConstStr name){
 }
 
 template<typename Tp>
-inline Tp CscHandler::enterAndGet(ConstStr path){
+inline Tp CscHandler::enterAndGet(crString path){
     const auto &items = detachName(path);
 
     if(items.first.size() != 0){

@@ -5,7 +5,7 @@ using namespace csc;
 
 int main(void){
     std::ifstream ifs("myconfig.csc");
-    CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
     CscHandler handler;
     CscEditor editor = handler.editor();

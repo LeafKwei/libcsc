@@ -14,14 +14,14 @@ CSC_BEGIN
 
 class  PureLexer{
 public:
-    using ConverterBranches = std::map<CscStr, TokenType>;
+    using ConverterBranches = std::map<String, TokenType>;
     using ReaderPtr = std::shared_ptr<TokenReader>;
     using ReaderBranches = std::vector<ReaderPtr>;
 
 public:
     PureLexer();
     Token nextTokenFrom(CharMngr &mngr);
-    void setAutoSkipBlank(bool b);
+    void   setAutoSkipBlank(bool b);
 
 private:
     bool m_autoSkipBlank;
@@ -29,9 +29,9 @@ private:
     ConverterBranches m_converters;
 
     inline bool isIgnoredToken(TokenType type) const noexcept;
-    Token& identifierConverter(Token &token);
-    void installReaders();
-    void installConverters();
+    Token&     identifierConverter(Token &token);
+    void           installReaders();
+    void           installConverters();
 };
 
 inline bool PureLexer::isIgnoredToken(TokenType type) const noexcept{

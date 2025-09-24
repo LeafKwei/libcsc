@@ -15,7 +15,7 @@ enum class TokenType{
 
 struct Token{
     TokenType type;
-    CscStr buffer;
+    String buffer;
 };
 
 CSC_END

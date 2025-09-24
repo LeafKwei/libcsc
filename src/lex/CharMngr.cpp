@@ -1,7 +1,7 @@
 #include "csc/lex/CharMngr.hpp"
 CSC_BEGIN
 
-CharMngr::CharMngr(const CscStr &str, int index) : m_str(str), m_index(index){
+CharMngr::CharMngr(crString str, int index) : m_str(str), m_index(index){
     if(m_index < 0) m_index = 0;
     else if(m_index > m_str.size()) m_index = m_str.size();
 }
@@ -18,27 +18,27 @@ bool CharMngr::valid() const{
     return (m_index >= 0) && (m_index < m_str.size());
 }
 
-CscChar CharMngr::at(int index) const{
+Char CharMngr::at(int index) const{
     return m_str.at(index);
 }
 
-CscChar CharMngr::getch() const{
+Char CharMngr::getch() const{
     return m_str.at(m_index);
 }
 
-CscChar CharMngr::forward(){
+Char CharMngr::forward(){
     auto index = m_index;
     ++m_index;
     return at(index);
 }
 
-CscChar CharMngr::backward(){
+Char CharMngr::backward(){
     auto index =m_index;
     --m_index;
     return at(index);
 }
 
-const CscStr& CharMngr::str() const{
+crString CharMngr::str() const{
     return m_str;
 }
 

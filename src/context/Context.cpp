@@ -7,7 +7,7 @@ Context::Context() : m_idCounter(0){
     clean();
 }
 
-Context& Context::makeScope(ConstStr name, bool entered){
+Context& Context::makeScope(crString name, bool entered){
     if(probeScope(name)){
         throw ContextExcept("Can't make repetitive scope.");
     }
@@ -21,7 +21,7 @@ Context& Context::makeScope(ConstStr name, bool entered){
     return *this;
 }
 
-Context& Context::enterScope(ConstStr name, bool created){
+Context& Context::enterScope(crString name, bool created){
     if(!probeScope(name)){
         if(!created){
             throw ContextExcept(std::string("No such scope: ") + name);
@@ -43,7 +43,7 @@ Context& Context::leaveScope(){
     return *this;
 }
 
-Context& Context::cleanScope(ConstStr name){
+Context& Context::cleanScope(crString name){
     if(!probeScope(name)){
         throw ContextExcept(std::string("No such scope: ") + name);
     }
@@ -52,20 +52,16 @@ Context& Context::cleanScope(ConstStr name){
     return *this;
 }   
 
-bool Context::probeScope(ConstStr name) const{
+bool Context::probeScope(crString name) const{
     return (m_current -> scopes.find(name)) != (m_current -> scopes.end());
 }   
 
 bool Context::isRootScope() const{
     return !(m_current -> parent.expired());
-}   
-
-ConstStr Context::scopeName() const noexcept{
-    return m_current -> name;
 }
 
-UID Context::scopeID() const noexcept{
-    return m_current -> id;
+Context::crMeta Context::scopeMetaData() const noexcept{
+    return m_current -> meta;
 }
 
 Context::Pos Context::postion() const{
@@ -79,17 +75,17 @@ void Context::setPostion(const Pos &pos){
     m_current = pos.scope.lock();
 }
 
-CscStr Context::relation(ConstStr separator) const{
+String Context::relation(crString separator) const{
     std::stringstream stream;
     do_relation(m_current, stream, separator);
     return stream.str();
 }
 
-Context& Context::makeVariable(ConstStr name, ConstStr value, ValueType type){
+Context& Context::makeVariable(crString name, crString value, ValueType type){
     return makeVariable(name, {value}, type);
 }
 
-Context& Context::makeVariable(ConstStr name, InitValues values, ValueType type){
+Context& Context::makeVariable(crString name, InitValues values, ValueType type){
     if(values.size() == 0) throw ContextExcept(std::string("No value specified for variable: ") + name);
 
     auto iterator = m_current -> variables.find(name);
@@ -102,7 +98,7 @@ Context& Context::makeVariable(ConstStr name, InitValues values, ValueType type)
     return *this;
 }
 
-Context& Context::cleanVariable(ConstStr name){
+Context& Context::cleanVariable(crString name){
     if(!probeVariable(name)){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
@@ -111,7 +107,7 @@ Context& Context::cleanVariable(ConstStr name){
     return *this;
 }
 
-Context::Value Context::getValue(ConstStr name) const{
+Context::Value Context::getValue(crString name) const{
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -122,7 +118,7 @@ Context::Value Context::getValue(ConstStr name) const{
     return {variable -> values.at(0), variable -> type};
 }
 
-Context::Values Context::getValues(ConstStr name) const{
+Context::Values Context::getValues(crString name) const{
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -132,11 +128,11 @@ Context::Values Context::getValues(ConstStr name) const{
     return Values(variable -> values, variable -> type);
 }
 
-bool Context::probeVariable(ConstStr name) const{
+bool Context::probeVariable(crString name) const{
     return (m_current -> variables.find(name)) != (m_current -> variables.end());
 }
 
-Context& Context::extendValues(ConstStr name, InitValues values){
+Context& Context::extendValues(crString name, InitValues values){
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -160,8 +156,7 @@ void Context::clean(){
     m_current = nullptr;
 
     m_root = std::make_shared<Scope>();
-    m_root -> id = nextID();
-    m_root -> name = "/";
+    m_root -> meta = {nextID(), "/", m_root};
     m_current = m_root;
 }
 
@@ -169,15 +164,14 @@ void Context::iterate(ContextSeeker &seeker) const{
     do_iterate(m_current, seeker);
 }
 
-void Context::do_makeScope(ConstStr name){
+void Context::do_makeScope(crString name){
     auto scope = std::make_shared<Scope>();
-    scope -> id = nextID();
-    scope -> name = name;
+    scope -> meta = {nextID(), name, scope};
     scope -> parent = m_current;
     m_current -> scopes.insert({name, scope});
 }
 
-void Context::do_enterScope(ConstStr name){
+void Context::do_enterScope(crString name){
     m_current = (m_current -> scopes.find(name)) -> second;
 }
 
@@ -185,15 +179,15 @@ void Context::do_leaveScope(){
     m_current = m_current -> parent.lock();
 }
 
-void Context::do_cleanScope(ConstStr name){
+void Context::do_cleanScope(crString name){
     m_current -> scopes.erase(name);
 }
 
-void Context::do_cleanVariable(ConstStr name){
+void Context::do_cleanVariable(crString name){
     m_current -> variables.erase(name);
 }
 
-void Context::do_makeVariable(ConstStr name, InitValues values, ValueType type){
+void Context::do_makeVariable(crString name, InitValues values, ValueType type){
     auto variable = std::make_shared<Variable>();
     variable -> name = name;
     variable -> type = type;
@@ -223,7 +217,7 @@ void Context::do_setVariable(VariablePtr variable, InitValues values, ValueType 
  */
 void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     if(scope != m_root){                                 //不传递根作用域的名称
-        seeker.enterScope(scope -> id, scope -> name);
+        seeker.enterScope(scope -> meta.id, scope -> meta.name);
     }
 
     /* 迭代作用域中的每个变量，将变量名称、值列表、类型传递给values函数 */
@@ -243,17 +237,17 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     }
 
     if(scope != m_root){
-        seeker.leaveScope(scope -> id, scope -> name);
+        seeker.leaveScope(scope -> meta.id, scope -> meta.name);
     }
 }
 
-void Context::do_relation(ScopePtr scope, std::stringstream &stream, ConstStr separator) const{
+void Context::do_relation(ScopePtr scope, std::stringstream &stream, crString separator) const{
     if(scope -> parent.expired()){   //忽略根作用域的名称
         return;
     }
 
     do_relation(scope -> parent.lock(), stream, separator);
-    stream << scope -> name;
+    stream << scope -> meta.name;
 
     if(scope != m_current){
         stream << separator;

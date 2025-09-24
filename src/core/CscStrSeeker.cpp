@@ -4,19 +4,19 @@ CSC_BEGIN
 
 CscStrSeeker::CscStrSeeker() : m_nest(0){}
 
-void CscStrSeeker::enterScope(UID id, const CscStr &name){
+void CscStrSeeker::enterScope(UID id, crString name){
     writeIndent();
     m_buffer << name << "::" << std::endl;
     ++m_nest;
 }
 
-void CscStrSeeker::leaveScope(UID id, const CscStr &name){
+void CscStrSeeker::leaveScope(UID id, crString name){
     --m_nest;
     writeIndent();
     m_buffer << "::" << name << std::endl;
 }
 
-void CscStrSeeker::values(const CscStr &name, const VariableValues &values){
+void CscStrSeeker::values(crString name, const VariableValues &values){
     writeIndent();
     
     auto vtype = arrayToValue(values.type());
@@ -38,7 +38,7 @@ void CscStrSeeker::values(const CscStr &name, const VariableValues &values){
     m_buffer << "}" << std::endl;
 }
 
-CscStr CscStrSeeker::toString(){
+String CscStrSeeker::toString(){
     return m_buffer.str();
 }
 
@@ -48,7 +48,7 @@ void CscStrSeeker::writeIndent(){
     }
 }
 
-void CscStrSeeker::writeValue(const CscStr &value,  ValueType type){
+void CscStrSeeker::writeValue(crString value,  ValueType type){
     switch(type){
         case ValueType::Bool:
         case ValueType::Integer:

@@ -13,17 +13,17 @@ CscEditor& CscEditor::autoEnterOff(){
     return *this;
 }
 
-CscEditor& CscEditor::makeScope(ConstStr name){
+CscEditor& CscEditor::makeScope(crString name){
     m_context.makeScope(name, m_autoEnter);
     return *this;
 }
 
-CscEditor& CscEditor::enterScope(ConstStr name){
+CscEditor& CscEditor::enterScope(crString name){
     m_context.enterScope(name);
     return *this;
 }
 
-CscEditor& CscEditor::cleanScope(ConstStr name){
+CscEditor& CscEditor::cleanScope(crString name){
     m_context.cleanScope(name);
     return *this;
 }
@@ -33,17 +33,17 @@ CscEditor& CscEditor::leaveScope(){
     return *this;
 }
 
-CscEditor& CscEditor::makeVariable(ConstStr name, InitValues values, ValueType type){
+CscEditor& CscEditor::makeVariable(crString name, InitValues values, ValueType type){
     m_context.makeVariable(name, values, type);
     return *this;
 }
 
-CscEditor& CscEditor::extendValues(ConstStr name, InitValues values){
+CscEditor& CscEditor::extendValues(crString name, InitValues values){
     m_context.extendValues(name, values);
     return *this;
 }
 
-CscEditor& CscEditor::cleanVariable(ConstStr name){
+CscEditor& CscEditor::cleanVariable(crString name){
     m_context.cleanVariable(name);
     return *this;
 }

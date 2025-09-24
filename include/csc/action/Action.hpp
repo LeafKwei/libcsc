@@ -7,9 +7,9 @@ CSC_BEGIN
 
 class Action{
 public:
-    Action(ActionType type, std::any extraData, const Context &context) :
+    Action(ActionType type, std::any extraData, Context::crMeta meta) : 
         m_type(type), m_extraData(extraData),
-        m_pos(context.postion()), m_scopeid(context.scopeID()) {}
+        m_pos{meta.ptr}, m_scopeid(meta.id) {}
 
     ActionType                type() const noexcept          { return m_type; }
     const std::any&         extraData() const noexcept { return m_extraData; }

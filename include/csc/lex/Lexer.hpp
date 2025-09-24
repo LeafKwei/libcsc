@@ -15,11 +15,11 @@ CSC_BEGIN
 class Lexer : public PureLexer{
 public:
     Lexer();
-    Lexer(const CscStr &str);
-    Token nextToken();
+    Lexer(crString str);
+    Token    nextToken();
     Locator locator(int offset=0) const;
-    bool valid() const;
-    const CscStr& str() const;
+    bool      valid() const;
+    crString str() const;
 
 private:
     CharMngr m_mngr;

@@ -42,7 +42,7 @@ void show(const Token &token){
 
 int main(void){
     std::ifstream ifs("myconfig.csc");
-    CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());  //Use parentheses for (std::istreambuf_iterator<char>(ifs) because cpp compiler will recongnize it as a function declaraion without parentheses
+    String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());  //Use parentheses for (std::istreambuf_iterator<char>(ifs) because cpp compiler will recongnize it as a function declaraion without parentheses
 
 #if 0
     Lexer lexer{};

@@ -13,7 +13,7 @@ public:
     TokenType type() override;
 
 protected:
-    virtual bool canRead(CscChar ch);
+    virtual bool canRead(Char ch);
 };
 
 class BlankReader : public CommonReader{
@@ -22,7 +22,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(CscChar ch) override;
+    bool canRead(Char ch) override;
 };
 
 class DescriptionReader : public CommonReader{
@@ -31,7 +31,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(CscChar ch) override;
+    bool canRead(Char ch) override;
 };
 
 class IdentifierReader : public CommonReader{
@@ -40,7 +40,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(CscChar ch) override;
+    bool canRead(Char ch) override;
 };
 
 class OperatorReader: public CommonReader{
@@ -49,7 +49,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(CscChar ch) override;
+    bool canRead(Char ch) override;
 };
 
 class NumberReader : public CommonReader{
@@ -59,7 +59,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(CscChar ch) override;
+    bool canRead(Char ch) override;
 
 private:
     int m_num;        //Realy reading number of character.
@@ -77,7 +77,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(CscChar ch) override;
+    bool canRead(Char ch) override;
 
 private:
     void readString(Token &token, CharMngr &mngr);
@@ -90,7 +90,7 @@ public:
     TokenType type() override;
 
 protected:
-    bool canRead(CscChar ch) override;
+    bool canRead(Char ch) override;
 };
 
 

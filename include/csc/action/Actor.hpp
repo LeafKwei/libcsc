@@ -11,8 +11,8 @@ public:
 
     UID        scopeID()                                      { return m_scopeid; }
     Livetime livetime()                                      { return m_livetime; }
-    bool       processable(ConstAction action) { return m_processable(action); }
-    bool       process(ConstAction action)        { return m_processor(action); }
+    bool       processable(crAction action) { return m_processable(action); }
+    bool       process(crAction action)        { return m_processor(action); }
 
 private:
     UID                   m_scopeid;

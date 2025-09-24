@@ -1,7 +1,7 @@
 #include "csc/lex/Locator.hpp"
 CSC_BEGIN
 
-Locator::Locator(const CscStr &str, int index) : 
+Locator::Locator(crString str, int index) : 
     m_row(1), m_col(1), m_index(index)
 {
     decltype(str.size()) start = 0;

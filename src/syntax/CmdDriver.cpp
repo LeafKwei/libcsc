@@ -9,7 +9,7 @@ CmdDriver::CmdDriver(){
     installCommands();
 }
 
-void CmdDriver::drive(ConstStr script, Context &context){
+void CmdDriver::drive(crString script, Context &context){
     Lexer lexer(script);
 
     /* 重复读入token并压入CmdExecutor中，并在具备匹配的命令时执行命令 */
@@ -41,7 +41,7 @@ void CmdDriver::installCommands(){
     m_executor.addCommand(std::make_shared<ArrayAssignCmd>());
 }
 
-CscStr CmdDriver::makeExceptMessage(ConstStr script, const Locator &locator){
+String CmdDriver::makeExceptMessage(crString script, const Locator &locator){
     std::stringstream sstream;
     sstream << "row " << locator.row() << ", col " << locator.col() << ".";
     sstream << "text: " << script.substr(locator.index(), 32);

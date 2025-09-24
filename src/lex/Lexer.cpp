@@ -3,7 +3,7 @@
 CSC_BEGIN
 
 Lexer::Lexer() : Lexer(""){ }
-Lexer::Lexer(const CscStr &str) : m_mngr(str){ }
+Lexer::Lexer(crString str) : m_mngr(str){ }
 
 Token Lexer::nextToken(){
     return nextTokenFrom(m_mngr);
@@ -13,7 +13,7 @@ bool Lexer::valid() const{
     return m_mngr.valid();
 }
 
-const CscStr& Lexer::str() const{
+crString Lexer::str() const{
     return m_mngr.str();
 }
 

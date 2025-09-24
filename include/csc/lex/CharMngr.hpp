@@ -8,20 +8,20 @@ CSC_BEGIN
 class CharMngr{
 public:
     enum SeekOption{Set, Cur, End};
-    CharMngr(const CscStr &str, int index=0);
+    CharMngr(crString str, int index=0);
     
     int         index() const;
     int         length() const;
     bool      valid() const;
-    CscChar at(int index) const;
-    CscChar getch() const;
-    CscChar forward();
-    CscChar backward();
-    const CscStr& str() const;
+    Char      at(int index) const;
+    Char      getch() const;
+    Char      forward();
+    Char      backward();
+    crString str() const;
     void       seek(SeekOption option, int offset);
 
 private:
-    CscStr m_str;
+    String m_str;
     Size_t m_index;
 };
 

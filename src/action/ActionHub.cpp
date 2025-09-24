@@ -2,8 +2,8 @@
 #include "csc/action/ActionHub.hpp"
 CSC_BEGIN
 
-void ActionHub::makeActor(const ActProcessable &proable, const ActProcessor &process, Livetime livetime=Livetime::Scoped, const Context &context){
-    auto scopeid = context.scopeID();
+void ActionHub::makeActor(const ActProcessable &proable, const ActProcessor &process, const ScopeMetaData &meta, Livetime livetime){
+    auto scopeid = meta.id;
     if(m_actors.find(scopeid) == m_actors.end()){
         m_actors.emplace(scopeid, ActorList());
     }
@@ -12,12 +12,12 @@ void ActionHub::makeActor(const ActProcessable &proable, const ActProcessor &pro
     pos -> second.emplace_back(proable, process, scopeid, livetime);
 }
 
-void ActionHub::sendAction(ActionType type, std::any extraData, const Context &context){
-    m_actions.emplace_back(type, extraData, context);
+void ActionHub::sendAction(ActionType type, std::any extraData, const ScopeMetaData &meta){
+    m_actions.emplace_back(type, extraData, meta);
 }
 
-void ActionHub::sendInnerAction(std::any extraData, const Context &context){
-    m_actions.emplace_back(ActionType::Inner, extraData, context);
+void ActionHub::sendInnerAction(std::any extraData, const ScopeMetaData &meta){
+    m_actions.emplace_back(ActionType::Inner, extraData, meta);
 }
 
 Size_t ActionHub::threshold(){
@@ -68,7 +68,7 @@ void ActionHub::processInnerAction(Context &context){
     }
 }
 
-void ActionHub::do_processInnerAction(ConstAction action){
+void ActionHub::do_processInnerAction(crAction action){
     switch(std::any_cast<InnerAction>(action.extraData())){
         case InnerAction::ExitScope:
             processExitScope(action);
@@ -76,12 +76,12 @@ void ActionHub::do_processInnerAction(ConstAction action){
     }
 }
 
-void ActionHub::processExitScope(ConstAction action){
+void ActionHub::processExitScope(crAction action){
     if(m_actors.find(action.scopeID()) == m_actors.end()) return;
     m_actors.erase(action.scopeID());
 }
 
-void ActionHub::callActor(ConstAction action){
+void ActionHub::callActor(crAction action){
     auto id = action.scopeID();
     auto &actors = m_actors.at(id);
     if(actors.size() == 0){

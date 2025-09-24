@@ -9,9 +9,9 @@ CSC_BEGIN
  /* 声明一些通用的别名 */
 
 //===================== Alias ===================
-using CscChar = char;
-using CscStr = std::string;
-using ConstStr = const CscStr&;
+using Char = char;
+using String = std::string;
+using crString = const String&;
 using UID = unsigned long long;     //U means unique.
 using Size_t = std::size_t;
 

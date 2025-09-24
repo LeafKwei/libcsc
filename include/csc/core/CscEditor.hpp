@@ -10,20 +10,20 @@ CSC_BEGIN
   */
 class CscEditor{
 public:
-    using InitValues = std::initializer_list<CscStr>;
+    using InitValues = std::initializer_list<String>;
 
 public:
     CscEditor(Context &context);
 
     CscEditor& autoEnterOn();                  /* 启用自动进入作用域的功能，当makeScope函数创建作用域后，自动进入该作用域 */
     CscEditor& autoEnterOff();                  /* 禁用自动进入作用域的功能(默认) */
-    CscEditor& makeScope(ConstStr name);
-    CscEditor& enterScope(ConstStr name);
+    CscEditor& makeScope(crString name);
+    CscEditor& enterScope(crString name);
     CscEditor& leaveScope();
-    CscEditor& cleanScope(ConstStr name);
-    CscEditor& makeVariable(ConstStr name, InitValues values, ValueType type);
-    CscEditor& extendValues(ConstStr name, InitValues values);
-    CscEditor& cleanVariable(ConstStr name);
+    CscEditor& cleanScope(crString name);
+    CscEditor& makeVariable(crString name, InitValues values, ValueType type);
+    CscEditor& extendValues(crString name, InitValues values);
+    CscEditor& cleanVariable(crString name);
 
 private:
     bool m_autoEnter;

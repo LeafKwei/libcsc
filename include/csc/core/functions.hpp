@@ -7,8 +7,8 @@
 
 CSC_BEGIN
 
-inline std::vector<CscStr> splitPath(ConstStr path){
-    std::vector<CscStr> items;
+inline std::vector<String> splitPath(crString path){
+    std::vector<String> items;
     Size_t pos = 0;
 
     if(pos == path.find('/')){                  //如果path的首个字符为/，即path为绝对路径时
@@ -18,7 +18,7 @@ inline std::vector<CscStr> splitPath(ConstStr path){
 
     while(pos < path.size()){
         auto nxpos = path.find('/', pos);
-        if(nxpos == CscStr::npos){       //如果path没有更多/时，那么剩余的部分就直接作为作用域或变量名称
+        if(nxpos == String::npos){       //如果path没有更多/时，那么剩余的部分就直接作为作用域或变量名称
             items.push_back(path.substr(pos, path.size() - pos));
             break;
         }
@@ -36,10 +36,10 @@ inline std::vector<CscStr> splitPath(ConstStr path){
     return items;
 }
 
-inline std::pair<CscStr, CscStr> detachName(ConstStr path){
+inline std::pair<String, String> detachName(crString path){
     auto pos = path.rfind('/');
 
-    if(pos == CscStr::npos){                       //当path不包含任何/，即path仅是作用域或变量名时
+    if(pos == String::npos){                       //当path不包含任何/，即path仅是作用域或变量名时
         return {"", path};
     }
 

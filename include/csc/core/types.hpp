@@ -12,7 +12,7 @@ using array_bool = std::vector<bool>;
 using array_int    = std::vector<int>;
 using array_long = std::vector<long>;
 using array_double = std::vector<double>;
-using array_string = std::vector<CscStr>;
+using array_string = std::vector<String>;
 
 CSC_END
 #endif

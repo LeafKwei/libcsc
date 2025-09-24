@@ -11,9 +11,8 @@ CSC_BEGIN
 
 class CommonCmd : public Command{
 public:
-    using InitOpTypes = std::initializer_list<OperandType>;
-    using OpTypeList = std::vector<OperandType>;
-    using ConstOpTypeList = const OpTypeList&;
+    using InitOpTypes  = std::initializer_list<OperandType>;
+    using OpTypeList   = std::vector<OperandType>;
 
 public:
     CommonCmd() =default;

@@ -46,7 +46,7 @@ bool ExitScopeCmd::runnable(const TokenList &tokens){
 void ExitScopeCmd::run(const TokenList &tokens, Context &context){
     auto &name = tokens[1].buffer;
 
-    if(name != context.scopeName()){
+    if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
 

@@ -26,7 +26,7 @@ TokenType CommonReader::type(){
     return TokenType::Aborted;
 }
 
-bool CommonReader::canRead(CscChar ch){
+bool CommonReader::canRead(Char ch){
     return false;
 }
 
@@ -39,7 +39,7 @@ TokenType BlankReader::type(){
     return TokenType::Blank;
 }
 
-bool BlankReader::canRead(CscChar ch){
+bool BlankReader::canRead(Char ch){
     return isBlank(ch);
 }
 
@@ -52,7 +52,7 @@ TokenType DescriptionReader::type(){
     return TokenType::Ignored;
 }
 
-bool DescriptionReader::canRead(CscChar ch){
+bool DescriptionReader::canRead(Char ch){
     if(!isNewLine(ch)) return true;
     return false;
 }
@@ -66,7 +66,7 @@ TokenType IdentifierReader::type(){
     return TokenType::Identifier;
 }
 
-bool IdentifierReader::canRead(CscChar ch){
+bool IdentifierReader::canRead(Char ch){
     return isIdentifier(ch);
 }
 
@@ -79,7 +79,7 @@ TokenType OperatorReader::type(){
     return TokenType::Operator;
 }
 
-bool OperatorReader::canRead(CscChar ch){
+bool OperatorReader::canRead(Char ch){
     return isOperator(ch);
 }
 
@@ -124,7 +124,7 @@ TokenType NumberReader::type(){
     return TokenType::Number;
 }
 
-bool NumberReader::canRead(CscChar ch){
+bool NumberReader::canRead(Char ch){
     return false;
 }
 
@@ -184,7 +184,7 @@ TokenType StringReader::type(){
     return TokenType::String;
 }
 
-bool StringReader::canRead(CscChar ch){
+bool StringReader::canRead(Char ch){
     return false;
 }
 
@@ -194,7 +194,7 @@ void StringReader::readString(Token &token, CharMngr &mngr){
 
     bool escape = false;
     while(mngr.valid()){
-        CscChar ch = mngr.forward();
+        Char ch = mngr.forward();
 
         if(escape){
             escape = false;
@@ -252,7 +252,7 @@ TokenType ArrayReader::type(){
     return TokenType::Array;
 }
 
-bool ArrayReader::canRead(CscChar ch){
+bool ArrayReader::canRead(Char ch){
     return false;
 }
 

@@ -15,13 +15,13 @@ public:
     CmdDriver(const CmdDriver &other) =delete;
     CmdDriver& operator=(const CmdDriver &other) =delete;
 
-    void drive(ConstStr script, Context &context);   /* 使用给定的Context对象开始对script进行解析执行 */
+    void drive(crString script, Context &context);   /* 使用给定的Context对象开始对script进行解析执行 */
 
 private:
     CmdExecutor m_executor;
 
     void    installCommands();
-    CscStr makeExceptMessage(ConstStr script, const Locator &locator);
+    String makeExceptMessage(crString script, const Locator &locator);
 };
 
 CSC_END

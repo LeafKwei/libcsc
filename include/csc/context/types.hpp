@@ -13,9 +13,9 @@ struct Scope;
 using VariablePtr = std::shared_ptr<Variable>;
 using ScopePtr = std::shared_ptr<Scope>;
 using ScopeWkr = std::weak_ptr<Scope>;
-using VariableKeeper = std::map<CscStr, VariablePtr>;
-using ScopeKeeper = std::map<CscStr, ScopePtr>;
-using ValueKeeper = std::vector<CscStr>;
+using VariableKeeper = std::map<String, VariablePtr>;
+using ScopeKeeper = std::map<String, ScopePtr>;
+using ValueKeeper = std::vector<String>;
 
 enum class ValueType{
     Unknown, 
@@ -24,25 +24,30 @@ enum class ValueType{
 };
 
 struct Variable{
-    CscStr name;
+    String name;
     ValueKeeper values;
     ValueType type;
-};
-
-struct Scope{
-    UID id;
-    CscStr name;
-    ScopeWkr parent;
-    VariableKeeper variables;
-    ScopeKeeper scopes;
 };
 
 struct ScopePos{
     ScopeWkr scope;
 };
 
+struct ScopeMetaData{
+    UID id;
+    String name;
+    ScopeWkr ptr;
+};
+
+struct Scope{
+    ScopeMetaData meta;
+    ScopeWkr          parent;
+    VariableKeeper  variables;
+    ScopeKeeper     scopes;
+};
+
 struct VariableValue{
-    CscStr str;
+    String str;
     ValueType type;
 };
 
