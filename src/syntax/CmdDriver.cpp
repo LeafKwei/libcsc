@@ -29,9 +29,19 @@ void CmdDriver::drive(crString script, Context &context){
          */
         m_executor.pushToken(token);
         if(m_executor.executable()){
-            m_executor.execute(context);
+            do_execute(context);
         }
     }
+}
+
+void CmdDriver::do_execute(Context &context){
+    if(!m_executor.execute(context, m_acthub)){
+        return;  //没有执行任何命令时直接返回
+    }
+
+    /* 当命令执行成功后，开始分发Action并处理 */
+    m_acthub.distributeAction(context);
+    m_acthub.processInnerAction(context);
 }
 
 void CmdDriver::installCommands(){
@@ -39,6 +49,7 @@ void CmdDriver::installCommands(){
     m_executor.addCommand(std::make_shared<ExitScopeCmd>());
     m_executor.addCommand(std::make_shared<AssignCmd>());
     m_executor.addCommand(std::make_shared<ArrayAssignCmd>());
+    m_executor.addCommand(std::make_shared<ActionCmd>());
 }
 
 String CmdDriver::makeExceptMessage(crString script, const Locator &locator){

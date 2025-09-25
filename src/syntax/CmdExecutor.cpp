@@ -23,18 +23,18 @@ bool CmdExecutor::executable() const noexcept{
     return m_current -> commands.size() != 0;
 }
 
-bool CmdExecutor::execute(Context &context){
+bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
     auto &commands = m_current -> commands;
     assert(commands.size() > 0);
 
-    /* 本例当前Node中的所有Command，通过runnable函数决定该Command是否可以处理当前的Token序列 */
+    /* 遍历当前Node中的所有Command，通过runnable函数决定该Command是否可以处理当前的Token序列 */
     for(auto &cmd : commands){
         if(!cmd -> runnable(m_tokens)){
             continue;
         }
 
         /* 执行Command，随后清空Token列表和重设m_current为m_root  */
-        cmd -> run(m_tokens, context);
+        cmd -> run(m_tokens, context, ctl);
         reset();
         return true;
     }

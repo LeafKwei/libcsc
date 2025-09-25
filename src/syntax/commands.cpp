@@ -23,13 +23,14 @@ bool EnterScopeCmd::runnable(const TokenList &tokens){
     return tokens.at(1).buffer == "::";
 }
 
-void EnterScopeCmd::run(const TokenList &tokens, Context &context){
-    auto &name = tokens[0].buffer;
+void EnterScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
+    auto &name = tokens.at(0).buffer;
     
     if(context.probeScope(name)){
          context.enterScope(name);
     }
     else{
+        ctl.sendAction(ActionType::MakeScope, name, context.scopeMetaData());
         context.makeScope(name, true);
     }
 }
@@ -43,13 +44,14 @@ bool ExitScopeCmd::runnable(const TokenList &tokens){
     return tokens.at(0).buffer == "::";
 }
 
-void ExitScopeCmd::run(const TokenList &tokens, Context &context){
-    auto &name = tokens[1].buffer;
+void ExitScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
+    auto &name = tokens.at(1).buffer;
 
     if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
 
+    ctl.sendInnerAction(0, context.scopeMetaData());
     context.leaveScope();
 }
 
@@ -62,11 +64,12 @@ bool AssignCmd::runnable(const TokenList &tokens){
     return tokens.at(1).buffer == "=";
 }
 
-void AssignCmd::run(const TokenList &tokens, Context &context){
-    auto vtype = valueTypeof(tokens[2]);
+void AssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
+    auto vtype = valueTypeof(tokens.at(2));
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
 
-    context.makeVariable(tokens[0].buffer, tokens[2].buffer, vtype);
+    ctl.sendAction(ActionType::MakeVariable, tokens.at(0).buffer, context.scopeMetaData());
+    context.makeVariable(tokens.at(0).buffer, tokens.at(2).buffer, vtype);
 }
 
 //============== ArrayAssignCmd =============
@@ -83,15 +86,15 @@ bool ArrayAssignCmd::runnable(const TokenList &tokens){
  * 依次读取数组字符串中的每个元素，并将其追加到Context的变量中。每个被读入的元素都会被判断类型，如果类型和第一个元素
  * 不同，则视为出错
  */
-void ArrayAssignCmd::run(const TokenList &tokens, Context &context){
+void ArrayAssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
     /* 获取首个元素的类型并将之作为数组的类型 */
-    auto vtype = valueTypeof(tokens[2]);
+    auto vtype = valueTypeof(tokens.at(2));
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
-    context.makeVariable(tokens[0].buffer, "", vtype);
+    context.makeVariable(tokens.at(0).buffer, "", vtype);
 
-    auto &name = tokens[0].buffer;
+    auto &name = tokens.at(0).buffer;
     auto etype = ValueType::Unknown;
-    CharMngr mngr(tokens[2].buffer);
+    CharMngr mngr(tokens.at(2).buffer);
     PureLexer lexer;
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
@@ -123,6 +126,24 @@ void ArrayAssignCmd::run(const TokenList &tokens, Context &context){
         context.extendValues(name, {token.buffer});
         etype = cetype;
     }
+}
+
+//============== ActionCmd =============
+ActionCmd::ActionCmd() : CommonCmd(
+    {OperandType::Keyword, OperandType::Value}
+){}
+
+bool ActionCmd::runnable(const TokenList &tokens){
+    return (tokens.at(0).buffer == "action") && (tokens.at(1).type == TokenType::String);
+}
+
+void ActionCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
+    if(tokens.at(1).buffer == "genidx") run_genidx(tokens, context);
+    else throw ActionExcept(String("Unsupport action: ") + tokens.at(1).buffer);
+}
+
+void ActionCmd::run_genidx(const TokenList &tokens, Context &context){
+    
 }
 
 CSC_END

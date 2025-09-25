@@ -18,8 +18,10 @@ public:
     void drive(crString script, Context &context);   /* 使用给定的Context对象开始对script进行解析执行 */
 
 private:
+    ActionHub     m_acthub;
     CmdExecutor m_executor;
 
+    void    do_execute(Context &context);
     void    installCommands();
     String makeExceptMessage(crString script, const Locator &locator);
 };

@@ -15,7 +15,7 @@ inline OperandType operandTypeof(const Token &token){
         case TokenType::Keyword:
             if(token.buffer == "true" || token.buffer == "false")
                 return OperandType::Value;
-            return OperandType::Unexcepted;
+            return OperandType::Keyword;
 
         case TokenType::Operator:
             return OperandType::Operator;

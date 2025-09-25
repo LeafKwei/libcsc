@@ -29,28 +29,38 @@ class EnterScopeCmd : public CommonCmd{
 public:
     EnterScopeCmd();
     bool runnable(const TokenList &tokens) override;
-    void run(const TokenList &tokens, Context &context) override;
+    void run(const TokenList &tokens, Context &context, ActionCtl &ctl) override;
 };
 
 class ExitScopeCmd : public CommonCmd{
 public:
     ExitScopeCmd();
     bool runnable(const TokenList &tokens) override;
-    void run(const TokenList &tokens, Context &context) override;
+    void run(const TokenList &tokens, Context &context, ActionCtl &ctl) override;
 };
 
 class AssignCmd : public CommonCmd{
 public:
     AssignCmd();
     bool runnable(const TokenList &tokens) override;
-    void run(const TokenList &tokens, Context &context) override;
+    void run(const TokenList &tokens, Context &context, ActionCtl &ctl) override;
 };
 
 class ArrayAssignCmd : public CommonCmd{
 public:
     ArrayAssignCmd();
     bool runnable(const TokenList &tokens) override;
-    void run(const TokenList &tokens, Context &context) override;
+    void run(const TokenList &tokens, Context &context, ActionCtl &ctl) override;
+};
+
+class ActionCmd : public CommonCmd{
+public:
+    ActionCmd();
+    bool runnable(const TokenList &tokens) override;
+    void run(const TokenList &tokens, Context &context, ActionCtl &ctl) override;
+
+private:
+    void run_genidx(const TokenList &tokens, Context &context);
 };
 
 CSC_END

@@ -7,7 +7,7 @@ CSC_BEGIN
 
 enum class OperandType{
     Unexcepted,
-    Identifier, Operator, Value, Values
+    Identifier, Keyword, Operator, Value, Values
 };
 
 CSC_END
