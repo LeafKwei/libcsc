@@ -11,6 +11,7 @@ class ActionCtl{
 public:
     virtual void sendAction(ActionType type, std::any extraData, Context::crMeta meta) =0;
     virtual void sendInnerAction(std::any extraData, Context::crMeta meta) =0;
+    virtual void addActor(ActProcessable checker, ActProcessor worker, UID scopeid, Livetime livetime=Livetime::Scoped) =0;
 };
 
 CSC_END

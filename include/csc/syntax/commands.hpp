@@ -60,7 +60,7 @@ public:
     void run(const TokenList &tokens, Context &context, ActionCtl &ctl) override;
 
 private:
-    void run_genidx(const TokenList &tokens, Context &context);
+    void run_genidx(ActionCtl &ctl, UID scopeid);
 };
 
 CSC_END

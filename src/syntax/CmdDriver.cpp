@@ -41,7 +41,6 @@ void CmdDriver::do_execute(Context &context){
 
     /* 当命令执行成功后，开始分发Action并处理 */
     m_acthub.distributeAction(context);
-    m_acthub.processInnerAction(context);
 }
 
 void CmdDriver::installCommands(){

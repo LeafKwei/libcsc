@@ -1,6 +1,7 @@
 #include "csc/syntax/commands.hpp"
 #include "csc/syntax/functions.hpp"
 #include "csc/lex/PureLexer.hpp"
+#include "csc/action/types.hpp"
 CSC_BEGIN
 
 //============== CommonCmd =============
@@ -51,7 +52,7 @@ void ExitScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
 
-    ctl.sendInnerAction(0, context.scopeMetaData());
+    ctl.sendInnerAction(InnerAction::ExitScope, context.scopeMetaData());
     context.leaveScope();
 }
 
@@ -90,6 +91,7 @@ void ArrayAssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &c
     /* 获取首个元素的类型并将之作为数组的类型 */
     auto vtype = valueTypeof(tokens.at(2));
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
+    ctl.sendAction(ActionType::MakeVariable, tokens.at(0).buffer, context.scopeMetaData());
     context.makeVariable(tokens.at(0).buffer, "", vtype);
 
     auto &name = tokens.at(0).buffer;
@@ -138,12 +140,40 @@ bool ActionCmd::runnable(const TokenList &tokens){
 }
 
 void ActionCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
-    if(tokens.at(1).buffer == "genidx") run_genidx(tokens, context);
+    if(tokens.at(1).buffer == "genidx") run_genidx(ctl, context.scopeMetaData().id);
     else throw ActionExcept(String("Unsupport action: ") + tokens.at(1).buffer);
 }
 
-void ActionCmd::run_genidx(const TokenList &tokens, Context &context){
-    
+void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
+    ctl.addActor(
+        [](crAction action) -> bool{
+            return (action.type() == ActionType::MakeScope) || (action.type() == ActionType::MakeVariable);
+        },
+
+        [](crAction action, Context &context) -> bool{
+            context.setPostion(action.postion());
+            if(action.type() == ActionType::MakeScope){
+                if(!context.probeVariable("_sidx_")){
+                    context.makeVariable("_sidx_", {std::any_cast<String>(action.extraData())}, ValueType::Strings);
+                    return true;
+                }
+                context.extendValues("_sidx_", {std::any_cast<String>(action.extraData())});
+                return true;
+            }
+            else if(action.type() == ActionType::MakeVariable){
+                 if(!context.probeVariable("_vidx_")){
+                    context.makeVariable("_vidx_", {std::any_cast<String>(action.extraData())}, ValueType::Strings);
+                    return true;
+                }
+                context.extendValues("_vidx_", {std::any_cast<String>(action.extraData())});
+                return true;
+            }
+
+            return false;
+        },
+
+        scopeid, Livetime::Scoped
+    );
 }
 
 CSC_END

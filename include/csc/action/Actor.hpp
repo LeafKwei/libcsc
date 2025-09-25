@@ -6,15 +6,17 @@ CSC_BEGIN
 
 class Actor{
 public:
-    Actor(const ActProcessable &proable, const ActProcessor &process, UID scopeid, Livetime livetime=Livetime::Scoped) :
-        m_scopeid(scopeid), m_livetime(livetime){}
+    Actor(const ActProcessable &checker, const ActProcessor &worker, Livetime livetime=Livetime::Scoped) :
+        m_livetime(livetime), m_checker(checker), m_worker(worker){}
 
-    UID        scopeID()                                                                { return m_scopeid; }
-    Livetime livetime()                                                               { return m_livetime; }
+    Livetime livetime()                                                  { return m_livetime; }
+    bool processable(crAction action)                         { return m_checker(action); }
+    bool process(crAction action, Context &context)  { return m_worker(action, context); }
 
 private:
-    UID                   m_scopeid;
     Livetime            m_livetime;
+    ActProcessable m_checker;
+    ActProcessor    m_worker;
 };
 
 CSC_END
