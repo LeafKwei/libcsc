@@ -14,7 +14,11 @@ public:
     }
 
     void values(crString name, const VariableValues &values){
-        std::cout << "value: " << values.str() << std::endl;
+        std::cout << name <<" = ";
+        for(int i = 0; i < values.size(); i++){
+            std::cout << values.str(i) << ",";
+        }
+        std::cout << std::endl;
     }
 };
 
@@ -25,11 +29,11 @@ int main(int argc, char *argv[]){
     AnySeeker seeker;
     CscHandler handler(str);
 
-    std::cout << handler.enterAndGet<int>("/custom/tom/age") << std::endl;
-    std::cout << handler.enterAndGet<String>("/player") << std::endl;
-    std::cout << handler.enterAndGet<double>("/custom/tom/height") << std::endl;
-    std::cout << handler.enterAndGet<int>("/custom/tom/weight") << std::endl;
-    std::cout << handler.enter("/").enter("custom").enter("tom").getValue<bool>("isHappy") << std::endl;
-    std::cout << handler.enter("/").toString() << std::endl;
+    // std::cout << handler.enterAndGet<int>("/custom/tom/age") << std::endl;
+    // std::cout << handler.enterAndGet<String>("/player") << std::endl;
+    // std::cout << handler.enterAndGet<double>("/custom/tom/height") << std::endl;
+    // std::cout << handler.enterAndGet<int>("/custom/tom/weight") << std::endl;
+    // std::cout << handler.enter("/").enter("custom").enter("tom").getValue<bool>("isHappy") << std::endl;
+    // std::cout << handler.enter("/").toString() << std::endl;
     handler.enter("/").iterate(seeker);
 }

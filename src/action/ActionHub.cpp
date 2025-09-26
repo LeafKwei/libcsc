@@ -11,7 +11,10 @@ void ActionHub::sendInnerAction(std::any extraData, const ScopeMetaData &meta){
 }
 
 void ActionHub::addActor(ActProcessable checker, ActProcessor worker, UID scopeid, Livetime livetime){
-    m_actors.insert({scopeid, ActorList()});
+    if(m_actors.find(scopeid) == m_actors.end()){
+        m_actors.insert({scopeid, ActorList()});
+    }
+
     m_actors.at(scopeid).emplace_back(checker, worker, livetime);
 }
 
@@ -44,7 +47,10 @@ void ActionHub::distributePublicAction(crAction action, Context &context){
         return;
     }
 
+    /* 备份context当前的作用域位置，执行action后再恢复context的作用域 */
+    auto backup = context.postion();
     actorPtr -> process(action, context);
+    context.setPostion(backup);
 }
 
 void ActionHub::distributeInnerAction(crAction action, Context &context){
@@ -73,7 +79,12 @@ ActionHub::ActIterator ActionHub::findProcessableActor(ActorList &actorList, crA
 }
 
 void ActionHub::removeActor(UID scopeid, Livetime livetime){
-    auto &actorList = m_actors.at(scopeid);
+    auto actorListPtr = m_actors.find(scopeid);
+    if(actorListPtr == m_actors.end()){
+        return;
+    }
+
+    auto &actorList = actorListPtr -> second;
     auto actorPtr = actorList.begin();
     auto end = actorList.end();
 

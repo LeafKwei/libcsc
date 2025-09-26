@@ -47,7 +47,6 @@ bool ExitScopeCmd::runnable(const TokenList &tokens){
 
 void ExitScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
     auto &name = tokens.at(1).buffer;
-
     if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
@@ -144,6 +143,11 @@ void ActionCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
     else throw ActionExcept(String("Unsupport action: ") + tokens.at(1).buffer);
 }
 
+/**
+ * 关键字：action "genidx"
+ * 在当前作用域中创建两个内部变量“_sidx_”、“_vidx_”，并且将此作用域中随后读取的子作用域名称保存到_sidx_，变量名称保存到_vidx_，
+ * 供迭代使用
+ */
 void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
     ctl.addActor(
         [](crAction action) -> bool{
