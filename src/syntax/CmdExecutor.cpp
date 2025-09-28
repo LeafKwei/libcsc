@@ -12,7 +12,7 @@ bool CmdExecutor::hasToken() const noexcept{
 }
 
 bool CmdExecutor::exceed() const noexcept{
-    return m_key.size() > m_maxKeySize;
+    return m_key.size() >= m_maxKeySize;
 }
 
 void CmdExecutor::pushToken(const Token &token){
