@@ -4,25 +4,23 @@
 #ifndef CSC_SYNTAX_CMDS_HPP
 #define CSC_SYNTAX_CMDS_HPP
 
-#include <vector>
 #include "csc/syntax/Command.hpp"
 #include "csc/utility/utility.hpp"
 CSC_BEGIN
 
 class CommonCmd : public Command{
 public:
-    using InitOpTypes  = std::initializer_list<OperandType>;
-    using OpTypeList   = std::vector<OperandType>;
+    using InitTokens  = std::initializer_list<Token>;
 
 public:
     CommonCmd() =default;
-    CommonCmd(InitOpTypes types);
-    
-    Size_t     sizeofTypes() override;
-    OpType  opTypeAt(int index) override;
+    CommonCmd(InitTokens types);
+    crString key() override;
 
 private:
-    OpTypeList m_types;
+    String m_key;
+
+    void genKey(InitTokens tokens);
 };
 
 class EnterScopeCmd : public CommonCmd{

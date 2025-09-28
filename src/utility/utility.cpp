@@ -4,6 +4,12 @@
 
 CSC_BEGIN
 
+//=================== 关键字定义 ===================
+const String KW_TRUE("true");
+const String KW_FALSE("false");
+const String KW_ACTION("action");
+
+//=================== 通用工具函数 ===================
 String join(String splitor, const std::vector<String> &elements, const std::initializer_list<String> &filters){
     String result;
 

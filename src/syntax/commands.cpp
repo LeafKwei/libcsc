@@ -5,23 +5,36 @@
 CSC_BEGIN
 
 //============== CommonCmd =============
-CommonCmd::CommonCmd(InitOpTypes types) : m_types(types){}
-
-Size_t CommonCmd::sizeofTypes(){
-    return m_types.size();
+CommonCmd::CommonCmd(InitTokens tokens){
+    genKey(tokens);
 }
 
-CommonCmd::OpType  CommonCmd::opTypeAt(int index){
-    return m_types.at(index);
+crString CommonCmd::key(){
+    return m_key;
+}
+
+/* 派生类通过构造函数将一组Token传递给CommonCmd，后者将每个token转换为key item，并最终生成一个key */
+void CommonCmd::genKey(InitTokens tokens){
+    String key("");
+
+    for(const auto &token : tokens){
+        key.append(tokenToKeyItem(token)).append("_");
+    }
+
+    key.pop_back();  //删除末尾多余的_
+    m_key = key;
 }
 
 //============== EnterScopeCmd =============
 EnterScopeCmd::EnterScopeCmd() : CommonCmd(
-    {OperandType::Identifier, OperandType::Operator}
+    {
+        {TokenType::Identifier, ""},
+        {TokenType::Operator, "::"}
+    }
 ){}
 
 bool EnterScopeCmd::runnable(const TokenList &tokens){
-    return tokens.at(1).buffer == "::";
+    return true;
 }
 
 void EnterScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
@@ -38,11 +51,14 @@ void EnterScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ct
 
 //============== ExitScopeCmd =============
 ExitScopeCmd::ExitScopeCmd() : CommonCmd(
-    {OperandType::Operator, OperandType::Identifier}
+    {
+        {TokenType::Operator, "::"},
+        {TokenType::Identifier, ""}
+    }
 ){}
 
 bool ExitScopeCmd::runnable(const TokenList &tokens){
-    return tokens.at(0).buffer == "::";
+    return true;
 }
 
 void ExitScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
@@ -57,11 +73,15 @@ void ExitScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl
 
 //============== AssignCmd =============
 AssignCmd::AssignCmd() : CommonCmd(
-    {OperandType::Identifier, OperandType::Operator, OperandType::Value}
+    {
+        {TokenType::Identifier, ""},
+        {TokenType::Operator, "="},
+        {TokenType::String, ""}              //OperandType::Value可以由TokenType::Number、Bool、String等转换，所以此处可以任意填写其中一个
+    }
 ){}
 
 bool AssignCmd::runnable(const TokenList &tokens){
-    return tokens.at(1).buffer == "=";
+    return true;
 }
 
 void AssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
@@ -74,11 +94,15 @@ void AssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
 
 //============== ArrayAssignCmd =============
 ArrayAssignCmd::ArrayAssignCmd() : CommonCmd(
-    {OperandType::Identifier, OperandType::Operator, OperandType::Values}
+    {
+        {TokenType::Identifier, ""},
+        {TokenType::Operator, "="},
+        {TokenType::Array, ""}
+    }
 ){}
 
 bool ArrayAssignCmd::runnable(const TokenList &tokens){
-    return tokens.at(1).buffer == "=";
+    return true;
 }
 
 /**
@@ -131,11 +155,14 @@ void ArrayAssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &c
 
 //============== ActionCmd =============
 ActionCmd::ActionCmd() : CommonCmd(
-    {OperandType::Keyword, OperandType::Value}
+    {
+        {TokenType::Keyword, KW_ACTION},
+        {TokenType::String, ""}
+    }
 ){}
 
 bool ActionCmd::runnable(const TokenList &tokens){
-    return (tokens.at(0).buffer == "action") && (tokens.at(1).type == TokenType::String);
+    return tokens.at(1).type == TokenType::String;
 }
 
 void ActionCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){

@@ -28,5 +28,10 @@ public:
     ActionExcept(const std::string &msg) : CscExcept(msg){}
 };
 
+/* 对关键字进行声明 */
+extern const String KW_TRUE;        //true和false会在syntax和context被当作OperandType::Value或ValueType::Bool类型处理
+extern const String KW_FALSE;
+extern const String KW_ACTION;
+
 CSC_END
 #endif

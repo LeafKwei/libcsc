@@ -56,9 +56,9 @@ void PureLexer::installReaders(){
 }
 
 void PureLexer::installConverters(){
-    m_converters.insert({"true", TokenType::Keyword});
-    m_converters.insert({"false", TokenType::Keyword});
-    m_converters.insert({"action", TokenType::Keyword});
+    m_converters.insert({KW_TRUE, TokenType::Keyword});
+    m_converters.insert({KW_FALSE, TokenType::Keyword});
+    m_converters.insert({KW_ACTION, TokenType::Keyword});
 }
 
 CSC_END

@@ -32,6 +32,11 @@ void CmdDriver::drive(crString script, Context &context){
             do_execute(context);
         }
     }
+
+    /* 如果script解析完后存在多余未使用的token则抛出异常 */
+    if(m_executor.hasToken()){
+        throw CommandExcept("Needless tokens at end of file.");
+    }
 }
 
 void CmdDriver::do_execute(Context &context){
