@@ -1,3 +1,9 @@
+**0.6.1**
+
+1. 添加了action模块
+2. 重新设计了syntax，添加了CmdExecutor用于缓存Token及执行Command
+3. 新增关键字`action "genidx"`，可为作用域和变量生成索引
+
 **0.5.3**
 
 1. 添加了Context::scopeID函数，用于获取当前Scope的ID

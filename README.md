@@ -73,18 +73,18 @@ cmake -DBUILD_SHARED_LIBS=YES -G "Unix Makefiles" ../libcsc
 #include <fstream>
 #include "csc/core/CscHandler.hpp"
 
-using csc::CscStr;
+using csc::String;
 using csc::CscHandler;
 
 int main(void){
     //使用标准库函数读入文件内容到字符串
 	std::ifstream ifs("sample.csc");
-    CscStr str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
     
     //创建CscHandler对象，解析文件内容
     CscHandler handler(str);
     handler.enter("/");      //进入根作用域
-    std::cout << "name: " << handler.getValue<CscStr>("name") << std::endl;     //获取name变量值
+    std::cout << "name: " << handler.getValue<String>("name") << std::endl;     //获取name变量值
     handler.enter("/Dummy"); //进入根目录下的Scope作用域
     std::cout << "Dummy.switch: " << handler.getValue<bool>("switch") << std::endl;//获取Dummy::switch
     
@@ -129,23 +129,23 @@ CscHandler可用于解析csc文件内容并获取其中的变量值，用户需�
 ```C++
 CscHandler()
     默认构造函数，创建一个带有根作用域的空CscHandler对象，通常结合editor函数和toString函数来创建csc文件的内容
-CscHandler(ConstStr script)
+CscHandler(crString script)
     按csc语法解析script中的内容到CscHandler对象中
-bool accessible(ConstStr path, bool v=false)
+bool accessible(crString path, bool v=false)
     检查给定的路径是否存在，默认将path视为作用域路径，当v为true时，将path视为变量路径
-CscStr absolutePath()
+String absolutePath()
     获取从根作用域到当前作用域的绝对路径
-CscHandler& enter(ConstStr path)
+CscHandler& enter(crString path)
     进入path对应的作用域，当path为"/"时，进入根作用域
 CscHandler& iterate(ContextSeeker &seeker)
     按DFS算法迭代当前作用域的所有变量以及其中的子作用域，用户需要提供一个ContextSeeker的派生类对象
-CscStr toString()
+String toString()
     从当前作用域开始，将其中的所有内容字符串化后返回。如果需要从根作用域字符串化，请先调用enter("/")进入根作用域
 CscEditor editor()
     返回一个CscEditor对象，可用于编辑CscHandler中的内容
-Tp getValue(ConstStr name)
+Tp getValue(crString name)
     获取当前作用域下指定名称的变量值，需要指定该变量值所需转换的类型
-Tp enterAndGet(ConstStr path)
+Tp enterAndGet(crString path)
     获取指定路径下的变量值，需要指定该变量值所需转换的类型
 ```
 
@@ -158,20 +158,20 @@ CscEditor& autoEnterOn()
 	开启autoEnter功能，当使用makeScope函数创建作用域后，自动进入该作用域而无需调用enterScope函数
 CscEditor& autoEnterOff()
 	关闭autoEnter功能
-CscEditor& makeScope(ConstStr name)
+CscEditor& makeScope(crString name)
 	在当前作用域下创建一个指定名称的作用域
-CscEditor& enterScope(ConstStr name)
+CscEditor& enterScope(crString name)
 	进入当前作用域下指定名称的子作用域
 CscEditor& leaveScope()
 	离开当前作用域，回到它的父作用域。当位于根作用域时，调用此函数将引发异常
-CscEditor& cleanScope(ConstStr name)
+CscEditor& cleanScope(crString name)
 	清除当前作用域下指定名称的作用域
-CscEditor& makeVariable(ConstStr name, InitValues values, ValueType type)
+CscEditor& makeVariable(crString name, InitValues values, ValueType type)
 	在当前作用域中创建指定名称的变量，values用于指定变量值，type指定变量的类型，该类型将提供给getValue函数进行类型检查。
     当创建一个已存在的变量时，将会直接使用values替代该变量中的变量值
-CscEditor& extendValues(ConstStr name, InitValues values)
+CscEditor& extendValues(crString name, InitValues values)
 	追加当前作用域中指定名称的变量的变量值
-CscEditor& cleanVariable(ConstStr name)
+CscEditor& cleanVariable(crString name)
 	清除当前作用域中指定名称的变量
 ```
 
@@ -180,11 +180,11 @@ CscEditor& cleanVariable(ConstStr name)
 ContextSeeker定义了用于迭代CscHandler内容的相关接口。用户可参考*csc/core/CscStrSeeker*实现自己的迭代功能：
 
 ```C++
-void enterScope(UID id, const CscStr &name)
+void enterScope(UID id, crString name)
     当进入一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
-void leaveScope(UID id, const CscStr &name)
+void leaveScope(UID id, crString name)
     当离开一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
-void values(const CscStr &name, const VariableValues &values)
+void values(crString name, const VariableValues &values)
     当获取到该作用域中的一个变量时，将调用此函数。name是变量名称，values是变量值列表
 ```
 
@@ -199,8 +199,8 @@ bool
 int
 long
 double
-CscStr/std::string
-array_bool/std::vector<boo>
+String/std::string
+array_bool/std::vector<bool>
 array_int/std::vector<int>
 array_long/std::vector<long>
 array_double/std::vector<double>
@@ -209,12 +209,66 @@ array_string/std::vector<std::string>
 
 
 
+## 4.3.扩展功能
+
+libcsc通过action模块提供了在Command对象之外操作Context的能力，该模块可用于实现那些仅依靠Command对象无法实现的功能，例如生成Scope和Variable的索引。下方是使用ActionHub模块为libcsc增加的扩展功能的列举：
+
+### 索引生成
+
+**基本信息**
+
+* 引入版本：v0.6.1
+* 关键字：`action`
+* 作用域：Scoped(仅在当前作用域内有效)
+* 使用方式：`action "genidx"`
+* 作用：在当前Scope内创建两个strings类型的内置变量`_vidx_`和`_sidx_`，然后从插入位置开始，将后续添加进当前Scope的变量和下一级Scope的名称分别添加到`_vidx_`和`_sidx_`中
+
+**使用方式**
+
+在csc文件内插入
+
+```
+custom::
+	action "genidx"
+	
+	name = "Tom"
+	age = 18
+	
+	sub1::
+	::sub1
+	
+	sub2::
+	::sub2
+::custom
+```
+
+在经过CscHandler解析后，等同于以下内容
+
+```
+custom::
+	_vidx_ = {"name", "age"}
+	_sidx_ = {"sub1", "sub2"}
+	
+	name = "Tom"
+	age = 18
+	
+	sub1::
+	::sub1
+	
+	sub2::
+	::sub2
+::custom
+```
+
+
+
 # 5.项目结构
 
-## 5.1.整体结构
+## 5.1.目录结构
 
 * include：存放libcsc中使用到的头文件
 * legacy：存放libcsc中的遗留代码，这些代码并未使用，但是具有参考价值
+* doc: 存放libcsc文档使用到的相关资源
 * src：存放libcsc的源码文件
 * README.md：项目的介绍以及使用方式
 * Releaselogs.md：项目的发布信息、版本信息、特性
@@ -223,45 +277,7 @@ array_string/std::vector<std::string>
 
 ## 5.2.详细说明
 
-### context
+**整体架构图**
 
-**Context**：Context类是libcsc用于保存所有作用域、变量的底层容器，它以字符串的形式保存每个变量的值，并以ValueType标记该变量的类型，以便之后在类型转换时可对变量进行类型检查
-
-**ContextSeeker**：提供一个可以遍历Context内部所有作用域和变量的接口(按DFS算法遍历每个作用域)，用户可通过实现ContextSeeker并调用CscHandler::iterate函数实现遍历功能
-
-**VariableValues**：当一个变量存在多个值时，需要通过Context::getValues函数获取一个VariableValues对象，通过该对象可以按照指定的索引获取到变量的每个值
-
-### core
-
-**CscEditor**：提供给CscHandler的editor函数使用，是对Context的封装，向用户提供一个可以编辑csc文件内容的接口
-
-**CscHandler**：向用户提供解析、编辑、获取csc文件内容的功能
-
-**CscStrSeeker**：提供给CscHandler的toString函数使用，是ContextSeeker的一个实现，可以将Context中的内容全部转换为一个字符串
-
-### lex
-
-**CharMngr**：将一个索引和一个字符串封装，以便获取一个字符时可以同步更新索引，简化索引的维护工作
-
-**Lexer**：将所有TokenReader集成并统一调用，向上提供将字符串分解为单个Token的功能，同时也负责检查和过滤无效token。每次调用Lexer的nextToken函数时，Lexer会遍历每一个TokenReader，调用它们的read函数并传递CharMngr，通过检查read函数返回的Token的type字段，来决定Token的读取操作是否成功
-
-**Locator**：根据给定的字符串和索引，计算当前读取位置所在的行数和列数。一般用于解析出错时获取位置信息
-
-**PureLexer**：Lexer的基类，Lexer集成了一个CharMngr对象，而PureLexer并未集成，需要结合一个CharMngr对象使用，以此提供更为灵活的控制能力(例如出现非预期的字符时，可以直接操作CharMngr对象检查和跳过)
-
-**readers**：统一声明和定义TokenReader的派生类
-
-**TokenReader**：定义了与Token读取相关的接口，供Lexer调用。一个TokenReader的工作流程为：首先检查CharMngr的当前字符是否是Reader的特征字符，如果是，则执行读取(读取前可能会跳过一些无意义的特征字符，例如{和")
-
-### syntax
-
-**Command**：Command定义了命令的接口，所谓命令，是指可以识别一组符合条件的Token，并根据Token做出相应操作的对象
-
-**cmds**：统一声明和定义Command的派生类
-
-**CommandDrv**：集成了所有Commnad对象并统一调用。其工作流程为：从Lexer中读取Token到Token列表，并在Token满足最小处理数量时，将Token列表依次传递给每个Command对象识别和处理，并根据Command对象的处理结果决定是否向后继续传递或者报告错误
-
-### utility
-
-**utility**：utility当中定义了一些通用的工具函数
+![libcsc_structure](doc/img/libcsc_structure.png)
 
