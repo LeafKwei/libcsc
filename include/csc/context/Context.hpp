@@ -20,11 +20,11 @@ CSC_BEGIN
  */
 class Context{
 public:
-    using Value        = VariableValue;
-    using Values      = VariableValues;
+    using VarValue   = VariableValue;
+    using VarValues = VariableValues;
     using Pos           = ScopePos;
     using crMeta     = const ScopeMetaData&;
-    using InitValues = std::initializer_list<String>;
+    using InitValues = std::initializer_list<Value>;
 
 public:
     Context();
@@ -42,16 +42,16 @@ public:
     void          setPostion(const Pos &pos);                                /* 将当前作用域设置为pos所指定的作用域 */
     String       relation(crString separator=" ") const;               /* 获取从根作用域到当前作用域之间经过的每个作用域的名称组成的字符串，separator用于指定分隔符 */
     
-    Context& makeVariable(crString name, crString value, ValueType type=ValueType::Unknown);     /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
-    Context& makeVariable(crString name, InitValues values, ValueType type=ValueType::Unknown); /* 在当前作用域创建变量时一次性设置多个值 */
+    Context& makeVariable(crString name, crValue value, ValueType type);      /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
+    Context& makeVariable(crString name, InitValues values, ValueType type); /* 在当前作用域创建变量时一次性设置多个值 */
     Context& cleanVariable(crString name);                               /* 删除一个当前作用域中的变量 */
-    Value        getValue(crString name) const;                             /* 获取一个当前作用域的变量的值 */
-    Values      getValues(crString name) const;                            /* 获取一个当前作用域的变量的Values对象，可按索引获取变量的每个值 */
+    VarValue  getValue(crString name) const;                             /* 获取一个当前作用域的变量的值 */
+    VarValues getValues(crString name) const;                            /* 获取一个当前作用域的变量的Values对象，可按索引获取变量的每个值 */
     bool         probeVariable(crString name) const;                     /* 如果当前作用域存在指定名称的变量，则返回true */
     Context& extendValues(crString name, InitValues values);   /* 向指定名称的变量中追加值 */                                                       
     Context& restart();                                                                /* 返回到根作用域，即设置当前作用域为根作用域 */
-    void         clean();                                                                           /* 清除所有的作用域和变量，随后重新创建一个新的根作用域 */
-    void         iterate(ContextSeeker &seeker) const;                         /* 从当前作用域开始，按DFS迭代其中的每个变量及每个子作用域 */
+    void         clean();                                                                   /* 清除所有的作用域和变量，随后重新创建一个新的根作用域 */
+    void         iterate(ContextSeeker &seeker) const;                  /* 从当前作用域开始，按DFS迭代其中的每个变量及每个子作用域 */
 
 private:
     UID         m_idCounter;

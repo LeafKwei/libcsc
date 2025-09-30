@@ -17,37 +17,5 @@ String join(String splitor, const std::vector<String> &elements, const std::init
 int      baseOf(crString str);
 String toEscapingString(crString str);
 
-//============= Templates =============
-template <typename Tp>
-inline String toString(const Tp &v){
-    throw CscExcept("Unsupported type.");
-};
-
-template<>
-inline String toString<bool>(const bool &v){
-    return v ? "true" : "false";
-}
-
-template<>
-inline String toString<int>(const int &v){
-    std::stringstream stream;
-    stream << v;
-    return stream.str();
-}
-
-template<>
-inline String toString<long>(const long &v){
-    std::stringstream stream;
-    stream << v;
-    return stream.str();
-}
-
-template<>
-inline String toString<double>(const double &v){
-    std::stringstream stream;
-    stream << v;
-    return stream.str();
-}
-
 CSC_END
 #endif

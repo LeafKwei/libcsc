@@ -81,7 +81,7 @@ String Context::relation(crString separator) const{
     return stream.str();
 }
 
-Context& Context::makeVariable(crString name, crString value, ValueType type){
+Context& Context::makeVariable(crString name, crValue value, ValueType type){
     return makeVariable(name, {value}, type);
 }
 
@@ -107,7 +107,7 @@ Context& Context::cleanVariable(crString name){
     return *this;
 }
 
-Context::Value Context::getValue(crString name) const{
+Context::VarValue Context::getValue(crString name) const{
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -118,14 +118,14 @@ Context::Value Context::getValue(crString name) const{
     return {variable -> values.at(0), variable -> type};
 }
 
-Context::Values Context::getValues(crString name) const{
+Context::VarValues Context::getValues(crString name) const{
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
 
     auto variable = iterator -> second;
-    return Values(variable -> values, variable -> type);
+    return VarValues(variable -> values, variable -> type);
 }
 
 bool Context::probeVariable(crString name) const{
@@ -224,7 +224,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     auto &variables = scope -> variables;
     if(variables.size() != 0){
         for(auto &variable : variables){
-            seeker.values(variable.second -> name, Values(variable.second -> values, variable.second -> type));
+            seeker.values(variable.second -> name, VarValues(variable.second -> values, variable.second -> type));
         }
     }
 

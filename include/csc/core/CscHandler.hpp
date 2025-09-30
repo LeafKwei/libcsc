@@ -60,7 +60,7 @@ inline bool CscHandler::getValue<bool>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    return value.str == "true" ? true : false;
+    
 }
 
 template<>
@@ -70,7 +70,7 @@ inline int CscHandler::getValue<int>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    return static_cast<int>(std::strtol(value.str.c_str(), NULL, baseOf(value.str)));
+    
 }
 
 template<>
@@ -80,7 +80,7 @@ inline long CscHandler::getValue<long>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    return std::strtol(value.str.c_str(), NULL, baseOf(value.str));
+    
 }
 
 template<>
@@ -90,90 +90,45 @@ inline double CscHandler::getValue<double>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    return std::strtod(value.str.c_str(), NULL);
+    
 }
 
 template<>
 inline String CscHandler::getValue<String>(crString name){
-    return m_context.getValue(name).str;
+    
 }
 
 template<>
 inline array_bool CscHandler::getValue<array_bool>(crString name){
     array_bool array;
 
-    auto values = m_context.getValues(name);
-    if(values.type() != ValueType::Bools){
-        throw CscExcept("Incompatible type.");
-    }
-
-    for(Size_t i = 1; i < values.size(); i++){
-        auto r = values.str(i) == "true" ? true : false;
-        array.push_back(r);
-    }
 }
 
 template<>
 inline array_int CscHandler::getValue<array_int>(crString name){
     array_int array;
 
-    auto values = m_context.getValues(name);
-    if(values.type() != ValueType::Integers){
-        throw CscExcept("Incompatible type.");
-    }
 
-    for(Size_t i = 1; i < values.size(); i++){
-        const auto &v = values.str(i);
-        auto r = static_cast<int>(std::strtol(v.c_str(), NULL, baseOf(v)));
-        array.push_back(r);
-    }
 }
 
 template<>
 inline array_long CscHandler::getValue<array_long>(crString name){
     array_long array;
 
-    auto values = m_context.getValues(name);
-    if(values.type() != ValueType::Integers){
-        throw CscExcept("Incompatible type.");
-    }
 
-    for(Size_t i = 1; i < values.size(); i++){
-        const auto &v = values.str(i);
-        auto r = std::strtol(v.c_str(), NULL, baseOf(v));
-        array.push_back(r);
-    }
 }
 
 template<>
 inline array_double CscHandler::getValue<array_double>(crString name){
     array_long array;
 
-    auto values = m_context.getValues(name);
-    if(values.type() != ValueType::Doubles){
-        throw CscExcept("Incompatible type.");
-    }
 
-    for(Size_t i = 1; i < values.size(); i++){
-        const auto &v = values.str(i);
-        auto r = std::strtol(v.c_str(), NULL, baseOf(v));
-        array.push_back(r);
-    }
 }
 
 template<>
 inline array_string CscHandler::getValue<array_string>(crString name){
     array_string array;
 
-    auto values = m_context.getValues(name);
-    if(values.type() != ValueType::Strings){
-        throw CscExcept("Incompatible type.");
-    }
-
-    for(Size_t i = 1; i < values.size(); i++){
-        const auto &v = values.str(i);
-        array.push_back(v);
-    }
 }
 
 template<typename Tp>

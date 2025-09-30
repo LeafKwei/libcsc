@@ -10,7 +10,7 @@ CSC_BEGIN
   */
 class CscEditor{
 public:
-    using InitValues = std::initializer_list<String>;
+    using InitValues = std::initializer_list<Value>;
 
 public:
     CscEditor(Context &context);

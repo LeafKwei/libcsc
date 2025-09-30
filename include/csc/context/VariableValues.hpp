@@ -14,9 +14,9 @@ public:
     ValueType type() const        { return m_type; }
     bool          isEmpty() const  { return m_keeper.empty(); }
     Size_t        size() const         { return m_keeper.size(); }
-    String       str() const           { assert(m_keeper.size() > 0); return m_keeper.at(0); }
-    String       str(int index) const              { return m_keeper.at(index); }
-    String       operator[] (int index) const { return m_keeper[index]; }
+    Value        val() const           { assert(m_keeper.size() > 0); return m_keeper.at(0); }
+    Value        val(int index) const              { return m_keeper.at(index); }
+    Value        operator[] (int index) const { return m_keeper[index]; }
 
 private:
     const ValueKeeper &m_keeper;
