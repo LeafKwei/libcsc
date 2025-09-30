@@ -37,28 +37,21 @@ inline OperandType operandTypeof(const Token &token){
 CSC_INNER_BEGIN
 /* 将Token类型转换为供Context使用的Value类型 */
 inline ValueType valueTypeofHelper(const Token &token){
-    //Bool
-    if(token.type == TokenType::Keyword){
-        if(token.buffer == "true" || token.buffer == "false"){
-            return ValueType::Bool;
-        }
-    }
-
-    //Integer/Double
-    if(token.type == TokenType::Number){
-        if(token.buffer.find('.') != String::npos){
+    switch(token.type){
+        case TokenType::Keyword:
+            if(token.buffer == "true" || token.buffer == "false") 
+                return ValueType::Bool;
+            return ValueType::Unknown;
+        case TokenType::Number:
+        case TokenType::NumberH:
+            return ValueType::Integer;
+        case TokenType::NumberF:
             return ValueType::Double;
-        }
-
-        return ValueType::Integer;
+        case TokenType::String:
+            return ValueType::String;
+        default:
+            return ValueType::Unknown;
     }
-
-    //String
-    if(token.type == TokenType::String){
-        return ValueType::String;
-    }
-
-    return ValueType::Unknown;
 }
 
 CSC_INNER_END

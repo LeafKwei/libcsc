@@ -150,6 +150,7 @@ void NumberReader::readPrefix(Token &token, CharMngr &mngr){
 }
 
 void NumberReader::readHex(Token &token, CharMngr &mngr){
+    token.type = TokenType::NumberH;
     while(mngr.valid()){
         if(!isHexNumber(mngr.getch())) break;
         token.buffer.push_back(mngr.forward());
@@ -163,7 +164,11 @@ void NumberReader::readNumber(Token &token, CharMngr &mngr){
     while(mngr.valid()){
         auto ch = mngr.getch();
         if(!isNumber(ch) && !(dot && ch == '.')) break;  //If ch neither number nor first dot.
-        if(ch == '.') dot = false;
+        if(ch == '.'){        //读取到dot时，表示该token是一个浮点数
+            dot = false;
+            token.type = TokenType::NumberF;
+        }
+
         token.buffer.push_back(mngr.forward());
         m_num++;
     }
