@@ -166,6 +166,7 @@ void NumberReader::readNumber(Token &token, CharMngr &mngr){
         auto ch = mngr.getch();
         if(!isNumber(ch) && !(dot && ch == '.')) break;  //If ch neither number nor first dot.
         if(ch == '.'){        //读取到dot时，表示该token是一个浮点数
+            token.tag = TokenTag::Float;
             dot = false;
         }
 

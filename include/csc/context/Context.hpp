@@ -23,7 +23,7 @@ public:
     using VarValue          = VariableValue;
     using VarValues        = VariableValues;
     using Pos                  = ScopePos;
-    using crScpMeta     = const ScopeMetaData&;
+    using crScpMeta      = const ScopeMetaData&;
     using InitValues        = std::initializer_list<Value>;
 
 public:
@@ -36,11 +36,11 @@ public:
     Context&        leaveScope();                                                         /* 离开当前作用域，返回到它的父作用域中 */
     Context&        cleanScope(crString name);                                 /* 删除当前作用域的一个子作用域，同时也删除其中的所有变量及该子作用域的子作用域 */
     bool                probeScope(crString name) const;                      /* 如果当前作用域中存在指定名称的子作用域，则返回true */
-    bool               isRootScope() const;                                             /* 如果当前作用域是根作用域，返回true */
-    crScpMeta     scopeMetaData() const noexcept;                        /* 获取当前作用域的元数据 */
-    Pos                postion() const;                                                     /* 获取当前作用域的Pos对象(对指针的包装) */
-    void               setPostion(const Pos &pos);                                /* 将当前作用域设置为pos所指定的作用域 */
-    String            relation(crString separator=" ") const;               /* 获取从根作用域到当前作用域之间经过的每个作用域的名称组成的字符串，separator用于指定分隔符 */
+    bool                isRootScope() const;                                             /* 如果当前作用域是根作用域，返回true */
+    crScpMeta      scopeMetaData() const noexcept;                        /* 获取当前作用域的元数据 */
+    Pos                 postion() const;                                                     /* 获取当前作用域的Pos对象(对指针的包装) */
+    void                setPostion(const Pos &pos);                                /* 将当前作用域设置为pos所指定的作用域 */
+    String             relation(crString separator=" ") const;               /* 获取从根作用域到当前作用域之间经过的每个作用域的名称组成的字符串，separator用于指定分隔符 */
     
     Context&       makeVariable(crString name, crValue value, ValueType type);      /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
     Context&       makeVariable(crString name, InitValues values, ValueType type); /* 在当前作用域创建变量时一次性设置多个值 */

@@ -6,6 +6,10 @@
 #include "csc/types.hpp"
 CSC_BEGIN
 
+enum class TokenTag{
+    None, Float
+};
+
 enum class TokenType{
     Aborted, Ignored, Unexcepted, 
     Keyword,
@@ -15,7 +19,8 @@ enum class TokenType{
 
 struct Token{
     TokenType type;
-    String buffer;
+    TokenTag   tag;
+    String        buffer;
 };
 
 CSC_END
