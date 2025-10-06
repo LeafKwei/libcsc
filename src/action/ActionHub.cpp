@@ -2,11 +2,11 @@
 #include "csc/action/ActionHub.hpp"
 CSC_BEGIN
 
-void ActionHub::sendAction(ActionType type, std::any extraData, const ScopeMetaData &meta){
+void ActionHub::sendAction(ActionType type, Any extraData, const ScopeMetaData &meta){
     m_actions.emplace_back(type, extraData, meta);
 }
 
-void ActionHub::sendInnerAction(std::any extraData, const ScopeMetaData &meta){
+void ActionHub::sendInnerAction(Any extraData, const ScopeMetaData &meta){
     m_actions.emplace_back(ActionType::Inner, extraData, meta);
 }
 

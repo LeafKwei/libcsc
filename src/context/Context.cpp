@@ -3,7 +3,7 @@
 #include "csc/context/Context.hpp"
 CSC_BEGIN
 
-Context::Context() : m_idCounter(0){
+Context::Context() : m_idCounter(1){           //作用域ID从1开始，0作为保留ID，为将来的全局Action做准备
     clean();
 }
 
@@ -60,7 +60,7 @@ bool Context::isRootScope() const{
     return !(m_current -> parent.expired());
 }
 
-Context::crMeta Context::scopeMetaData() const noexcept{
+Context::crScpMeta Context::scopeMetaData() const noexcept{
     return m_current -> meta;
 }
 

@@ -15,8 +15,8 @@ public:
     using ActorMap = std::map<UID, ActorList>;
 
 public:
-    void   sendAction(ActionType type, std::any extraData, Context::crMeta meta) override;
-    void   sendInnerAction(std::any extraData, Context::crMeta meta) override;
+    void   sendAction(ActionType type, Any  extraData, Context::crScpMeta meta) override;
+    void   sendInnerAction(Any  extraData, Context::crScpMeta meta) override;
     void   addActor(ActProcessable checker, ActProcessor worker, UID scopeid, Livetime livetime=Livetime::Scoped) override;
     void   distributeAction(Context &context);
 

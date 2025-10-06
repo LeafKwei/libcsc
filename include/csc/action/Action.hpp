@@ -7,18 +7,18 @@ CSC_BEGIN
 
 class Action{
 public:
-    Action(ActionType type, std::any extraData, Context::crMeta meta) : 
+    Action(ActionType type, Any extraData, Context::crScpMeta meta) : 
         m_type(type), m_extraData(extraData),
         m_pos{meta.ptr}, m_scopeid(meta.id) {}
 
     ActionType                type() const noexcept          { return m_type; }
-    const std::any&         extraData() const noexcept { return m_extraData; }
+    const Any&               extraData() const noexcept { return m_extraData; }
     const Context::Pos&  postion() const noexcept    { return m_pos; }         
     UID                            scopeID() const noexcept   { return m_scopeid; }    
 
 private:
     ActionType   m_type;
-    std::any         m_extraData;
+    Any              m_extraData;
     Context::Pos m_pos;
     UID               m_scopeid;
 };

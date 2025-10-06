@@ -23,7 +23,7 @@ public:
     using CmdPtr  = std::shared_ptr<Command>;
     using CmdList = std::vector<CmdPtr>;
     using CmdListMap = std::map<String, CmdList>;
-    using TokenList = std::vector<Token>;
+    using OpList = std::vector<Operand>;
     using OpType = OperandType;
 
 public:
@@ -31,21 +31,22 @@ public:
     CmdExecutor(const CmdExecutor &other) =delete;
     CmdExecutor& operator=(const CmdExecutor &other) =delete;
 
-    bool hasToken() const noexcept;                               /* 检查m_tokens中是否存在token */
+    bool hasOperand() const noexcept;                           /* 检查m_operands中是否存在operand*/
     bool exceed() const noexcept;                                   /* 检查m_key的长度是否已超过了m_cmdListMap中最长的key的长度 */
-    void pushToken(const Token &token);                       /* 压入一个Token到Token列表，根据Token更新m_key字段 */
+    void pushToken(const Token &token);                       /* 将指定Token转换为operand后压入operand列表，根据Token更新m_key字段 */
     bool executable() const;                                             /* 检查当前的m_key是否有对应的CmdList，即是否有匹配的可执行命令 */
     bool execute(Context &context, ActionCtl &ctl);      /* 使用当前的Token列表和给定的Context对象执行一条命令(即Command对象)，如果命令执行成功则返回true，如果操作数(而非类型)不匹配则返回false，此时应该继续pushToken以匹配后续命令 */
     void addCommand(CmdPtr cmd);                            /* 添加一个Command对象到m_cmdListMap中 */
 
 private:
-    Size_t             m_maxKeySize;
-    String             m_key;
-    TokenList       m_tokens;
+    Size_t            m_maxKeySize;
+    String            m_key;
+    OpList           m_operands;
     CmdListMap m_cmdListMap;
 
-    void updateKey(const Token &token);
-    void reset();
+    void         updateKey(const Token &token);
+    void         reset();
+    Operand  tokenToOperand(const Token &token);
 };
 
 CSC_END

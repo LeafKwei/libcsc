@@ -7,8 +7,8 @@ CSC_BEGIN
 
 CmdExecutor::CmdExecutor() : m_maxKeySize(0){}
 
-bool CmdExecutor::hasToken() const noexcept{
-    return m_tokens.size() > 0;
+bool CmdExecutor::hasOperand() const noexcept{
+    return m_operands.size() > 0;
 }
 
 bool CmdExecutor::exceed() const noexcept{
@@ -17,7 +17,7 @@ bool CmdExecutor::exceed() const noexcept{
 
 void CmdExecutor::pushToken(const Token &token){
     assert(m_key.size() < m_maxKeySize);
-    m_tokens.push_back(token);
+    m_operands.push_back(tokenToOperand(token));
     updateKey(token);
 }
 
@@ -36,12 +36,12 @@ bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
 
     /* 遍历列表中所有Command，通过runnable函数决定该Command是否可以处理当前的Token序列 */
     for(auto &cmd : cmdList){
-        if(!cmd -> runnable(m_tokens)){
+        if(!cmd -> runnable(m_operands)){
             continue;
         }
 
         /* 执行Command，随后清空Token列表和重设m_key  */
-        cmd -> run(m_tokens, context, ctl);
+        cmd -> run(m_operands, context, ctl);
         reset();
         return true;
     }
@@ -72,8 +72,16 @@ void CmdExecutor::updateKey(const Token &token){
 }
 
 void CmdExecutor::reset(){
-    m_tokens.clear();
+    m_operands.clear();
     m_key.clear();
+}
+
+Operand CmdExecutor::tokenToOperand(const Token &token){
+    Operand op;
+    op.str = token.buffer;
+    op.tp_tk = token.type;
+    
+    TODO
 }
 
 CSC_END

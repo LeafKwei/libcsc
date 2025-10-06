@@ -33,12 +33,12 @@ EnterScopeCmd::EnterScopeCmd() : CommonCmd(
     }
 ){}
 
-bool EnterScopeCmd::runnable(const TokenList &tokens){
+bool EnterScopeCmd::runnable(crOpList operands){
     return true;
 }
 
-void EnterScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
-    auto &name = tokens.at(0).buffer;
+void EnterScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
+    auto &name = operands.at(0).str;
     
     if(context.probeScope(name)){
          context.enterScope(name);
@@ -57,12 +57,12 @@ ExitScopeCmd::ExitScopeCmd() : CommonCmd(
     }
 ){}
 
-bool ExitScopeCmd::runnable(const TokenList &tokens){
+bool ExitScopeCmd::runnable(crOpList operands){
     return true;
 }
 
-void ExitScopeCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
-    auto &name = tokens.at(1).buffer;
+void ExitScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
+    auto &name = operands.at(1).str;
     if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
@@ -80,16 +80,16 @@ AssignCmd::AssignCmd() : CommonCmd(
     }
 ){}
 
-bool AssignCmd::runnable(const TokenList &tokens){
+bool AssignCmd::runnable(crOpList operands){
     return true;
 }
 
-void AssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
-    auto vtype = valueTypeof(tokens.at(2));
+void AssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
+    auto vtype = operands.at(2).tp_va;
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
 
-    ctl.sendAction(ActionType::MakeVariable, tokens.at(0).buffer, context.scopeMetaData());
-    context.makeVariable(tokens.at(0).buffer, tokens.at(2).buffer, vtype);
+    ctl.sendAction(ActionType::MakeVariable, operands.at(0).str, context.scopeMetaData());
+    context.makeVariable(operands.at(0).str, operands.at(2).str, vtype);
 }
 
 //============== ArrayAssignCmd =============
@@ -101,7 +101,7 @@ ArrayAssignCmd::ArrayAssignCmd() : CommonCmd(
     }
 ){}
 
-bool ArrayAssignCmd::runnable(const TokenList &tokens){
+bool ArrayAssignCmd::runnable(crOpList operands){
     return true;
 }
 
@@ -110,16 +110,16 @@ bool ArrayAssignCmd::runnable(const TokenList &tokens){
  * 依次读取数组字符串中的每个元素，并将其追加到Context的变量中。每个被读入的元素都会被判断类型，如果类型和第一个元素
  * 不同，则视为出错
  */
-void ArrayAssignCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
+void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
     /* 获取首个元素的类型并将之作为数组的类型 */
-    auto vtype = valueTypeof(tokens.at(2));
+    auto vtype = operands.at(2).tp_va;
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
-    ctl.sendAction(ActionType::MakeVariable, tokens.at(0).buffer, context.scopeMetaData());
-    context.makeVariable(tokens.at(0).buffer, "", vtype);
+    ctl.sendAction(ActionType::MakeVariable, operands.at(0).str, context.scopeMetaData());
+    context.makeVariable(operands.at(0).str, "", vtype);
 
-    auto &name = tokens.at(0).buffer;
+    auto &name = operands.at(0).str;
     auto etype = ValueType::Unknown;
-    CharMngr mngr(tokens.at(2).buffer);
+    CharMngr mngr(operands.at(2).str);
     PureLexer lexer;
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
@@ -161,13 +161,13 @@ ActionCmd::ActionCmd() : CommonCmd(
     }
 ){}
 
-bool ActionCmd::runnable(const TokenList &tokens){
-    return tokens.at(1).type == TokenType::String;
+bool ActionCmd::runnable(crOpList operands){
+    return operands.at(1).tp_tk == TokenType::String;
 }
 
-void ActionCmd::run(const TokenList &tokens, Context &context, ActionCtl &ctl){
-    if(tokens.at(1).buffer == "genidx") run_genidx(ctl, context.scopeMetaData().id);
-    else throw ActionExcept(String("Unsupport action: ") + tokens.at(1).buffer);
+void ActionCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
+    if(operands.at(1).str == "genidx") run_genidx(ctl, context.scopeMetaData().id);
+    else throw ActionExcept(String("Unsupport action: ") + operands.at(1).str);
 }
 
 /**

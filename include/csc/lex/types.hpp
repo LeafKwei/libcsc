@@ -10,9 +10,7 @@ enum class TokenType{
     Aborted, Ignored, Unexcepted, 
     Keyword,
     Blank, Identifier, Operator, 
-    Number, NumberF, NumberH,  //Number标准整型数字，例如114；NumberF浮点型数字，例如51.4；NumberH十六进制型数字，例如0xFF
-    String, 
-    Array
+    Number, String, Array
 };
 
 struct Token{

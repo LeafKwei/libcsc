@@ -12,12 +12,13 @@ CSC_BEGIN
 
 class Command{
 public:
-    using TokenList = std::vector<Token>;
+    using OpList = std::vector<Operand>;
+    using crOpList = const OpList&;
 
 public:
-    virtual crString  key() =0;                                                                                                  /* 获取此命令的key。key需要根据此命令依赖的Token序列生成。CmdExecuter使用key来归纳和匹配命令 */
-    virtual bool       runnable(const TokenList &tokens) =0;                                                 /* 检查token列表中的token是否是当前命令所需 */
-    virtual void       run(const TokenList &tokens, Context &context, ActionCtl &ctl) =0;   /* 使用给定的Token序列、Context对象和ActionCtl对象执行命令 */
+    virtual crString  key() =0;                                                                                       /* 获取此命令的key。key需要根据此命令依赖的Token序列生成。CmdExecuter使用key来归纳和匹配命令 */
+    virtual bool       runnable(crOpList operands) =0;                                                /* 检查operand列表中的operand是否是当前命令所需 */
+    virtual void       run(crOpList operands, Context &context, ActionCtl &ctl) =0;   /* 使用给定的operand列表、Context对象和ActionCtl对象执行命令 */
 };
 
 CSC_END
