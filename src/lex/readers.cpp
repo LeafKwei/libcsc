@@ -109,12 +109,12 @@ Token NumberReader::read(CharMngr &mngr){
 
     //If no valid number character was read.
     if(m_num == 0){
-        token.type = TokenType::Unexcepted;
+        token.type = TokenType::Unknown;
     }
 
     //If this number is not ending with blank or separator.
     if(mngr.valid() && (!isBlank(mngr.getch()) && !(isSeparator(mngr.getch())))){
-       token.type = TokenType::Unexcepted;
+       token.type = TokenType::Unknown;
     }
 
     return token;
@@ -151,6 +151,8 @@ void NumberReader::readPrefix(Token &token, CharMngr &mngr){
 
 void NumberReader::readHex(Token &token, CharMngr &mngr){
     token.type = TokenType::Number;
+    token.tag = TokenTag::Hex;
+    
     while(mngr.valid()){
         if(!isHexNumber(mngr.getch())) break;
         token.buffer.push_back(mngr.forward());
@@ -221,7 +223,7 @@ void StringReader::readString(Token &token, CharMngr &mngr){
     }
 
     if(!(mngr.valid())){ //If there is no ending quota
-        token.type = TokenType::Unexcepted;
+        token.type = TokenType::Unknown;
     }
 }
 
@@ -245,7 +247,7 @@ Token ArrayReader::read(CharMngr &mngr){
 
     if(!mngr.valid()){        //Restore index if token is unexcepted
         mngr.seek(CharMngr::Set, idx);
-        token.type = TokenType::Unexcepted;
+        token.type = TokenType::Unknown;
         return token;
     }
 

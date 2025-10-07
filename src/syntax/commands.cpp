@@ -28,8 +28,8 @@ void CommonCmd::genKey(InitTokens tokens){
 //============== EnterScopeCmd =============
 EnterScopeCmd::EnterScopeCmd() : CommonCmd(
     {
-        {TokenType::Identifier, ""},
-        {TokenType::Operator, "::"}
+        {TokenType::Identifier, TokenTag::None, ""},
+        {TokenType::Operator, TokenTag::None, "::"}
     }
 ){}
 
@@ -38,7 +38,7 @@ bool EnterScopeCmd::runnable(crOpList operands){
 }
 
 void EnterScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto &name = operands.at(0).str;
+    auto &name = operands.at(0).token.buffer;
     
     if(context.probeScope(name)){
          context.enterScope(name);
@@ -52,8 +52,8 @@ void EnterScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
 //============== ExitScopeCmd =============
 ExitScopeCmd::ExitScopeCmd() : CommonCmd(
     {
-        {TokenType::Operator, "::"},
-        {TokenType::Identifier, ""}
+        {TokenType::Operator, TokenTag::None, "::"},
+        {TokenType::Identifier, TokenTag::None, ""}
     }
 ){}
 
@@ -62,7 +62,7 @@ bool ExitScopeCmd::runnable(crOpList operands){
 }
 
 void ExitScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto &name = operands.at(1).str;
+    auto &name = operands.at(1).token.buffer;
     if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
@@ -74,9 +74,9 @@ void ExitScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
 //============== AssignCmd =============
 AssignCmd::AssignCmd() : CommonCmd(
     {
-        {TokenType::Identifier, ""},
-        {TokenType::Operator, "="},
-        {TokenType::String, ""}              //OperandType::Value可以由TokenType::Number、Bool、String等转换，所以此处可以任意填写其中一个
+        {TokenType::Identifier, TokenTag::None, ""},
+        {TokenType::Operator, TokenTag::None, "="},
+        {TokenType::String, TokenTag::None, ""}              //OperandType::Value可以由TokenType::Number、Bool、String等转换，所以此处可以任意填写其中一个
     }
 ){}
 
@@ -85,19 +85,27 @@ bool AssignCmd::runnable(crOpList operands){
 }
 
 void AssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto vtype = operands.at(2).tp_va;
+    auto vtype = valueTypeof(operands.at(2).token);
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
 
-    ctl.sendAction(ActionType::MakeVariable, operands.at(0).str, context.scopeMetaData());
-    context.makeVariable(operands.at(0).str, operands.at(2).str, vtype);
+    ctl.sendAction(
+        ActionType::MakeVariable, 
+        operands.at(0).token.buffer, 
+        context.scopeMetaData()
+    );
+    context.makeVariable(
+        operands.at(0).token.buffer,
+        tokenToValue(operands.at(1).token),
+        vtype
+    );
 }
 
 //============== ArrayAssignCmd =============
 ArrayAssignCmd::ArrayAssignCmd() : CommonCmd(
     {
-        {TokenType::Identifier, ""},
-        {TokenType::Operator, "="},
-        {TokenType::Array, ""}
+        {TokenType::Identifier, TokenTag::None, ""},
+        {TokenType::Operator, TokenTag::None, "="},
+        {TokenType::Array, TokenTag::None, ""}
     }
 ){}
 
@@ -112,14 +120,22 @@ bool ArrayAssignCmd::runnable(crOpList operands){
  */
 void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
     /* 获取首个元素的类型并将之作为数组的类型 */
-    auto vtype = operands.at(2).tp_va;
+    auto vtype = valueTypeof(operands.at(2).token);
     if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
-    ctl.sendAction(ActionType::MakeVariable, operands.at(0).str, context.scopeMetaData());
-    context.makeVariable(operands.at(0).str, "", vtype);
+    ctl.sendAction(
+        ActionType::MakeVariable, 
+        operands.at(0).token.buffer, 
+        context.scopeMetaData()
+    );
+    context.makeVariable(
+        operands.at(0).token.buffer, 
+        "", 
+        vtype
+    );
 
-    auto &name = operands.at(0).str;
-    auto etype = ValueType::Unknown;
-    CharMngr mngr(operands.at(2).str);
+    auto &name = operands.at(0).token.buffer;
+    auto evtype = ValueType::Unknown;
+    CharMngr mngr(operands.at(2).token.buffer);
     PureLexer lexer;
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
@@ -130,7 +146,7 @@ void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
             break;
         }
 
-        if(token.type == TokenType::Unexcepted){
+        if(token.type == TokenType::Unknown){
             if(mngr.getch() ==','){
                 mngr.forward();
                 continue;
@@ -143,31 +159,31 @@ void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
             throw CommandExcept("Invalid token in assignment.");
         }
 
-        auto cetype = valueTypeof(token);
-        if(etype != ValueType::Unknown && etype != cetype){  /* 如果数组中的元素类型不同则视为错误 */
+        auto tp = valueTypeof(token);
+        if(evtype != ValueType::Unknown && evtype != tp){  /* 如果数组中的元素类型不同则视为错误 */
             throw CommandExcept("Elements in array are not a same type.");
         }
 
         context.extendValues(name, {token.buffer});
-        etype = cetype;
+        evtype = tp;
     }
 }
 
 //============== ActionCmd =============
 ActionCmd::ActionCmd() : CommonCmd(
     {
-        {TokenType::Keyword, KW_ACTION},
-        {TokenType::String, ""}
+        {TokenType::Keyword, TokenTag::None, KW_ACTION},
+        {TokenType::String, TokenTag::None, ""}
     }
 ){}
 
 bool ActionCmd::runnable(crOpList operands){
-    return operands.at(1).tp_tk == TokenType::String;
+    return valueTypeof(operands.at(1).token) == ValueType::String;
 }
 
 void ActionCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    if(operands.at(1).str == "genidx") run_genidx(ctl, context.scopeMetaData().id);
-    else throw ActionExcept(String("Unsupport action: ") + operands.at(1).str);
+    if(operands.at(1).token.buffer == "genidx") run_genidx(ctl, context.scopeMetaData().id);
+    else throw ActionExcept(String("Unsupport action: ") + operands.at(1).token.buffer);
 }
 
 /**

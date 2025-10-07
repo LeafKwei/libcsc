@@ -28,7 +28,7 @@ Token PureLexer::nextTokenFrom(CharMngr &mngr){
         return identifierConverter(token);
     }
 
-    token.type = mngr.valid() ? TokenType::Unexcepted : TokenType::Aborted;
+    token.type = mngr.valid() ? TokenType::Unknown : TokenType::Aborted;
     return token;
 }
 

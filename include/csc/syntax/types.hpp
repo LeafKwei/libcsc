@@ -3,18 +3,17 @@
 
 #include "csc/csc.hpp"
 #include "csc/lex/types.hpp"
+#include "csc/context/types.hpp"
 CSC_BEGIN
 
 enum class OperandType{
-    Unexcepted,
+    Unknown,
     Identifier, Keyword, Operator, Value, Values
 };
 
 struct Operand{
-    String              str;
-    TokenType      tp_tk;
-    OperandType tp_op;
-    ValueType       tp_va;
+    Token              token;
+    OperandType  type;
 };
 
 struct Command;

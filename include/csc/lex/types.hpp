@@ -7,11 +7,11 @@
 CSC_BEGIN
 
 enum class TokenTag{
-    None, Float
+    None, Float, Hex
 };
 
 enum class TokenType{
-    Aborted, Ignored, Unexcepted, 
+    Aborted, Ignored, Unknown, 
     Keyword,
     Blank, Identifier, Operator, 
     Number, String, Array

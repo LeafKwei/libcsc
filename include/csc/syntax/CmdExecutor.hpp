@@ -46,7 +46,6 @@ private:
 
     void         updateKey(const Token &token);
     void         reset();
-    Operand  tokenToOperand(const Token &token);
 };
 
 CSC_END

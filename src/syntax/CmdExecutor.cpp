@@ -17,7 +17,13 @@ bool CmdExecutor::exceed() const noexcept{
 
 void CmdExecutor::pushToken(const Token &token){
     assert(m_key.size() < m_maxKeySize);
-    m_operands.push_back(tokenToOperand(token));
+
+    Operand op{token, operandTypeof(token)};
+    if(op.type == OperandType::Unknown){
+        throw CommandExcept("Unrecognized token: " + token.buffer);
+    }
+
+    m_operands.push_back(op);
     updateKey(token);
 }
 
@@ -32,7 +38,7 @@ bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
     auto cmdListPtr = m_cmdListMap.find(m_key);
     auto &cmdList = cmdListPtr -> second;
     auto end = m_cmdListMap.end();
-    assert((cmdListPtr != end) && (cmdListPtr -> second.size() > 0));
+    assert((cmdListPtr != end) && (cmdList.size() > 0));
 
     /* 遍历列表中所有Command，通过runnable函数决定该Command是否可以处理当前的Token序列 */
     for(auto &cmd : cmdList){
@@ -50,12 +56,17 @@ bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
 }
 
 void CmdExecutor::addCommand(CmdPtr cmd){
-    auto key = cmd -> key();
+    if(cmd == nullptr){
+        throw CommandExcept("Pointer to command is a nullptr.");
+    }
 
+    /* 查找cmd的key是否已在map中存在对应的list对象，如果不存在则创建一个空list */
+    auto key = cmd -> key();
     if(m_cmdListMap.find(key) == m_cmdListMap.end()){
         m_cmdListMap.insert({key, CmdList()});
     }
 
+    /* 根据key获取list，将command添加到list中 */
     m_cmdListMap.at(key).push_back(cmd);
     m_maxKeySize = m_maxKeySize < key.size() ? key.size() : m_maxKeySize;
 }
@@ -74,14 +85,6 @@ void CmdExecutor::updateKey(const Token &token){
 void CmdExecutor::reset(){
     m_operands.clear();
     m_key.clear();
-}
-
-Operand CmdExecutor::tokenToOperand(const Token &token){
-    Operand op;
-    op.str = token.buffer;
-    op.tp_tk = token.type;
-    
-    TODO
 }
 
 CSC_END

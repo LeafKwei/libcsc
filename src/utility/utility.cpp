@@ -24,9 +24,27 @@ String join(String splitor, const std::vector<String> &elements, const std::init
     return result;
 }
 
-int baseOf(crString str){
-    if(str.substr(0, 2) == "0x") return 16;
-    return 10;
+String valueToString(const Value &val, ValueType tp){
+    std::stringstream sstream;
+
+    switch(tp){
+        case ValueType::Bool:
+            sstream << (std::any_cast<bool>(val) ? "true" : "false");
+            break;
+        case ValueType::Integer:
+            sstream << std::any_cast<long>(val);
+            break;
+        case ValueType::Double:
+            sstream << std::any_cast<double>(val);
+            break;
+        case ValueType::String:
+            return std::any_cast<String>(val);
+            break;
+        default:
+            return "";
+    }
+
+    return sstream.str();
 }
 
 String toEscapingString(crString str){
