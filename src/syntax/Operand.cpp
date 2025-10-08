@@ -36,13 +36,13 @@ Value Operand::zero() const{
 Value Operand::zero(ValueType type){
     switch(type){
         case ValueType::Bool:
-            return bool{};
+            return CppType<ValueType::Bool>::type{};
         case ValueType::Integer:
-            return long{};
+            return CppType<ValueType::Integer>::type{};
         case ValueType::Double:
-            return double{};
+            return CppType<ValueType::Double>::type{};
         case ValueType::String:
-            return String{};
+            return CppType<ValueType::String>::type{};
         default:
             return Value{};
     }

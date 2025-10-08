@@ -53,5 +53,37 @@ struct VariableValue{
     ValueType type;
 };
 
+
+//============= Templates =============
+/* 通过下方的模板将ValueType的类型映射为C++内置类型 */
+template<ValueType VTP>
+struct CppType{};
+
+template<>
+struct CppType<ValueType::Bool>{
+    using type = bool;
+};
+
+template<>
+struct CppType<ValueType::Bool>{
+    using type = bool;
+};
+
+template<>
+struct CppType<ValueType::Integer>{
+    using type = long;
+};
+
+template<>
+struct CppType<ValueType::Double>{
+    using type = double;
+};
+
+template<>
+struct CppType<ValueType::String>{
+    using type = String;
+};
+
+
 CSC_END
 #endif
