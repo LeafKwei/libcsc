@@ -1,6 +1,7 @@
 #include <cassert>
 #include "csc/types.hpp"
 #include "csc/context/Context.hpp"
+#include "csc/context/functions.hpp"
 CSC_BEGIN
 
 Context::Context() : m_idCounter(1){           //作用域ID从1开始，0作为保留ID，为将来的全局Action做准备
@@ -114,8 +115,9 @@ Context::VarValue Context::getValue(crString name) const{
     }
 
     auto variable = iterator -> second;
-    assert(variable -> values.size() > 0);
-    return {variable -> values.at(0), variable -> type};
+    return (variable -> values.size() > 0) ? 
+        VarValue{variable -> values.at(0), variable -> type} : 
+        zeroValue(variable -> type);
 }
 
 Context::VarValues Context::getValues(crString name) const{

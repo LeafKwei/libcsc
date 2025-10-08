@@ -6,6 +6,7 @@
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
+
 CSC_BEGIN
 
 class VariableValues{
@@ -14,7 +15,7 @@ public:
     ValueType type() const        { return m_type; }
     bool          isEmpty() const  { return m_keeper.empty(); }
     Size_t        size() const         { return m_keeper.size(); }
-    Value        val() const           { assert(m_keeper.size() > 0); return m_keeper.at(0); }
+    Value        val() const           { return (m_keeper.size() > 0) ?  m_keeper.at(0) :  zeroValue(m_type);}  **********TODO: 处理数组元素为空时的情况**********
     Value        val(int index) const              { return m_keeper.at(index); }
     Value        operator[] (int index) const { return m_keeper[index]; }
 

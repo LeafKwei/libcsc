@@ -11,7 +11,7 @@ Token CommonReader::read(CharMngr &mngr){
 
     while(mngr.valid()){
         if(!canRead(mngr.getch())) break;
-        token.buffer.push_back(mngr.forward());
+        token.str.push_back(mngr.forward());
     }
 
     token.type = type();
@@ -132,8 +132,8 @@ void NumberReader::readPrefix(Token &token, CharMngr &mngr){
     /* Checking for hex is must be first, because the prefix '0x' contain number 0. */
     if(mngr.at(mngr.index()) == '0' && mngr.at(mngr.index() + 1) == 'x'){
         m_type = 1;
-        token.buffer.push_back(mngr.forward());
-        token.buffer.push_back(mngr.forward());
+        token.str.push_back(mngr.forward());
+        token.str.push_back(mngr.forward());
         return;
     }
 
@@ -144,7 +144,7 @@ void NumberReader::readPrefix(Token &token, CharMngr &mngr){
     
     if(mngr.valid() && (mngr.getch() == '+' || mngr.getch() == '-')){
         m_type = 0;
-        token.buffer.push_back(mngr.forward());
+        token.str.push_back(mngr.forward());
         return;
     }
 }
@@ -155,7 +155,7 @@ void NumberReader::readHex(Token &token, CharMngr &mngr){
     
     while(mngr.valid()){
         if(!isHexNumber(mngr.getch())) break;
-        token.buffer.push_back(mngr.forward());
+        token.str.push_back(mngr.forward());
         m_num++;
     }
 }
@@ -172,7 +172,7 @@ void NumberReader::readNumber(Token &token, CharMngr &mngr){
             dot = false;
         }
 
-        token.buffer.push_back(mngr.forward());
+        token.str.push_back(mngr.forward());
         m_num++;
     }
 }
@@ -206,7 +206,7 @@ void StringReader::readString(Token &token, CharMngr &mngr){
 
         if(escape){
             escape = false;
-            token.buffer.push_back(escapeTo(ch));
+            token.str.push_back(escapeTo(ch));
             continue;
         }
 
@@ -219,7 +219,7 @@ void StringReader::readString(Token &token, CharMngr &mngr){
             return;
         }
 
-        token.buffer.push_back(ch);
+        token.str.push_back(ch);
     }
 
     if(!(mngr.valid())){ //If there is no ending quota
@@ -242,7 +242,7 @@ Token ArrayReader::read(CharMngr &mngr){
     /* Read all characters in '{}'*/
     while(mngr.valid()){
         if(mngr.getch() == '}') break;
-        token.buffer.push_back(mngr.forward());
+        token.str.push_back(mngr.forward());
     }
 
     if(!mngr.valid()){        //Restore index if token is unexcepted

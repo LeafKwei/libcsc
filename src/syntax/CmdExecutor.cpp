@@ -20,7 +20,7 @@ void CmdExecutor::pushToken(const Token &token){
 
     Operand op{token, operandTypeof(token)};
     if(op.type == OperandType::Unknown){
-        throw CommandExcept("Unrecognized token: " + token.buffer);
+        throw CommandExcept("Unrecognized token: " + token.str);
     }
 
     m_operands.push_back(op);

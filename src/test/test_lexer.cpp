@@ -14,25 +14,25 @@ void show(const Token &token){
             printf("Reached end\n");
             break;
         case TokenType::Blank:
-            printf("Blank: %s\n", token.buffer.c_str());
+            printf("Blank: %s\n", token.str.c_str());
             break;
         case TokenType::Identifier:
-            printf("Identifier: %s\n", token.buffer.c_str());
+            printf("Identifier: %s\n", token.str.c_str());
             break;
         case TokenType::Operator:
-            printf("Operator: %s\n", token.buffer.c_str());
+            printf("Operator: %s\n", token.str.c_str());
             break;
         case TokenType::Number:
-            printf("Number: %s\n", token.buffer.c_str());
+            printf("Number: %s\n", token.str.c_str());
             break;
         case TokenType::String:
-            printf("String: %s\n", token.buffer.c_str());
+            printf("String: %s\n", token.str.c_str());
             break;
         case TokenType::Array:
-             printf("Array: %s\n", token.buffer.c_str());
+             printf("Array: %s\n", token.str.c_str());
              break;
         case TokenType::Keyword:
-            printf("Keyword: %s\n", token.buffer.c_str());
+            printf("Keyword: %s\n", token.str.c_str());
             break;
         default:
             printf("Unexepted token-type: %d\n", static_cast<int>(token.type));

@@ -38,7 +38,7 @@ bool EnterScopeCmd::runnable(crOpList operands){
 }
 
 void EnterScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto &name = operands.at(0).token.buffer;
+    auto &name = operands.at(0).token.str;
     
     if(context.probeScope(name)){
          context.enterScope(name);
@@ -62,7 +62,7 @@ bool ExitScopeCmd::runnable(crOpList operands){
 }
 
 void ExitScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto &name = operands.at(1).token.buffer;
+    auto &name = operands.at(1).token.str;
     if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
@@ -90,12 +90,12 @@ void AssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
 
     ctl.sendAction(
         ActionType::MakeVariable, 
-        operands.at(0).token.buffer, 
+        operands.at(0).token.str, 
         context.scopeMetaData()
     );
     context.makeVariable(
-        operands.at(0).token.buffer,
-        tokenToValue(operands.at(1).token),
+        operands.at(0).token.str,
+        tokenToValue(operands.at(2).token, vtype),
         vtype
     );
 }
@@ -119,23 +119,23 @@ bool ArrayAssignCmd::runnable(crOpList operands){
  * 不同，则视为出错
  */
 void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    /* 获取首个元素的类型并将之作为数组的类型 */
-    auto vtype = valueTypeof(operands.at(2).token);
-    if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
+    /* 获取数组的类型 */
+    auto atype = valueTypeof(operands.at(2).token);
+    if(atype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
     ctl.sendAction(
         ActionType::MakeVariable, 
-        operands.at(0).token.buffer, 
+        operands.at(0).token.str, 
         context.scopeMetaData()
     );
-    context.makeVariable(
-        operands.at(0).token.buffer, 
-        "", 
-        vtype
+    context.makeVariable(       //创建一个数组类型的空变量
+        operands.at(0).token.str, 
+        {},
+        atype
     );
 
-    auto &name = operands.at(0).token.buffer;
+    auto &name = operands.at(0).token.str;
     auto evtype = ValueType::Unknown;
-    CharMngr mngr(operands.at(2).token.buffer);
+    CharMngr mngr(operands.at(2).token.str);
     PureLexer lexer;
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
@@ -147,6 +147,7 @@ void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
         }
 
         if(token.type == TokenType::Unknown){
+            /* 出现不可识别的字符时，如果是“,”则跳过，否则抛出异常 */
             if(mngr.getch() ==','){
                 mngr.forward();
                 continue;
@@ -164,7 +165,7 @@ void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
             throw CommandExcept("Elements in array are not a same type.");
         }
 
-        context.extendValues(name, {token.buffer});
+        context.extendValues(name, {tokenToValue(token, tp)});
         evtype = tp;
     }
 }
@@ -182,8 +183,8 @@ bool ActionCmd::runnable(crOpList operands){
 }
 
 void ActionCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    if(operands.at(1).token.buffer == "genidx") run_genidx(ctl, context.scopeMetaData().id);
-    else throw ActionExcept(String("Unsupport action: ") + operands.at(1).token.buffer);
+    if(operands.at(1).token.str == "genidx") run_genidx(ctl, context.scopeMetaData().id);
+    else throw ActionExcept(String("Unsupport action: ") + operands.at(1).token.str);
 }
 
 /**

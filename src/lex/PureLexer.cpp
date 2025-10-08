@@ -38,7 +38,7 @@ void PureLexer::setAutoSkipBlank(bool b){
 
 Token& PureLexer::identifierConverter(Token &token){
     if(token.type != TokenType::Identifier) return token;
-    auto pos = m_converters.find(token.buffer);
+    auto pos = m_converters.find(token.str);
     if(pos == m_converters.end()) return token;
     
     token.type = pos -> second;

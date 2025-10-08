@@ -16,7 +16,7 @@ void CmdDriver::drive(crString script, Context &context){
     while(lexer.valid()){
         const auto &token = lexer.nextToken();
         if(token.type == TokenType::Aborted) break;
-        if(token.type == TokenType::Unknown) throw CommandExcept("Unexcepted token at: " + makeExceptMessage(script, lexer.locator(-(token.buffer.size()))));
+        if(token.type == TokenType::Unknown) throw CommandExcept("Unexcepted token at: " + makeExceptMessage(script, lexer.locator(-(token.str.size()))));
         
         /* 检查是否已到的叶节点，即已无Command可以适配当前的token序列 */
         if(m_executor.exceed()){

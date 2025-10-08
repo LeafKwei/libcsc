@@ -60,7 +60,7 @@ inline bool CscHandler::getValue<bool>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    
+    return std::any_cast<bool>(value);
 }
 
 template<>
@@ -70,7 +70,7 @@ inline int CscHandler::getValue<int>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    
+    return std::any_cast<int>(value);
 }
 
 template<>
@@ -80,7 +80,7 @@ inline long CscHandler::getValue<long>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    
+    return std::any_cast<long>(value);
 }
 
 template<>
@@ -90,18 +90,24 @@ inline double CscHandler::getValue<double>(crString name){
         throw CscExcept("Incompatible type.");
     }
 
-    
+    return std::any_cast<double>(value);
 }
 
 template<>
 inline String CscHandler::getValue<String>(crString name){
-    
+    const auto &value = m_context.getValue(name);
+    if(value.type != ValueType::String){
+        throw CscExcept("Incompatible type.");
+    }
+
+    return std::any_cast<String>(value);
 }
 
 template<>
 inline array_bool CscHandler::getValue<array_bool>(crString name){
     array_bool array;
 
+    const auto &values = 
 }
 
 template<>

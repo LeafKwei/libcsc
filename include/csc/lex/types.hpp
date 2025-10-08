@@ -20,7 +20,7 @@ enum class TokenType{
 struct Token{
     TokenType type;
     TokenTag   tag;
-    String        buffer;
+    String         str;
 };
 
 CSC_END

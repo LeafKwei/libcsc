@@ -13,7 +13,7 @@ CSC_BEGIN
 inline OperandType operandTypeof(const Token &token){
     switch(token.type){
         case TokenType::Keyword:
-            if(token.buffer == KW_TRUE || token.buffer == KW_FALSE) return OperandType::Value;   //对于关键字true和false，将其作为值处理
+            if(token.str == KW_TRUE || token.str == KW_FALSE) return OperandType::Value;   //对于关键字true和false，将其作为值处理
             return OperandType::Keyword;
         case TokenType::Number:
         case TokenType::String:
@@ -35,7 +35,7 @@ inline ValueType valueTypeofHelper(const Token &token){
         case TokenType::String:
             return ValueType::String;
         case TokenType::Keyword:
-            if(token.buffer == KW_TRUE || token.buffer == KW_FALSE)
+            if(token.str == KW_TRUE || token.str == KW_FALSE)
                 return ValueType::Bool;
             return ValueType::Unknown;
         default:
@@ -51,7 +51,7 @@ inline ValueType valueTypeof(const Token &token){
         return csc::csc_inner::valueTypeofHelper(token);
     }
 
-    CharMngr mngr(token.buffer);
+    CharMngr mngr(token.str);
     PureLexer lexer;
     auto type = csc::csc_inner::valueTypeofHelper(lexer.nextTokenFrom(mngr));
     switch(type){
@@ -70,7 +70,7 @@ inline ValueType valueTypeof(const Token &token){
 
  /** 
   * 首先将token类型转换为operand类型，然后根据operand类型决定key item的生成。对应Keyword、Operator这些与Command对象绑定的类型,
-  * 以token.buffer中的字符串作为key item，对于Identifer、Value这些与Command对象无关的类型，则以它们的枚举值作为key item。
+  * 以token.str中的字符串作为key item，对于Identifer、Value这些与Command对象无关的类型，则以它们的枚举值作为key item。
   */
 inline String tokenToKeyItem(const Token &token){
     std::stringstream sstream;
@@ -81,10 +81,10 @@ inline String tokenToKeyItem(const Token &token){
             sstream << static_cast<int>(OperandType::Identifier);
             break;
         case OperandType::Keyword:
-            sstream << token.buffer;
+            sstream << token.str;
             break;
         case OperandType::Operator:
-            sstream << token.buffer;
+            sstream << token.str;
             break;
         case OperandType::Value:
             sstream << static_cast<int>(OperandType::Value);
@@ -99,8 +99,21 @@ inline String tokenToKeyItem(const Token &token){
     return sstream.str();
 }
 
-inline Value tokenToValue(const Token &token){
-
+inline Value tokenToValue(const Token &token, ValueType type){
+    switch(type){
+        case ValueType::Bool:
+            if(token.str == KW_TRUE) return true;
+            return false;
+        case ValueType::Integer:
+            int base = (token.tag == TokenTag::Hex) ? 16 : 10;
+            return strtol(token.str.c_str(), NULL, base);
+        case ValueType::Double:
+            return strtod(token.str.c_str(), NULL);
+        case ValueType::String:
+            return token.str;
+        default:
+            return "";
+    }
 };
 
 CSC_END
