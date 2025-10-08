@@ -7,6 +7,7 @@
 #include "csc/csc.hpp"
 #include "csc/lex/types.hpp"
 #include "csc/syntax/types.hpp"
+#include "csc/syntax/Operand.hpp"
 #include "csc/context/Context.hpp"
 #include "csc/action/ActionHub.hpp"
 CSC_BEGIN
@@ -23,8 +24,7 @@ public:
     using CmdPtr  = std::shared_ptr<Command>;
     using CmdList = std::vector<CmdPtr>;
     using CmdListMap = std::map<String, CmdList>;
-    using OpList = std::vector<Operand>;
-    using OpType = OperandType;
+    using OperandList = std::vector<Operand>;
 
 public:
     CmdExecutor();
@@ -41,7 +41,7 @@ public:
 private:
     Size_t            m_maxKeySize;
     String            m_key;
-    OpList           m_operands;
+    OperandList m_operands;
     CmdListMap m_cmdListMap;
 
     void         updateKey(const Token &token);

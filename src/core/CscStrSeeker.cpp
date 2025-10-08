@@ -18,9 +18,8 @@ void CscStrSeeker::leaveScope(UID id, crString name){
 
 void CscStrSeeker::values(crString name, const VariableValues &values){
     writeIndent();
-    auto vtype = arrayToValue(values.type());
 
-    if(vtype == ValueType::Unknown){                //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
+    if(values.size() == 1){                //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
         m_buffer << name << " = ";
         writeValue(
             valueToString(values.val(), values.type()), 
@@ -35,8 +34,8 @@ void CscStrSeeker::values(crString name, const VariableValues &values){
         for(Size_t index = 0; index < values.size(); index++){
             if(index > 1) m_buffer << ", ";
             writeValue(
-                valueToString(values.val(index), vtype), 
-                vtype
+                valueToString(values.val(index), values.type()), 
+                values.type()
             );
         }
 
@@ -68,21 +67,6 @@ void CscStrSeeker::writeValue(crString value,  ValueType type){
             m_buffer << "*** UNKNOWN VALUE ***";
         default:
             break;
-    }
-}
-
-ValueType CscStrSeeker::arrayToValue(ValueType type){
-    switch(type){
-        case ValueType::Bools:
-            return ValueType::Bool;
-        case ValueType::Integers:
-            return ValueType::Integer;
-        case ValueType::Doubles:
-            return ValueType::Double;
-        case ValueType::Strings:
-            return ValueType::String;
-        default:
-            return ValueType::Unknown;
     }
 }
 

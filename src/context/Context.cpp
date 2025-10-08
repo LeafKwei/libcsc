@@ -1,7 +1,5 @@
-#include <cassert>
 #include "csc/types.hpp"
 #include "csc/context/Context.hpp"
-#include "csc/context/functions.hpp"
 CSC_BEGIN
 
 Context::Context() : m_idCounter(1){           //作用域ID从1开始，0作为保留ID，为将来的全局Action做准备
@@ -89,12 +87,14 @@ Context& Context::makeVariable(crString name, crValue value, ValueType type){
 Context& Context::makeVariable(crString name, InitValues values, ValueType type){
     if(values.size() == 0) throw ContextExcept(std::string("No value specified for variable: ") + name);
 
+    /* 变量存在时，替换原变量值和类型 */
     auto iterator = m_current -> variables.find(name);
     if(iterator != m_current -> variables.end()){
         do_setVariable(iterator -> second, values, type);
         return *this;
     }
 
+    /* 否则创建新变量 */
     do_makeVariable(name, values, type);
     return *this;
 }
@@ -114,10 +114,11 @@ Context::VarValue Context::getValue(crString name) const{
         throw ContextExcept(std::string("No such variable: ") + name);
     }
 
+    /* 当变量中存在值时，返回首个值，如果变量不存在任何值(空变量)，则返回变量类型对应的零值 */
     auto variable = iterator -> second;
     return (variable -> values.size() > 0) ? 
         VarValue{variable -> values.at(0), variable -> type} : 
-        zeroValue(variable -> type);
+        VarValue{Operand::zero(variable -> type), variable -> type};
 }
 
 Context::VarValues Context::getValues(crString name) const{

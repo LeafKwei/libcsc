@@ -1,3 +1,4 @@
+#include <cassert>
 #include "csc/types.hpp"
 #include "csc/syntax/Command.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
@@ -18,8 +19,8 @@ bool CmdExecutor::exceed() const noexcept{
 void CmdExecutor::pushToken(const Token &token){
     assert(m_key.size() < m_maxKeySize);
 
-    Operand op{token, operandTypeof(token)};
-    if(op.type == OperandType::Unknown){
+    Operand op(token);
+    if(op.operandType() == OperandType::Unknown){
         throw CommandExcept("Unrecognized token: " + token.str);
     }
 

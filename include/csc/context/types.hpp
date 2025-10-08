@@ -23,7 +23,6 @@ using ValueKeeper = std::vector<Value>;
 enum class ValueType{
     Unknown, 
     Bool, Integer, Double, String,        //bool、int/long、double、std::string
-    Bools, Integers, Doubles, Strings  //std::vector<bool>...
 };
 
 struct Variable{

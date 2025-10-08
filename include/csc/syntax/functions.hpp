@@ -25,9 +25,8 @@ inline OperandType operandTypeof(const Token &token){
     }
 }
 
-CSC_INNER_BEGIN
-/* 将Token类型转换为供Context使用的ValueType类型 */
-inline ValueType valueTypeofHelper(const Token &token){
+/* 将Token类型转换为供Context使用的Value类型 */
+inline ValueType valueTypeof(const Token &token){
     switch(token.type){
         case TokenType::Number:
             if(token.tag == TokenTag::Float) return ValueType::Double;
@@ -43,29 +42,11 @@ inline ValueType valueTypeofHelper(const Token &token){
     }
 }
 
-CSC_INNER_END
-
-/* 将Token类型转换为供Context使用的Value类型，借助valueTypeofHelper对数组Token进行类型判断 */
-inline ValueType valueTypeof(const Token &token){
-    if(token.type != TokenType::Array){
-        return csc::csc_inner::valueTypeofHelper(token);
-    }
-
+/* 将数组Token转换为供Context使用的Value类型 */
+inline ValueType arrayTypeof(const Token &token){
     CharMngr mngr(token.str);
     PureLexer lexer;
-    auto type = csc::csc_inner::valueTypeofHelper(lexer.nextTokenFrom(mngr));
-    switch(type){
-        case ValueType::Bool:
-            return ValueType::Bools;
-        case ValueType::Integer:
-            return ValueType::Integers;
-        case ValueType::Double:
-            return ValueType::Doubles;
-        case ValueType::String:
-            return ValueType::Strings;
-        default:
-            return ValueType::Unknown;
-    };
+    return valueTypeof(lexer.nextTokenFrom(mngr));
 }
 
  /** 

@@ -26,36 +26,36 @@ private:
 class EnterScopeCmd : public CommonCmd{
 public:
     EnterScopeCmd();
-    bool runnable(crOpList operands) override;
-    void run(crOpList operands, Context &context, ActionCtl &ctl) override;
+    bool runnable(crOperandList operands) override;
+    void run(crOperandList operands, Context &context, ActionCtl &ctl) override;
 };
 
 class ExitScopeCmd : public CommonCmd{
 public:
     ExitScopeCmd();
-    bool runnable(crOpList operands) override;
-    void run(crOpList operands, Context &context, ActionCtl &ctl) override;
+    bool runnable(crOperandList operands) override;
+    void run(crOperandList operands, Context &context, ActionCtl &ctl) override;
 };
 
 class AssignCmd : public CommonCmd{
 public:
     AssignCmd();
-    bool runnable(crOpList operands) override;
-    void run(crOpList operands, Context &context, ActionCtl &ctl) override;
+    bool runnable(crOperandList operands) override;
+    void run(crOperandList operands, Context &context, ActionCtl &ctl) override;
 };
 
 class ArrayAssignCmd : public CommonCmd{
 public:
     ArrayAssignCmd();
-    bool runnable(crOpList operands) override;
-    void run(crOpList operands, Context &context, ActionCtl &ctl) override;
+    bool runnable(crOperandList operands) override;
+    void run(crOperandList operands, Context &context, ActionCtl &ctl) override;
 };
 
 class ActionCmd : public CommonCmd{
 public:
     ActionCmd();
-    bool runnable(crOpList operands) override;
-    void run(crOpList operands, Context &context, ActionCtl &ctl) override;
+    bool runnable(crOperandList operands) override;
+    void run(crOperandList operands, Context &context, ActionCtl &ctl) override;
 
 private:
     void run_genidx(ActionCtl &ctl, UID scopeid);

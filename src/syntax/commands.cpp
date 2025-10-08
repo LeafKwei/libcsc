@@ -33,12 +33,12 @@ EnterScopeCmd::EnterScopeCmd() : CommonCmd(
     }
 ){}
 
-bool EnterScopeCmd::runnable(crOpList operands){
+bool EnterScopeCmd::runnable(crOperandList operands){
     return true;
 }
 
-void EnterScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto &name = operands.at(0).token.str;
+void EnterScopeCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+    auto &name = operands.at(0).str();
     
     if(context.probeScope(name)){
          context.enterScope(name);
@@ -57,12 +57,12 @@ ExitScopeCmd::ExitScopeCmd() : CommonCmd(
     }
 ){}
 
-bool ExitScopeCmd::runnable(crOpList operands){
+bool ExitScopeCmd::runnable(crOperandList operands){
     return true;
 }
 
-void ExitScopeCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto &name = operands.at(1).token.str;
+void ExitScopeCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+    auto &name = operands.at(1).str();
     if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
@@ -80,22 +80,22 @@ AssignCmd::AssignCmd() : CommonCmd(
     }
 ){}
 
-bool AssignCmd::runnable(crOpList operands){
+bool AssignCmd::runnable(crOperandList operands){
     return true;
 }
 
-void AssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    auto vtype = valueTypeof(operands.at(2).token);
-    if(vtype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
+void AssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+    auto vtype = operands.at(2).valueType();
+    if(operands.at(2).valueType() == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
 
     ctl.sendAction(
         ActionType::MakeVariable, 
-        operands.at(0).token.str, 
+        operands.at(0).str(),
         context.scopeMetaData()
     );
     context.makeVariable(
-        operands.at(0).token.str,
-        tokenToValue(operands.at(2).token, vtype),
+        operands.at(0).str(),
+        operands.at(2).value(),
         vtype
     );
 }
@@ -109,7 +109,7 @@ ArrayAssignCmd::ArrayAssignCmd() : CommonCmd(
     }
 ){}
 
-bool ArrayAssignCmd::runnable(crOpList operands){
+bool ArrayAssignCmd::runnable(crOperandList operands){
     return true;
 }
 
@@ -118,35 +118,34 @@ bool ArrayAssignCmd::runnable(crOpList operands){
  * 依次读取数组字符串中的每个元素，并将其追加到Context的变量中。每个被读入的元素都会被判断类型，如果类型和第一个元素
  * 不同，则视为出错
  */
-void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
+void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
     /* 获取数组的类型 */
-    auto atype = valueTypeof(operands.at(2).token);
+    auto atype = operands.at(2).valueType();
     if(atype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
     ctl.sendAction(
         ActionType::MakeVariable, 
-        operands.at(0).token.str, 
+        operands.at(0).str(),
         context.scopeMetaData()
     );
-    context.makeVariable(       //创建一个数组类型的空变量
-        operands.at(0).token.str, 
+    context.makeVariable(       //创建一个空变量
+        operands.at(0).str(),
         {},
         atype
     );
 
-    auto &name = operands.at(0).token.str;
-    auto evtype = ValueType::Unknown;
-    CharMngr mngr(operands.at(2).token.str);
+    auto &name = operands.at(0).str();
+    CharMngr mngr(operands.at(2).str());
     PureLexer lexer;
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
     while(mngr.valid()){
-        auto token = lexer.nextTokenFrom(mngr);
+        Operand op(lexer.nextTokenFrom(mngr));
 
-        if(token.type == TokenType::Aborted){
+        if(op.tokenType() == TokenType::Aborted){
             break;
         }
 
-        if(token.type == TokenType::Unknown){
+        if(op.tokenType() == TokenType::Unknown){
             /* 出现不可识别的字符时，如果是“,”则跳过，否则抛出异常 */
             if(mngr.getch() ==','){
                 mngr.forward();
@@ -156,17 +155,16 @@ void ArrayAssignCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
             throw CommandExcept("Invalid character in assignment.");
         }
 
-        if(operandTypeof(token) != OperandType::Value){
+        if(op.operandType() != OperandType::Value){
             throw CommandExcept("Invalid token in assignment.");
         }
 
-        auto tp = valueTypeof(token);
-        if(evtype != ValueType::Unknown && evtype != tp){  /* 如果数组中的元素类型不同则视为错误 */
+        auto tp = op.valueType();
+        if(tp != atype){    //如果数组中的元素类型不同则视为错误
             throw CommandExcept("Elements in array are not a same type.");
         }
 
-        context.extendValues(name, {tokenToValue(token, tp)});
-        evtype = tp;
+        context.extendValues(name, {op.value()});
     }
 }
 
@@ -178,13 +176,13 @@ ActionCmd::ActionCmd() : CommonCmd(
     }
 ){}
 
-bool ActionCmd::runnable(crOpList operands){
-    return valueTypeof(operands.at(1).token) == ValueType::String;
+bool ActionCmd::runnable(crOperandList operands){
+    return operands.at(1).valueType() == ValueType::String;
 }
 
-void ActionCmd::run(crOpList operands, Context &context, ActionCtl &ctl){
-    if(operands.at(1).token.str == "genidx") run_genidx(ctl, context.scopeMetaData().id);
-    else throw ActionExcept(String("Unsupport action: ") + operands.at(1).token.str);
+void ActionCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+    if(operands.at(1).str() == "genidx") run_genidx(ctl, context.scopeMetaData().id);
+    else throw ActionExcept(String("Unsupport action: ") + operands.at(1).str());
 }
 
 /**
@@ -202,7 +200,7 @@ void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
             context.setPostion(action.postion());
             if(action.type() == ActionType::MakeScope){
                 if(!context.probeVariable("_sidx_")){
-                    context.makeVariable("_sidx_", {std::any_cast<String>(action.extraData())}, ValueType::Strings);
+                    context.makeVariable("_sidx_", {std::any_cast<String>(action.extraData())}, ValueType::String);
                     return true;
                 }
                 context.extendValues("_sidx_", {std::any_cast<String>(action.extraData())});
@@ -210,7 +208,7 @@ void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
             }
             else if(action.type() == ActionType::MakeVariable){
                  if(!context.probeVariable("_vidx_")){
-                    context.makeVariable("_vidx_", {std::any_cast<String>(action.extraData())}, ValueType::Strings);
+                    context.makeVariable("_vidx_", {std::any_cast<String>(action.extraData())}, ValueType::String);
                     return true;
                 }
                 context.extendValues("_vidx_", {std::any_cast<String>(action.extraData())});

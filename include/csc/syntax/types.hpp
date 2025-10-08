@@ -11,11 +11,6 @@ enum class OperandType{
     Identifier, Keyword, Operator, Value, Values
 };
 
-struct Operand{
-    Token              token;
-    OperandType  type;
-};
-
 struct Command;
 
 CSC_END
