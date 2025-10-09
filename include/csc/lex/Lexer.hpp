@@ -12,16 +12,17 @@
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
-class Lexer : public PureLexer{
+class Lexer{
 public:
     Lexer();
     Lexer(crString str);
-    Token    nextToken();
-    Locator locator(int offset=0) const;
-    bool      valid() const;
-    crString str() const;
+    LexResult nextToken();
+    Locator    locator(int offset=0) const;
+    bool         valid() const;
+    crString    str() const;
 
 private:
+    PureLexer  m_pure;
     CharMngr m_mngr;
 };
 

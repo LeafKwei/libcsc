@@ -85,8 +85,8 @@ bool AssignCmd::runnable(crOperandList operands){
 }
 
 void AssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
-    auto vtype = operands.at(2).valueType();
-    if(operands.at(2).valueType() == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
+    auto vtype = operands.at(2).typeofValue();
+    if(operands.at(2).typeofValue() == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
 
     ctl.sendAction(
         ActionType::MakeVariable, 
@@ -120,7 +120,7 @@ bool ArrayAssignCmd::runnable(crOperandList operands){
  */
 void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
     /* 获取数组的类型 */
-    auto atype = operands.at(2).valueType();
+    auto atype = operands.at(2).typeofValue();
     if(atype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
     ctl.sendAction(
         ActionType::MakeVariable, 
@@ -141,11 +141,11 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
     while(mngr.valid()){
         Operand op(lexer.nextTokenFrom(mngr));
 
-        if(op.tokenType() == TokenType::Aborted){
+        if(op.typeofToken() == TokenType::Aborted){
             break;
         }
 
-        if(op.tokenType() == TokenType::Unknown){
+        if(op.typeofToken() == TokenType::Unknown){
             /* 出现不可识别的字符时，如果是“,”则跳过，否则抛出异常 */
             if(mngr.getch() ==','){
                 mngr.forward();
@@ -155,11 +155,11 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
             throw CommandExcept("Invalid character in assignment.");
         }
 
-        if(op.operandType() != OperandType::Value){
+        if(op.typeofOperand() != OperandType::Value){
             throw CommandExcept("Invalid token in assignment.");
         }
 
-        auto tp = op.valueType();
+        auto tp = op.typeofValue();
         if(tp != atype){    //如果数组中的元素类型不同则视为错误
             throw CommandExcept("Elements in array are not a same type.");
         }
@@ -177,7 +177,7 @@ ActionCmd::ActionCmd() : CommonCmd(
 ){}
 
 bool ActionCmd::runnable(crOperandList operands){
-    return operands.at(1).valueType() == ValueType::String;
+    return operands.at(1).typeofValue() == ValueType::String;
 }
 
 void ActionCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){

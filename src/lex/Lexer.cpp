@@ -6,7 +6,7 @@ Lexer::Lexer() : Lexer(""){ }
 Lexer::Lexer(crString str) : m_mngr(str){ }
 
 Token Lexer::nextToken(){
-    return nextTokenFrom(m_mngr);
+    return m_pure.nextTokenFrom(m_mngr);
 }
 
 bool Lexer::valid() const{

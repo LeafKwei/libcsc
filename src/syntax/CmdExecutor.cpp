@@ -20,7 +20,7 @@ void CmdExecutor::pushToken(const Token &token){
     assert(m_key.size() < m_maxKeySize);
 
     Operand op(token);
-    if(op.operandType() == OperandType::Unknown){
+    if(op.typeofOperand() == OperandType::Unknown){
         throw CommandExcept("Unrecognized token: " + token.str);
     }
 

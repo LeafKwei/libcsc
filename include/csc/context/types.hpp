@@ -65,11 +65,6 @@ struct CppType<ValueType::Bool>{
 };
 
 template<>
-struct CppType<ValueType::Bool>{
-    using type = bool;
-};
-
-template<>
 struct CppType<ValueType::Integer>{
     using type = long;
 };

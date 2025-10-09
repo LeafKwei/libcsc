@@ -20,29 +20,22 @@ public:
 
 public:
     PureLexer();
-    Token nextTokenFrom(CharMngr &mngr);
-    void   setAutoSkipBlank(bool b);
+    LexResult nextTokenFrom(CharMngr &mngr);
+    void         setAutoSkipBlank(bool b);
 
 private:
     bool m_autoSkipBlank;
     ReaderBranches m_readers;
     ConverterBranches m_converters;
 
-    inline bool isIgnoredToken(TokenType type) const noexcept;
+    inline bool isIgnoredToken(const LexResult &res) const noexcept;
     Token&     identifierConverter(Token &token);
     void           installReaders();
     void           installConverters();
 };
 
-inline bool PureLexer::isIgnoredToken(TokenType type) const noexcept{
-    switch(type){
-        case TokenType::Ignored:
-            return true;
-        case TokenType::Blank:
-            return m_autoSkipBlank;
-        default:
-            return false;
-    }
+inline bool PureLexer::isIgnoredToken(const LexResult &res) const noexcept{
+    return (res.first == LexOption::Ignored || (res.second.type == TokenType::Blank && m_autoSkipBlank));
 }
 
 CSC_END
