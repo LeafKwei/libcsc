@@ -12,8 +12,8 @@ CSC_BEGIN
 
 class TokenReader{
 public:
-    virtual bool          readable(CharMngr &mngr) =0;
-    virtual Token        read(CharMngr &mngr) =0;
+    virtual bool           readable(CharMngr &mngr) =0;
+    virtual Token         read(CharMngr &mngr) =0;
     virtual TokenType type() =0;
 };
 

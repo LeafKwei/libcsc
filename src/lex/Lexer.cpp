@@ -5,8 +5,8 @@ CSC_BEGIN
 Lexer::Lexer() : Lexer(""){ }
 Lexer::Lexer(crString str) : m_mngr(str){ }
 
-Token Lexer::nextToken(){
-    return m_pure.nextTokenFrom(m_mngr);
+LexResult Lexer::nextResult(){
+    return m_pure.nextResultFrom(m_mngr);
 }
 
 bool Lexer::valid() const{

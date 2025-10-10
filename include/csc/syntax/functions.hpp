@@ -46,7 +46,7 @@ inline ValueType valueTypeof(const Token &token){
 inline ValueType arrayTypeof(const Token &token){
     CharMngr mngr(token.str);
     PureLexer lexer;
-    return valueTypeof(lexer.nextTokenFrom(mngr));
+    return valueTypeof(lexer.nextResultFrom(mngr));
 }
 
  /** 

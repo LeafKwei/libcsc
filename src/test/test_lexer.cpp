@@ -49,7 +49,7 @@ int main(void){
     lexer.setAutoSkipBlank(true);
 
     while(lexer.valid()){
-        auto token = lexer.nextToken();
+        auto token = lexer.nextResult();
         if(token.type == TokenType::Unknown){
             auto locator = lexer.locator();
             printf("Unexcepted error at row: %d, col: %d\n", locator.row(), locator.col());
@@ -67,7 +67,7 @@ int main(void){
     CharMngr mngr{str};
 
     while(mngr.valid()){
-        auto token = pure.nextTokenFrom(mngr);
+        auto token = pure.nextResultFrom(mngr);
         if(token.type == TokenType::Unknown){
             Locator locator(mngr.str(), mngr.index());
             printf("Unexcepted error at row: %d, col: %d\n", locator.row(), locator.col());

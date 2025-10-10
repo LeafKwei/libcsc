@@ -99,8 +99,8 @@ ValueType Operand::getValueTypeof(const Token &token){
 
 ValueType Operand::getArrayValueTypeof(const Token &token){
     Lexer lexer(token.str);
-    const auto &tk = lexer.nextToken();
-    return getValueTypeof(tk);
+    const auto &tk = lexer.nextResult();
+    return getValueTypeof(tk.token);
 }
 
 OperandType Operand::getOperandTypeof(const Token &token, ValueType type){

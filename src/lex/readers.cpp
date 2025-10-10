@@ -6,8 +6,12 @@
 CSC_BEGIN
 
 //============== CommonReader =============
+/** 
+ * CommonReader将token的读取抽象为了字符判断、字符读取、获取选项、获取类型等部分，对于一些结构简单的token，仅需实现以上函数
+ * 即可完成读取，而无需重写整个read函数
+ */
 Token CommonReader::read(CharMngr &mngr){
-    Token token{TokenType::Aborted};
+    Token token{};
 
     while(mngr.valid()){
         if(!canRead(mngr.getch())) break;
@@ -23,7 +27,7 @@ bool CommonReader::readable(CharMngr &mngr){
 }
 
 TokenType CommonReader::type(){
-    return TokenType::Aborted;
+    return TokenType::Unknown;
 }
 
 bool CommonReader::canRead(Char ch){
@@ -49,7 +53,7 @@ bool DescriptionReader::readable(CharMngr &mngr){
 }
 
 TokenType DescriptionReader::type(){
-    return TokenType::Ignored;
+    return TokenType::Description;
 }
 
 bool DescriptionReader::canRead(Char ch){
@@ -87,10 +91,10 @@ bool OperatorReader::canRead(Char ch){
 bool NumberReader::readable(CharMngr &mngr){
     if(mngr.valid() && isNumber(mngr.getch())) return true;
     
-    /* Check if this token has +- as prefix. */
+    /* 检查token是否以+-符号开头 */
     if(mngr.valid() && (mngr.getch() == '+' || mngr.getch() == '-')) return true;
 
-    /* Check if this token has 0x as prefix. */
+    /* 检查token是否含有0x前缀 */
     if(mngr.index() + 1 >= mngr.length()) return false;
     if(mngr.at(mngr.index()) == '0' && mngr.at(mngr.index() + 1) == 'x') return true;
 
@@ -98,21 +102,19 @@ bool NumberReader::readable(CharMngr &mngr){
 }
 
 Token NumberReader::read(CharMngr &mngr){
-    Token token{TokenType::Aborted};
-    
+    Token token{TokenType::Number};
     readPrefix(token, mngr);
 
     m_num = 0;
-    token.type = TokenType::Number;
     if(m_type == 1) readHex(token, mngr);
     if(m_type == 0) readNumber(token, mngr);
 
-    //If no valid number character was read.
+    /* 如果在前缀之后没有读取到任何一个数字，则说明token有误 */
     if(m_num == 0){
         token.type = TokenType::Unknown;
     }
 
-    //If this number is not ending with blank or separator.
+    /* 如果数字字符之后不是空白字符或者“,”结尾，则说明token有误(例如123abc) */
     if(mngr.valid() && (!isBlank(mngr.getch()) && !(isSeparator(mngr.getch())))){
        token.type = TokenType::Unknown;
     }
@@ -124,12 +126,8 @@ TokenType NumberReader::type(){
     return TokenType::Number;
 }
 
-bool NumberReader::canRead(Char ch){
-    return false;
-}
-
 void NumberReader::readPrefix(Token &token, CharMngr &mngr){
-    /* Checking for hex is must be first, because the prefix '0x' contain number 0. */
+    /* 对于16进制的前缀0x的检查必须放在前面，否则字符0将被作为数字token读取 */
     if(mngr.at(mngr.index()) == '0' && mngr.at(mngr.index() + 1) == 'x'){
         m_type = 1;
         token.str.push_back(mngr.forward());
@@ -150,7 +148,6 @@ void NumberReader::readPrefix(Token &token, CharMngr &mngr){
 }
 
 void NumberReader::readHex(Token &token, CharMngr &mngr){
-    token.type = TokenType::Number;
     token.tag = TokenTag::Hex;
     
     while(mngr.valid()){
@@ -162,12 +159,11 @@ void NumberReader::readHex(Token &token, CharMngr &mngr){
 
 void NumberReader::readNumber(Token &token, CharMngr &mngr){
     bool dot = true;
-    token.type = TokenType::Number;
 
     while(mngr.valid()){
         auto ch = mngr.getch();
-        if(!isNumber(ch) && !(dot && ch == '.')) break;  //If ch neither number nor first dot.
-        if(ch == '.'){        //读取到dot时，表示该token是一个浮点数
+        if(!isNumber(ch) && !(dot && ch == '.')) break;  //如果一个字符既不是数字字符也不是点，则停止读取
+        if(ch == '.'){                                                            //读取到dot时，表示该token是一个浮点数
             token.tag = TokenTag::Float;
             dot = false;
         }
@@ -183,22 +179,13 @@ bool StringReader::readable(CharMngr &mngr){
 }
 
 Token StringReader::read(CharMngr &mngr){
-    Token token{TokenType::Aborted};
+    Token token{TokenType::String};
     readString(token, mngr);
     return token;
 }
 
-TokenType StringReader::type(){
-    return TokenType::String;
-}
-
-bool StringReader::canRead(Char ch){
-    return false;
-}
-
 void StringReader::readString(Token &token, CharMngr &mngr){
-    mngr.forward();  //skip first quota
-    token.type = TokenType::String;
+    mngr.forward();  //跳过首个引号
 
     bool escape = false;
     while(mngr.valid()){
@@ -222,7 +209,7 @@ void StringReader::readString(Token &token, CharMngr &mngr){
         token.str.push_back(ch);
     }
 
-    if(!(mngr.valid())){ //If there is no ending quota
+    if(!(mngr.valid())){ //当到达string末尾时，如果还没找到引号，则说明字符串边界有误
         token.type = TokenType::Unknown;
     }
 }
@@ -233,35 +220,27 @@ bool ArrayReader::readable(CharMngr &mngr){
 }
 
 Token ArrayReader::read(CharMngr &mngr){
-    Token token{TokenType::Aborted};
+    Token token{TokenType::Array};
 
-    token.type = TokenType::Array;
-    auto idx = mngr.index();
-    mngr.forward();   //Skip first '{'
+    mngr.forward();   //跳过首个{
 
-    /* Read all characters in '{}'*/
+    /* 读取{}中的所有内容 */
     while(mngr.valid()){
         if(mngr.getch() == '}') break;
         token.str.push_back(mngr.forward());
     }
 
-    if(!mngr.valid()){        //Restore index if token is unexcepted
-        mngr.seek(CharMngr::Set, idx);
+    if(!mngr.valid()){  //类似于字符串，如果数组没有以}结尾，则视为错误
         token.type = TokenType::Unknown;
         return token;
     }
 
-    mngr.forward(); //Skip ending '}'
-
+    mngr.forward(); //跳过末尾的}
     return token;
 }
 
 TokenType ArrayReader::type(){
     return TokenType::Array;
-}
-
-bool ArrayReader::canRead(Char ch){
-    return false;
 }
 
 CSC_END

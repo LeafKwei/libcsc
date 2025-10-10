@@ -12,9 +12,19 @@ enum class TokenTag{
 };
 
 enum class TokenType{
+    Unknown, Description,
     Keyword,
     Blank, Identifier, Operator, 
     Number, String, Array
+};
+
+/**
+ * LexHint决定了上层功能对token的取舍，OK表示该token可以正常使用，Ignored表示该token应该被忽略，
+ * Aborted表示已没有可以读取的token
+ */
+enum class LexHint{
+    OK, Ignored,
+    Aborted
 };
 
 struct Token{
@@ -23,11 +33,10 @@ struct Token{
     String         str;
 };
 
-enum class LexOption{
-    Aborted, Ignored, Unknown     //Aborted：已无可读取的token，Ignored：该token需要忽略，Unknown：未知的token
+struct LexResult{
+    LexHint hint;
+    Token    token;
 };
-
-using LexResult = std::pair<LexOption, Token>;
 
 CSC_END
 #endif

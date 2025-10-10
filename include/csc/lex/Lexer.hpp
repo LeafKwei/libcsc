@@ -16,7 +16,7 @@ class Lexer{
 public:
     Lexer();
     Lexer(crString str);
-    LexResult nextToken();
+    LexResult nextResult();
     Locator    locator(int offset=0) const;
     bool         valid() const;
     crString    str() const;

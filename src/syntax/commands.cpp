@@ -139,9 +139,10 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
     while(mngr.valid()){
-        Operand op(lexer.nextTokenFrom(mngr));
+        const auto &result = lexer.nextResultFrom(mngr);
+        Operand op(result.token);
 
-        if(op.typeofToken() == TokenType::Aborted){
+        if(result.hint == LexHint::Aborted){
             break;
         }
 

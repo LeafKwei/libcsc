@@ -20,7 +20,7 @@ public:
 
 public:
     PureLexer();
-    LexResult nextTokenFrom(CharMngr &mngr);
+    LexResult nextResultFrom(CharMngr &mngr);
     void         setAutoSkipBlank(bool b);
 
 private:
@@ -28,15 +28,11 @@ private:
     ReaderBranches m_readers;
     ConverterBranches m_converters;
 
-    inline bool isIgnoredToken(const LexResult &res) const noexcept;
-    Token&     identifierConverter(Token &token);
-    void           installReaders();
-    void           installConverters();
+    void setHint(LexResult &result) const;
+    void identifierConverter(Token &token);
+    void installReaders();
+    void installConverters();
 };
-
-inline bool PureLexer::isIgnoredToken(const LexResult &res) const noexcept{
-    return (res.first == LexOption::Ignored || (res.second.type == TokenType::Blank && m_autoSkipBlank));
-}
 
 CSC_END
 #endif
