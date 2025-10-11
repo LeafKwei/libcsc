@@ -193,13 +193,17 @@ inline array_string CscHandler::getValue<array_string>(crString name){
 
 template<typename Tp>
 inline Tp CscHandler::enterAndGet(crString path){
-    const auto &items = detachName(path);
+    PathHelper helper(path);
+    
+    if(!helper.valid()){
+        throw CscExcept("Invalid path: " + path);
+    }
 
-    if(items.first.size() != 0){
-        enter(items.first);
+    if(helper.count() > 1){
+        enter(helper.buildPath(helper.count() - 1));
     }
     
-    return getValue<Tp>(items.second);
+    return getValue<Tp>(helper.lastItem());
 }
 
 CSC_END

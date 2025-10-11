@@ -162,6 +162,7 @@ Context& Context::restart(){
 void Context::clean(){
     m_root = nullptr;
     m_current = nullptr;
+    m_idCounter = 1;
 
     m_root = std::make_shared<Scope>();
     m_root -> meta = {nextID(), "/", m_root};
