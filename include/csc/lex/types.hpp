@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <utility>
 #include <functional>
+#include <memory>
 #include "csc/csc.hpp"
 #include "csc/types.hpp"
 CSC_BEGIN
@@ -38,6 +39,13 @@ struct LexResult{
     LexHint hint;
     Token    token;
 };
+
+/* 声明InitAgent这个名字，以便PureLexer可以将其声明为友元 */
+class InitAgent;
+
+/* 别名 */
+class TokenReader;
+using ReaderPtr = std::shared_ptr<TokenReader>;
 
 CSC_END
 #endif

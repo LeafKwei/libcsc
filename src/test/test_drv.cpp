@@ -12,9 +12,9 @@ int main(void){
     CmdDriver drv;
     drv.drive(str, context);
     context.enterScope("custom").enterScope("tom");
-    std::cout << context.getValue("name").str << std::endl;
-    std::cout << context.getValue("age").str << std::endl;
-    std::cout << context.getValue("weight").str << std::endl;
+    std::cout <<  std::any_cast<String>(context.getValue("name").value) << std::endl;
+    std::cout <<  std::any_cast<String>(context.getValue("age").value) << std::endl;
+    std::cout <<  std::any_cast<String>(context.getValue("weight").value) << std::endl;
     context.leaveScope();
-    std::cout << context.getValue("school").str << std::endl;
+    std::cout <<  std::any_cast<String>(context.getValue("school").value) << std::endl;
 }

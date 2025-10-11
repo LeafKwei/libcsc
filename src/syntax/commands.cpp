@@ -1,6 +1,7 @@
 #include "csc/syntax/commands.hpp"
 #include "csc/syntax/functions.hpp"
 #include "csc/lex/PureLexer.hpp"
+#include "csc/lex/initializers.hpp"
 #include "csc/action/types.hpp"
 CSC_BEGIN
 
@@ -136,6 +137,7 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
     auto &name = operands.at(0).str();
     CharMngr mngr(operands.at(2).str());
     PureLexer lexer;
+    stdlexer_initializer(lexer);
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
     while(mngr.valid()){

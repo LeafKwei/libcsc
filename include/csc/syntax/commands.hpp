@@ -1,9 +1,6 @@
 #ifndef CSC_SYNTAX_COMMANDS_HPP
 #define CSC_SYNTAX_COMMANDS_HPP
 
-#ifndef CSC_SYNTAX_CMDS_HPP
-#define CSC_SYNTAX_CMDS_HPP
-
 #include "csc/syntax/Command.hpp"
 #include "csc/utility/utility.hpp"
 CSC_BEGIN
@@ -62,6 +59,4 @@ private:
 };
 
 CSC_END
-#endif
-
 #endif

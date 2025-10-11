@@ -1,5 +1,5 @@
-#ifndef CSC_PURE_LEXER_HPP
-#define CSC_PURE_LEXER_HPP
+#ifndef CSC_PURELEXER_HPP
+#define CSC_PURELEXER_HPP
 
 #include <map>
 #include "csc/csc.hpp"
@@ -9,7 +9,6 @@
 #include "csc/lex/CharMngr.hpp"
 #include "csc/lex/Locator.hpp"
 #include "csc/lex/TokenReader.hpp"
-#include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
 class  PureLexer{
@@ -23,14 +22,17 @@ public:
     void         setAutoSkipBlank(bool b);
 
 private:
+    friend                    InitAgent;
     bool                      m_autoSkipBlank;
     ReaderBranches   m_readers;
     IMapperBranches m_mappers;
 
     void setHint(LexResult &result) const;
-    void identifierConverter(Token &token);
-    void addReader(ReaderPtr ptr);
-    void addIdentifierMapper(crString identifier, TokenType type);
+    void identifierMapping(Token &token);
+    void addReader(ReaderPtr reader);
+    void addMapper(crString identifier, TokenType type);
+    void cleanReaders();
+    void cleanMappers();
 };
 
 CSC_END

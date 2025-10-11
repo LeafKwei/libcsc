@@ -1,5 +1,5 @@
-#ifndef CSC_LEX_FUNCIONS_HPP
-#define CSC_LEX_FUNCIONS_HPP
+#ifndef CSC_LEX_FUNCTIONS_HPP
+#define CSC_LEX_FUNCTIONS_HPP
 
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"

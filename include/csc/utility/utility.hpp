@@ -11,31 +11,39 @@
 #include "csc/context/types.hpp"
 #include "csc/syntax/types.hpp"
 #include "csc/core/types.hpp"
-
 CSC_BEGIN
 
-String join(String splitor, const std::vector<String> &elements, const std::initializer_list<String> &filters={});
-String valueToString(const Value &val, ValueType tp);
+String valueToString(crValue value, ValueType tp);
 String toEscapingString(crString str);
 
 //=================== toString系列函数 ===================
-inline String toString(CppType<ValueType::Bool>::type raw){
+/* 由于重载会导致某些类型(如int)因为隐式类型转换而出现模糊匹配错误，因此需要使用模板结合特例化实现toString函数 */
+template<typename T>
+inline String toString(T raw){
+    return "";
+}
+
+template<>
+inline String toString<CppType<ValueType::Bool>::type>(CppType<ValueType::Bool>::type raw){
     return (raw) ? "true" : "false";
 }
 
-inline String toString(CppType<ValueType::Integer>::type raw){
+template<>
+inline String toString<CppType<ValueType::Integer>::type>(CppType<ValueType::Integer>::type raw){
     std::stringstream sstream;
     sstream << raw;
     return sstream.str();
 }
 
-inline String toString(CppType<ValueType::Double>::type raw){
+template<>
+inline String toString<CppType<ValueType::Double>::type>(CppType<ValueType::Double>::type raw){
     std::stringstream sstream;
     sstream << raw;
     return sstream.str();
 }
 
-inline String toString(CppType<ValueType::String>::type raw){
+template<>
+inline String toString<CppType<ValueType::String>::type>(CppType<ValueType::String>::type raw){
     return raw;
 }
 

@@ -1,9 +1,10 @@
 #include "csc/lex/Lexer.hpp"
 #include "csc/lex/readers.hpp"
+#include "csc/lex/initializers.hpp"
 CSC_BEGIN
 
 Lexer::Lexer(crString str) : m_mngr(str){
-    
+    stdlexer_initializer(m_pure);
 }
 
 LexResult Lexer::nextResult(){

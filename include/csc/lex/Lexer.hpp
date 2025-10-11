@@ -1,5 +1,5 @@
-#ifndef CSC_LEXCER_HPP
-#define CSC_LEXCER_HPP
+#ifndef CSC_LEXER_HPP
+#define CSC_LEXER_HPP
 
 #include <map>
 #include "csc/csc.hpp"
@@ -14,7 +14,6 @@ CSC_BEGIN
 
 class Lexer{
 public:
-    Lexer();
     Lexer(crString str);
     LexResult nextResult();
     Locator    locator(int offset=0) const;

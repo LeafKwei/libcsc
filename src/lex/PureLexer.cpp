@@ -2,9 +2,7 @@
 #include "csc/lex/readers.hpp"
 CSC_BEGIN
 
-PureLexer::PureLexer() : m_autoSkipBlank(true){
-
-}
+PureLexer::PureLexer() : m_autoSkipBlank(true){}
 
 LexResult PureLexer::nextResultFrom(CharMngr &mngr){
     LexResult result{LexHint::OK};
@@ -28,7 +26,7 @@ LexResult PureLexer::nextResultFrom(CharMngr &mngr){
         }
 
         /* 为Identifier类型的token转换type字段 */
-        identifierConverter(result.token);
+        identifierMapping(result.token);
         return result;
     }
 
@@ -46,10 +44,6 @@ void PureLexer::setAutoSkipBlank(bool b){
     m_autoSkipBlank = b;
 }
 
-void PureLexer::install(Installer &install){
-    install(*this);
-}
-
 void PureLexer::setHint(LexResult &result) const{
     /* 对于注释和空白(autoSkipBlank为true时)，设置hint字段为Ignored */
     if(result.token.type == TokenType::Description){
@@ -60,7 +54,7 @@ void PureLexer::setHint(LexResult &result) const{
     }
 }
 
-void PureLexer::identifierConverter(Token &token){
+void PureLexer::identifierMapping(Token &token){
     /* 对于不是Identier的token，直接返回*/
     if(token.type != TokenType::Identifier) return;
 
@@ -71,11 +65,20 @@ void PureLexer::identifierConverter(Token &token){
 }
 
 void PureLexer::addReader(ReaderPtr ptr){
+    if(ptr == nullptr) throw LexExcept("Pointer to reader is not allowed to nullptr.");
     m_readers.push_back(ptr);
 }
 
-void PureLexer::addIdentifierMapper(crString identifier, TokenType type){
+void PureLexer::addMapper(crString identifier, TokenType type){
     m_mappers.insert({identifier, type});
+}
+
+void PureLexer::cleanReaders(){
+    m_readers.clear();
+}
+
+void PureLexer::cleanMappers(){
+    m_mappers.clear();
 }
 
 CSC_END

@@ -267,7 +267,6 @@ custom::
 ## 5.1.目录结构
 
 * include：存放libcsc中使用到的头文件
-* legacy：存放libcsc中的遗留代码，这些代码并未使用，但是具有参考价值
 * doc: 存放libcsc文档使用到的相关资源
 * src：存放libcsc的源码文件
 * README.md：项目的介绍以及使用方式

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "csc/core/CscHandler.hpp"
+#include "csc/utility/utility.hpp"
 using namespace csc;
 
 class AnySeeker : public ContextSeeker{
@@ -16,7 +17,7 @@ public:
     void values(crString name, const VariableValues &values){
         std::cout << name <<" = ";
         for(int i = 0; i < values.size(); i++){
-            std::cout << values.str(i) << ",";
+            std::cout << valueToString(values.val(), values.type()) << ",";
         }
         std::cout << std::endl;
     }

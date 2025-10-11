@@ -13,6 +13,11 @@ public:
     CscExcept(const std::string &msg) : logic_error(msg){}
 };
 
+class LexExcept : public CscExcept{
+public:
+    LexExcept(const std::string &msg) : CscExcept(msg){}
+};
+
 class ContextExcept : public CscExcept{
 public:
     ContextExcept(const std::string &msg) : CscExcept(msg){}

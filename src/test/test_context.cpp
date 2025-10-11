@@ -5,7 +5,7 @@ using namespace csc;
 int main(void){
     Context context;
 
-    context.makeVariable("what", "Hello World!");
+    context.makeVariable("what", "Hello World!", ValueType::String);
     context.makeScope("users", true)
         .makeScope("tom", true)
             .makeVariable("name", "tom", ValueType::String)
@@ -16,11 +16,11 @@ int main(void){
             .makeVariable("age", "18", ValueType::String);
 
     context.restart();
-    std::cout << context.getValue("what").str << std::endl;
-    std::cout << context.enterScope("users").enterScope("tom").getValue("name").str << std::endl;
+    std::cout << std::any_cast<String>(context.getValue("what").value) << std::endl;
+    std::cout <<  std::any_cast<String>(context.enterScope("users").enterScope("tom").getValue("name").value) << std::endl;
 
     context.restart();
-    std::cout << context.enterScope("users").enterScope("jerry").getValue("age").str << std::endl;
+    std::cout <<  std::any_cast<String>(context.enterScope("users").enterScope("jerry").getValue("age").value)<< std::endl;
     context.clean();
 
     context.makeScope("Kunkun", true)
@@ -31,5 +31,5 @@ int main(void){
     std::cout << "Relation after restart: " << context.relation() << std::endl;
     context.setPostion(pos);
     std::cout << "Relation after setPostion: " << context.relation() << std::endl;
-    std::cout << "Kunkun::music: " << context.getValue("music").str << std::endl;
+    std::cout << "Kunkun::music: " <<  std::any_cast<String>(context.getValue("music").value) << std::endl;
 }

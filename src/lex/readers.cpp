@@ -184,6 +184,10 @@ Token StringReader::read(CharMngr &mngr){
     return token;
 }
 
+TokenType StringReader::type(){
+    return TokenType::String;
+}
+
 void StringReader::readString(Token &token, CharMngr &mngr){
     mngr.forward();  //跳过首个引号
 
@@ -219,6 +223,10 @@ bool ArrayReader::readable(CharMngr &mngr){
     return mngr.valid() && mngr.getch() == '{';
 }
 
+TokenType ArrayReader::type(){
+    return TokenType::Array;
+}
+
 Token ArrayReader::read(CharMngr &mngr){
     Token token{TokenType::Array};
 
@@ -237,10 +245,6 @@ Token ArrayReader::read(CharMngr &mngr){
 
     mngr.forward(); //跳过末尾的}
     return token;
-}
-
-TokenType ArrayReader::type(){
-    return TokenType::Array;
 }
 
 CSC_END
