@@ -6,6 +6,7 @@
 #include "csc/context/ContextSeeker.hpp"
 #include "csc/core/types.hpp"
 #include "csc/core/CscEditor.hpp"
+#include "csc/core/PathHelper.hpp"
 #include "csc/core/functions.hpp"
 #include "csc/syntax/CmdDriver.hpp"
 #include "csc/utility/utility.hpp"
@@ -18,14 +19,11 @@ CSC_BEGIN
  */
 class CscHandler{
 public:
-    using PathItems = decltype(splitPath(""));
-
-public:
     CscHandler() =default;
     CscHandler(crString script);
 
     bool               accessible(crString path, bool v=false); /* 检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称 */
-    String            absolutePath();                                       /* 返回从根作用域到当前作用域的绝对路径 */
+    String             absolutePath();                                       /* 返回从根作用域到当前作用域的绝对路径 */
     CscHandler& enter(crString path);                              /* 进入给定路径对应的作用域，如果路径为“/”，则进入根作用域 */
     CscHandler& iterate(ContextSeeker &seeker);            /* 从当前作用域开始，迭代其及所有子作用域的所有变量 */
     String            toString();                                               /* 从当前作用域开始，将其及子作用域、变量转换为字符串 */
@@ -40,10 +38,6 @@ public:
 private:
     Context      m_context;
     CmdDriver m_driver;
-
-    bool do_accessibleScope(crString path);
-    bool do_accessibleVariable(crString path);
-    void do_enter(const PathItems &items);
 };
 
 

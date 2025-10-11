@@ -10,6 +10,9 @@
 #include "csc/lex/CharMngr.hpp"
 CSC_BEGIN
 
+class TokenReader;
+using ReaderPtr = std::shared_ptr<TokenReader>;
+
 class TokenReader{
 public:
     virtual bool           readable(CharMngr &mngr) =0;

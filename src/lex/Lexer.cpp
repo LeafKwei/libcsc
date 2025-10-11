@@ -2,8 +2,9 @@
 #include "csc/lex/readers.hpp"
 CSC_BEGIN
 
-Lexer::Lexer() : Lexer(""){ }
-Lexer::Lexer(crString str) : m_mngr(str){ }
+Lexer::Lexer(crString str) : m_mngr(str){
+    
+}
 
 LexResult Lexer::nextResult(){
     return m_pure.nextResultFrom(m_mngr);

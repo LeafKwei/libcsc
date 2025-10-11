@@ -14,8 +14,7 @@ CSC_BEGIN
 
 class  PureLexer{
 public:
-    using ConverterBranches = std::map<String, TokenType>;
-    using ReaderPtr = std::shared_ptr<TokenReader>;
+    using IMapperBranches = std::map<String, TokenType>;
     using ReaderBranches = std::vector<ReaderPtr>;
 
 public:
@@ -24,14 +23,14 @@ public:
     void         setAutoSkipBlank(bool b);
 
 private:
-    bool m_autoSkipBlank;
-    ReaderBranches m_readers;
-    ConverterBranches m_converters;
+    bool                      m_autoSkipBlank;
+    ReaderBranches   m_readers;
+    IMapperBranches m_mappers;
 
     void setHint(LexResult &result) const;
     void identifierConverter(Token &token);
-    void installReaders();
-    void installConverters();
+    void addReader(ReaderPtr ptr);
+    void addIdentifierMapper(crString identifier, TokenType type);
 };
 
 CSC_END

@@ -7,6 +7,7 @@
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
 #include "csc/context/ContextSeeker.hpp"
+#include "csc/context/Detector.hpp"
 CSC_BEGIN
 
 
@@ -39,8 +40,9 @@ public:
     bool                isRootScope() const;                                             /* 如果当前作用域是根作用域，返回true */
     crScpMeta      scopeMetaData() const noexcept;                        /* 获取当前作用域的元数据 */
     Pos                 postion() const;                                                     /* 获取当前作用域的Pos对象(对指针的包装) */
+    Detector         detector(bool root) const;                                    /* 使用根scope的指针(root为true时)获取当前scope的指针生成一个Detector */
     void                setPostion(const Pos &pos);                                /* 将当前作用域设置为pos所指定的作用域 */
-    String             relation(crString separator=" ") const;               /* 获取从根作用域到当前作用域之间经过的每个作用域的名称组成的字符串，separator用于指定分隔符 */
+    String             relation(crString separator=" ") const;                 /* 获取从根作用域到当前作用域之间经过的每个作用域的名称组成的字符串，separator用于指定分隔符 */
     
     Context&       makeVariable(crString name, crValue value, ValueType type);      /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
     Context&       makeVariable(crString name, InitValues values, ValueType type); /* 在当前作用域创建变量时一次性设置多个值 */

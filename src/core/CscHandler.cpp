@@ -7,7 +7,7 @@ CscHandler::CscHandler(crString script){
 }
 
 bool CscHandler::accessible(crString path, bool v){
-    return v ? do_accessibleVariable(path) : do_accessibleScope(path);
+    
 }
 
 String CscHandler::absolutePath(){
@@ -15,19 +15,7 @@ String CscHandler::absolutePath(){
 }
 
 CscHandler& CscHandler::enter(crString path){
-    const auto &items = splitPath(path);
-    if(items.size() == 0){
-        throw CscExcept(std::string("Invalid path: ") + path);
-    }
-
-    try{
-        do_enter(items);
-    }
-    catch(ContextExcept &e){
-        throw CscExcept(std::string("Invalid path: ") + path);
-    }
-
-    return *this;
+   
 }
 
 CscHandler& CscHandler::iterate(ContextSeeker &seeker){
@@ -44,55 +32,4 @@ String CscHandler::toString(){
 CscEditor CscHandler::editor(){
     return CscEditor(m_context);
 }
-
-bool CscHandler::do_accessibleScope(crString path){
-    auto result = true;
-    const auto pos = m_context.postion();
-    
-    try{
-        enter(path);
-    }
-    catch(CscExcept &e){
-        result = false;
-    }
-
-    m_context.setPostion(pos);
-    return result;
-}
-
-bool CscHandler::do_accessibleVariable(crString path){
-    auto result = true;
-    const auto &items = detachName(path);
-    const auto pos = m_context.postion();
-
-    if(items.first.size() != 0){      //如果path除变量名外还包含作用域路径，则进入到作用域中
-        try{
-            enter(items.first);
-        }
-        catch(CscExcept &e){
-            m_context.setPostion(pos);
-            return false;
-        }
-    }
-
-    if(!m_context.probeVariable(items.second)){
-        result = false;
-    }
-
-    m_context.setPostion(pos);
-    return result;
-}
-
-void CscHandler::do_enter(const PathItems &items){
-    for(Size_t index = 0; index < items.size(); index++){
-        const auto &item = items.at(index);
-        if(index == 0 && item == "/"){             //如果是绝对路径，则先回到根作用域
-            m_context.restart();
-            continue;
-        }
-    
-        m_context.enterScope(item);
-    }
-}
-
 CSC_END

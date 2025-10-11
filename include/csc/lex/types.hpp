@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <utility>
+#include <functional>
 #include "csc/csc.hpp"
 #include "csc/types.hpp"
 CSC_BEGIN

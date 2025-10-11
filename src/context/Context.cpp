@@ -66,6 +66,11 @@ Context::crScpMeta Context::scopeMetaData() const noexcept{
 Context::Pos Context::postion() const{
     return Pos{m_current};
 }
+
+Detector Context::detector(bool root) const{
+    return root ? Detector(m_root) : Detector(m_current);
+}
+
 void Context::setPostion(const Pos &pos){
     if(pos.scope.expired()){
         throw ContextExcept(std::string("Expired scope postion."));

@@ -20,7 +20,7 @@ public:
 
 private:
     const ValueKeeper &m_keeper;
-    ValueType m_type;
+    ValueType                 m_type;
 };
 
 CSC_END
