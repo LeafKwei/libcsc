@@ -45,6 +45,8 @@ void PureLexer::setAutoSkipBlank(bool b){
 }
 
 void PureLexer::setHint(LexResult &result) const{
+    result.hint = LexHint::OK;
+
     /* 对于注释和空白(autoSkipBlank为true时)，设置hint字段为Ignored */
     if(result.token.type == TokenType::Description){
         result.hint = LexHint::Ignored;
@@ -65,7 +67,7 @@ void PureLexer::identifierMapping(Token &token){
 }
 
 void PureLexer::addReader(ReaderPtr ptr){
-    if(ptr == nullptr) throw LexExcept("Pointer to reader is not allowed to nullptr.");
+    if(ptr == nullptr) throw LexExcept("Pointer to nullptr is not allowed to reader.");
     m_readers.push_back(ptr);
 }
 
