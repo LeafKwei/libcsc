@@ -2,7 +2,6 @@
 #include "csc/types.hpp"
 #include "csc/syntax/Command.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
-#include "csc/syntax/functions.hpp"
 CSC_BEGIN
 
 
@@ -13,11 +12,11 @@ bool CmdExecutor::hasOperand() const noexcept{
 }
 
 bool CmdExecutor::exceed() const noexcept{
-    return m_key.size() >= m_maxKeySize;
+    return m_keyseq.size() >= m_maxKeySize;
 }
 
 void CmdExecutor::pushToken(const Token &token){
-    assert(m_key.size() < m_maxKeySize);
+    assert(m_keyseq.size() < m_maxKeySize);
 
     Operand op(token);
     if(op.typeofOperand() == OperandType::Unknown){
@@ -25,18 +24,18 @@ void CmdExecutor::pushToken(const Token &token){
     }
 
     m_operands.push_back(op);
-    updateKey(token);
+    updateKeyseq(op);
 }
 
 bool CmdExecutor::executable() const{
-    auto cmdListPtr = m_cmdListMap.find(m_key);
+    auto cmdListPtr = m_cmdListMap.find(m_keyseq);
     auto end = m_cmdListMap.end();
 
     return (cmdListPtr != end) && (cmdListPtr -> second.size() > 0);
 }
 
 bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
-    auto cmdListPtr = m_cmdListMap.find(m_key);
+    auto cmdListPtr = m_cmdListMap.find(m_keyseq);
     auto &cmdList = cmdListPtr -> second;
     auto end = m_cmdListMap.end();
     assert((cmdListPtr != end) && (cmdList.size() > 0));
@@ -72,20 +71,20 @@ void CmdExecutor::addCommand(CmdPtr cmd){
     m_maxKeySize = m_maxKeySize < key.size() ? key.size() : m_maxKeySize;
 }
 
-/* 将Token转换为key item后，追加到当前的m_key中，最终得到类型1_=_3形式的key */
-void CmdExecutor::updateKey(const Token &token){
-    const auto &ki = tokenToKeyItem(token);
-    if(m_key.size() == 0){
-        m_key.append(ki);
+/* 获取Operand对应的key，追加到m_keyseq中，最终得到类型1_=_3形式的key。CmdExecutor根据该序列查找对应Command */
+void CmdExecutor::updateKeyseq(const Operand &operand){
+    const auto &key = operand.key();
+    if(m_keyseq.size() == 0){
+        m_keyseq.append(key);
         return;
     }
 
-    m_key.append("_").append(ki);
+    m_keyseq.append("_").append(key);
 }
 
 void CmdExecutor::reset(){
     m_operands.clear();
-    m_key.clear();
+    m_keyseq.clear();
 }
 
 CSC_END

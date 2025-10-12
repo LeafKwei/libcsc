@@ -32,7 +32,7 @@ void CscStrSeeker::values(crString name, const VariableValues &values){
         m_buffer << name << " = " << "{"; 
 
         for(Size_t index = 0; index < values.size(); index++){
-            if(index > 1) m_buffer << ", ";
+            if(index > 0) m_buffer << ", ";
             writeValue(
                 valueToString(values.val(index), values.type()), 
                 values.type()

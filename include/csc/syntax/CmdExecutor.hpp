@@ -40,11 +40,11 @@ public:
 
 private:
     Size_t            m_maxKeySize;
-    String            m_key;
+    String            m_keyseq;
     OperandList m_operands;
     CmdListMap m_cmdListMap;
 
-    void         updateKey(const Token &token);
+    void         updateKeyseq(const Operand &operand);
     void         reset();
 };
 

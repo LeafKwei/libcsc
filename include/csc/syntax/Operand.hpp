@@ -19,9 +19,10 @@ public:
     TokenType      typeofToken() const noexcept;      //获取token类型
     OperandType typeofOperand() const noexcept;  //获取从token转换得到的OperandType类型
     ValueType       typeofValue() const noexcept;       //获取从token转换得到的ValueType类型
-    Value              value() const;                                //将当前Operand转换为Value
+    Value              value() const;                                 //将当前Operand转换为Value
     Value              zero() const;                                  //获取ValueType对应类型的零值
     static Value    zero(ValueType type);                    //获取给定的ValueType对应类型的零值
+    String             key() const;                                             //获取Operand对应的key，key将用于CmdExecutor的命令查找
 
 private:
     Token               m_token;
@@ -30,10 +31,10 @@ private:
 
     void                updateOperandType();
     void                updateValueType();
-    ValueType       getValueTypeof(const Token &token);
-    ValueType       getArrayValueTypeof(const Token &token);
-    OperandType getOperandTypeof(const Token &token, ValueType type);
-    OperandType getOtherOperandTypeof(const Token &token);
+    ValueType       getValueTypeof(const Token &token) const;
+    ValueType       getArrayValueTypeof(const Token &token) const;
+    OperandType getOperandTypeof(const Token &token) const;
+    bool                isBoolString(crString str) const;
 };
 
 CSC_END

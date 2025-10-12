@@ -1,3 +1,5 @@
+#include <iostream>
+#include <sstream>
 #include "csc/lex/Lexer.hpp"
 #include "csc/lex/initializers.hpp"
 #include "csc/syntax/Operand.hpp"
@@ -5,7 +7,7 @@ CSC_BEGIN
 
 Operand::Operand(const Token &token) : m_token(token){
     updateValueType();
-    updateOperandType(); //此函数会依赖ValueType，因此请确保此函数在updateValueType之后调用
+    updateOperandType();
 }
 
 crString Operand::str() const noexcept{
@@ -79,13 +81,16 @@ void Operand::updateValueType(){
 }
 
 void Operand::updateOperandType(){
-    m_optype = getOperandTypeof(m_token, m_valtype);
+    if(m_token.type != TokenType::Array)
+        m_optype = getOperandTypeof(m_token);
+    else
+        m_optype = OperandType::Values;
 }
 
-ValueType Operand::getValueTypeof(const Token &token){
+ValueType Operand::getValueTypeof(const Token &token) const{
         switch(token.type){
         case TokenType::Keyword:
-            return (token.str == "true" || token.str == "false") ? ValueType::Bool : ValueType::Unknown;
+            return (isBoolString(token.str)) ? ValueType::Bool : ValueType::Unknown;
         case TokenType::Number:
             if(token.tag == TokenTag::Float)
                 return ValueType::Double;
@@ -98,7 +103,7 @@ ValueType Operand::getValueTypeof(const Token &token){
     }
 }
 
-ValueType Operand::getArrayValueTypeof(const Token &token){
+ValueType Operand::getArrayValueTypeof(const Token &token) const{
     CharMngr mngr(token.str);
     PureLexer lexer;
     arraylexer_initializer(lexer);
@@ -107,25 +112,13 @@ ValueType Operand::getArrayValueTypeof(const Token &token){
     return getValueTypeof(tk.token);
 }
 
-OperandType Operand::getOperandTypeof(const Token &token, ValueType type){
-        switch(type){
-        case ValueType::Bool:
-        case ValueType::Integer:
-        case ValueType::Double:
-        case ValueType::String:
+OperandType Operand::getOperandTypeof(const Token &token) const{
+    switch(token.type){
+        case TokenType::String:
+        case TokenType::Number:
             return OperandType::Value;
-        default:
-            return getOtherOperandTypeof(token);
-    }
-}
-
-/* 负责处理通过ValueType无法确定其OperandType的其他token */
-OperandType Operand::getOtherOperandTypeof(const Token &token){
-        switch(token.type){
         case TokenType::Keyword:
-            return (m_valtype == ValueType::Bool) ? OperandType::Value : OperandType::Keyword;
-        case TokenType::Array:
-            return OperandType::Values;
+            return (isBoolString(token.str)) ? OperandType::Value : OperandType::Keyword;
         case TokenType::Identifier:
             return OperandType::Identifier;
         case TokenType::Operator:
@@ -135,5 +128,37 @@ OperandType Operand::getOtherOperandTypeof(const Token &token){
     }
 }
 
+bool Operand::isBoolString(crString str) const{
+    return (str == "true") || (str == "false");
+}
+ 
+/* 根据Operand生成对应的key，这些key最终将用于合成一个key序列，以该序列代表一组Operand，并用于匹配一个对应的Command */
+String Operand::key() const{
+    std::stringstream sstream;
+    auto type = m_optype;
+    auto &token = m_token;
+
+    switch(type){
+        case OperandType::Identifier:
+            sstream << static_cast<int>(type);
+            break;
+        case OperandType::Keyword:
+            sstream << token.str;
+            break;
+        case OperandType::Operator:
+            sstream << token.str;
+            break;
+        case OperandType::Value:
+            sstream << static_cast<int>(type);
+            break;
+        case OperandType::Values:
+            sstream << static_cast<int>(type);
+            break;
+        default:
+            sstream << "*** BAD OPERAND  ***";
+    }
+
+    return sstream.str();
+}
 
 CSC_END

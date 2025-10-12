@@ -1,5 +1,4 @@
 #include "csc/syntax/commands.hpp"
-#include "csc/syntax/functions.hpp"
 #include "csc/lex/PureLexer.hpp"
 #include "csc/lex/initializers.hpp"
 #include "csc/action/types.hpp"
@@ -19,7 +18,7 @@ void CommonCmd::genKey(InitTokens tokens){
     String key("");
 
     for(const auto &token : tokens){
-        key.append(tokenToKeyItem(token)).append("_");
+        key.append(Operand(token).key()).append("_");
     }
 
     key.pop_back();  //删除末尾多余的_

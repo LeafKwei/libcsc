@@ -7,7 +7,6 @@
 #include "csc/core/types.hpp"
 #include "csc/core/CscEditor.hpp"
 #include "csc/core/PathHelper.hpp"
-#include "csc/core/functions.hpp"
 #include "csc/syntax/CmdDriver.hpp"
 #include "csc/utility/utility.hpp"
 
