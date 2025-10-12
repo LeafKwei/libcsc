@@ -40,8 +40,8 @@ struct LexResult{
     Token    token;
 };
 
-/* 声明InitAgent这个名字，以便PureLexer可以将其声明为友元 */
-class InitAgent;
+/* 声明LexerAgent这个名字，以便PureLexer可以将其声明为友元 */
+class LexerAgent;
 
 /* 别名 */
 class TokenReader;

@@ -15,7 +15,7 @@ void CmdDriver::drive(crString script, Context &context){
     /* 重复读入token并压入CmdExecutor中，并在具备匹配的命令时执行命令 */
     while(lexer.valid()){
         const auto &result = lexer.nextResult();
-        if(result.hint == LexHint::Aborted) break;
+        if(result.hint == LexHint::Aborted) break;  //此语句必不可少，由于lexer会自动丢弃空白字符和注释，因此即使valid函数返回true，lexer也可能会因为后续字符全是空白字符时返回Aborted
         if(result.token.type == TokenType::Unknown) throw CommandExcept("Unexcepted token at: " + makeExceptMessage(script, lexer.locator(-(result.token.str.size()))));
         
         /* 检查是否已到的叶节点，即已无Command可以适配当前的token序列 */

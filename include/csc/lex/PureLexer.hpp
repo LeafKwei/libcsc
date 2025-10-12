@@ -22,7 +22,7 @@ public:
     void         setAutoSkipBlank(bool b);
 
 private:
-    friend                    InitAgent;
+    friend                    LexerAgent;
     bool                      m_autoSkipBlank;
     ReaderBranches   m_readers;
     IMapperBranches m_mappers;

@@ -1,4 +1,5 @@
 #include "csc/lex/Lexer.hpp"
+#include "csc/lex/initializers.hpp"
 #include "csc/syntax/Operand.hpp"
 CSC_BEGIN
 
@@ -98,8 +99,11 @@ ValueType Operand::getValueTypeof(const Token &token){
 }
 
 ValueType Operand::getArrayValueTypeof(const Token &token){
-    Lexer lexer(token.str);
-    const auto &tk = lexer.nextResult();
+    CharMngr mngr(token.str);
+    PureLexer lexer;
+    arraylexer_initializer(lexer);
+
+    const auto &tk = lexer.nextResultFrom(mngr);
     return getValueTypeof(tk.token);
 }
 

@@ -137,14 +137,14 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
     auto &name = operands.at(0).str();
     CharMngr mngr(operands.at(2).str());
     PureLexer lexer;
-    stdlexer_initializer(lexer);
+    arraylexer_initializer(lexer);
 
     /* 依次读取字符串中的每个元素然后追加到Context的变量中 */
     while(mngr.valid()){
         const auto &result = lexer.nextResultFrom(mngr);
         Operand op(result.token);
 
-        if(result.hint == LexHint::Aborted){
+        if(result.hint == LexHint::Aborted){  //没有可读取的token时结束循环
             break;
         }
 
