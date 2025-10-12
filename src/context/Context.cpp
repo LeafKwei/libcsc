@@ -90,8 +90,6 @@ Context& Context::makeVariable(crString name, crValue value, ValueType type){
 }
 
 Context& Context::makeVariable(crString name, InitValues values, ValueType type){
-    if(values.size() == 0) throw ContextExcept(std::string("No value specified for variable: ") + name);
-
     /* 变量存在时，替换原变量值和类型 */
     auto iterator = m_current -> variables.find(name);
     if(iterator != m_current -> variables.end()){
