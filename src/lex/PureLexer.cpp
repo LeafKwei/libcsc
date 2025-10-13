@@ -67,7 +67,7 @@ void PureLexer::identifierMapping(Token &token){
 }
 
 void PureLexer::addReader(ReaderPtr ptr){
-    if(ptr == nullptr) throw LexExcept("Pointer to nullptr is not allowed to reader.");
+    if(ptr == nullptr) throw LexExcept("Pointer to reader is a nullptr.");
     m_readers.push_back(ptr);
 }
 

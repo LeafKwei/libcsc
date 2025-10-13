@@ -18,7 +18,7 @@ Value ValueMaker::value() const noexcept{
 }
 
 Value ValueMaker::make(const Token &token){
-    m_unit.type = (token.type == TokenType::Array) ? getValueTypeof(token) : getArrayValueTypeof(token);
+    m_unit.type = (token.type != TokenType::Array) ? getValueTypeof(token) : getArrayValueTypeof(token);
     m_unit.value = getValueof(token);
     return m_unit.value;
 }
