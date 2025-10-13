@@ -9,8 +9,8 @@ CSC_BEGIN
 
 class ActionCtl{
 public:
-    virtual void sendAction(ActionType type, Any extraData, Context::crScpMeta meta) =0;
-    virtual void sendInnerAction(Any extraData, Context::crScpMeta meta) =0;
+    virtual void sendAction(ActionType type, Any extraData, const ScopeMetaData &meta) =0;
+    virtual void sendInnerAction(Any extraData, const ScopeMetaData &meta) =0;
     virtual void addActor(ActProcessable checker, ActProcessor worker, UID scopeid, Livetime livetime=Livetime::Scoped) =0;
 };
 

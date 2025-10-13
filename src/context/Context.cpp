@@ -59,7 +59,7 @@ bool Context::isRootScope() const{
     return !(m_current -> parent.expired());
 }
 
-Context::crScpMeta Context::scopeMetaData() const noexcept{
+Context::crScopeMeta Context::scopeMetaData() const noexcept{
     return m_current -> meta;
 }
 
@@ -111,7 +111,7 @@ Context& Context::cleanVariable(crString name){
     return *this;
 }
 
-Context::VarValue Context::getValue(crString name) const{
+Context::Unit Context::getValueUnit(crString name) const{
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -120,18 +120,18 @@ Context::VarValue Context::getValue(crString name) const{
     /* 当变量中存在值时，返回首个值，如果变量不存在任何值(空变量)，则返回变量类型对应的零值 */
     auto variable = iterator -> second;
     return (variable -> values.size() > 0) ? 
-        VarValue{variable -> values.at(0), variable -> type} : 
-        VarValue{Operand::zero(variable -> type), variable -> type};
+        Unit{variable -> values.at(0), variable -> type} : 
+        Unit{ValueMaker::makeZero(variable -> type), variable -> type};
 }
 
-Context::VarValues Context::getValues(crString name) const{
+Context::Accessor Context::getValueAccessor(crString name) const{
     auto iterator = m_current -> variables.find(name);
     if(iterator == m_current -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
 
     auto variable = iterator -> second;
-    return VarValues(variable -> values, variable -> type);
+    return ValueAccessor(variable -> values, variable -> type);
 }
 
 bool Context::probeVariable(crString name) const{
@@ -231,7 +231,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     auto &variables = scope -> variables;
     if(variables.size() != 0){
         for(auto &variable : variables){
-            seeker.values(variable.second -> name, VarValues(variable.second -> values, variable.second -> type));
+            seeker.values(variable.second -> name, ValueAccessor(variable.second -> values, variable.second -> type));
         }
     }
 

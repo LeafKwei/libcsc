@@ -25,7 +25,7 @@ bool PathHelper::isRoot() const noexcept{
     return m_absolute && m_valid && m_items.size() == 0;
 }
 
-Size_t PathHelper::count() const noexcept{
+Size_t PathHelper::size() const noexcept{
     return m_items.size();
 }
 

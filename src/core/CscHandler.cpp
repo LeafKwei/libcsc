@@ -12,8 +12,8 @@ bool CscHandler::accessible(crString path, bool v){
     if(helper.isRoot()) return true; //对于根路径'/'的特别处理
 
     Detector detector = m_context.detector(helper.isAbsolute());
-    for(Size_t i = 0; i < helper.count(); i++){
-        if(v && i == helper.count() - 1){                             //当检查variable路径时，将最后一个item作为variable名称处理
+    for(Size_t i = 0; i < helper.size(); i++){
+        if(v && i == helper.size() - 1){                             //当检查variable路径时，将最后一个item作为variable名称处理
             if(!detector.detectVariable(helper.item(i))) return false;
         }
 
@@ -30,11 +30,11 @@ String CscHandler::absolutePath(){
 CscHandler& CscHandler::enter(crString path){
     PathHelper helper(path);
     if(!helper.valid()) throw CscExcept("Invalid path: " + path);
-    if(helper.isAbsolute()){  //如果是根路径'/'，由于helper.count()为0，所以下方的循环不会执行
+    if(helper.isAbsolute()){  //如果是根路径'/'，由于helper.size()为0，所以下方的循环不会执行
         m_context.restart();  //因此通过这条语句既可以处理根路径，也可以处理绝对路径
     }
 
-    for(Size_t i = 0; i < helper.count(); i++){
+    for(Size_t i = 0; i < helper.size(); i++){
         m_context.enterScope(helper.item(i));
     }
 

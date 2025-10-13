@@ -50,6 +50,7 @@
         "cstring": "cpp",
         "sstream": "cpp",
         "any": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "variant": "cpp"
     }
 }

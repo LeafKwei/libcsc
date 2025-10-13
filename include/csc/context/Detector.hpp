@@ -6,6 +6,7 @@
 #include "csc/context/types.hpp"
 CSC_BEGIN
 
+/* Detector可帮助外部快速确定是否存在指定的scope和variable */
 class Detector{
 public:
     Detector(ScopeWkr wkr);

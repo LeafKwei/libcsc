@@ -16,6 +16,11 @@ CSC_BEGIN
 String valueToString(crValue value, ValueType tp);
 String toEscapingString(crString str);
 
+//=================== 内联函数 //===================
+inline bool isBoolString(crString str){
+    return (str == "true") || (str == "false");
+}
+
 //=================== toString系列函数 ===================
 /* 由于重载会导致某些类型(如int)因为隐式类型转换而出现模糊匹配错误，因此需要使用模板结合特例化实现toString函数 */
 template<typename T>

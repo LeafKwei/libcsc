@@ -14,10 +14,10 @@ public:
         std::cout << "leave: " << name << ", ID = " << id << std::endl;
     }
 
-    void values(crString name, const VariableValues &values){
+    void values(crString name, const ValueAccessor &accessor){
         std::cout << name <<" = ";
-        for(int i = 0; i < values.size(); i++){
-            std::cout << valueToString(values.val(), values.type()) << ",";
+        for(int i = 0; i < accessor.size(); i++){
+            std::cout << valueToString(accessor.value(), accessor.type()) << ",";
         }
         std::cout << std::endl;
     }

@@ -2,7 +2,7 @@
 #define CSC_CONTEXTSEEKER_HPP
 
 #include "csc/context/types.hpp"
-#include "csc/context/VariableValues.hpp"
+#include "csc/context/ValueAccessor.hpp"
 CSC_BEGIN
 
 /**
@@ -14,7 +14,7 @@ public:
     virtual ~ContextSeeker() =default;
     virtual void enterScope(UID id, crString name) =0;
     virtual void leaveScope(UID id, crString name) =0;
-    virtual void values(crString name, const VariableValues &values) =0;
+    virtual void values(crString name, const ValueAccessor &values) =0;
 };
 
 CSC_END

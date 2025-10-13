@@ -7,7 +7,7 @@ CSC_BEGIN
 
 class Action{
 public:
-    Action(ActionType type, Any extraData, Context::crScpMeta meta) : 
+    Action(ActionType type, Any extraData, const ScopeMetaData &meta) : 
         m_type(type), m_extraData(extraData),
         m_pos{meta.ptr}, m_scopeid(meta.id) {}
 

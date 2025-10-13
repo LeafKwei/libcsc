@@ -12,7 +12,7 @@ public:
     CscStrSeeker();
     void enterScope(UID id, crString name) override;
     void leaveScope(UID id, crString name) override;
-    void values(crString name, const VariableValues &values) override;
+    void values(crString name, const ValueAccessor &accessor) override;
     String toString();
 
 private:

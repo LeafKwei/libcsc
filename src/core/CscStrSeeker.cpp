@@ -16,14 +16,14 @@ void CscStrSeeker::leaveScope(UID id, crString name){
     m_buffer << "::" << name << std::endl;
 }
 
-void CscStrSeeker::values(crString name, const VariableValues &values){
+void CscStrSeeker::values(crString name, const ValueAccessor &accessor){
     writeIndent();
 
-    if(values.size() == 1){                //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
+    if(accessor.size() == 1){                //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
         m_buffer << name << " = ";
         writeValue(
-            valueToString(values.val(), values.type()), 
-            values.type()
+            valueToString(accessor.value(), accessor.type()), 
+            accessor.type()
         );
 
         m_buffer << std::endl;
@@ -31,11 +31,11 @@ void CscStrSeeker::values(crString name, const VariableValues &values){
     else{                                                             //否则按照数组格式处理
         m_buffer << name << " = " << "{"; 
 
-        for(Size_t index = 0; index < values.size(); index++){
+        for(Size_t index = 0; index < accessor.size(); index++){
             if(index > 0) m_buffer << ", ";
             writeValue(
-                valueToString(values.val(index), values.type()), 
-                values.type()
+                valueToString(accessor.value(index), accessor.type()), 
+                accessor.type()
             );
         }
 

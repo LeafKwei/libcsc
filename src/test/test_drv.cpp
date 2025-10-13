@@ -13,9 +13,9 @@ int main(void){
     CmdDriver drv;
     drv.drive(str, context);
     context.enterScope("custom").enterScope("tom");
-    std::cout <<  valueToString(context.getValue("name").value, ValueType::String) << std::endl;
-    std::cout <<  valueToString(context.getValue("age").value, ValueType::Integer) << std::endl;
-    std::cout <<  valueToString(context.getValue("weight").value, ValueType::Integer) << std::endl;
+    std::cout <<  valueToString(context.getValueUnit("name").value, ValueType::String) << std::endl;
+    std::cout <<  valueToString(context.getValueUnit("age").value, ValueType::Integer) << std::endl;
+    std::cout <<  valueToString(context.getValueUnit("weight").value, ValueType::Integer) << std::endl;
     context.leaveScope();
-    std::cout <<  valueToString(context.getValue("school").value, ValueType::String) << std::endl;
+    std::cout <<  valueToString(context.getValueUnit("school").value, ValueType::String) << std::endl;
 }

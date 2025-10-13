@@ -48,68 +48,68 @@ inline Tp getValue(crString name){
 
 template<>
 inline bool CscHandler::getValue<bool>(crString name){
-    const auto &value = m_context.getValue(name);
-    if(value.type != ValueType::Bool){
+    const auto &unit = m_context.getValueUnit(name);
+    if(unit.type != ValueType::Bool){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>).name()));
     }
 
-    return std::any_cast<CppType<ValueType::Bool>::type>(value);
+    return std::any_cast<CppType<ValueType::Bool>::type>(unit.value);
 }
 
 template<>
 inline int CscHandler::getValue<int>(crString name){
-    const auto &value = m_context.getValue(name);
-    if(value.type != ValueType::Integer){
+    const auto &unit = m_context.getValueUnit(name);
+    if(unit.type != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(int).name()));
     }
 
     return static_cast<int>(
-        std::any_cast<CppType<ValueType::Integer>::type>(value)
+        std::any_cast<CppType<ValueType::Integer>::type>(unit.value)
     );
 }
 
 template<>
 inline long CscHandler::getValue<long>(crString name){
-    const auto &value = m_context.getValue(name);
-    if(value.type != ValueType::Integer){
+    const auto &unit = m_context.getValueUnit(name);
+    if(unit.type != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>).name()));
     }
 
-    return std::any_cast<CppType<ValueType::Integer>::type>(value);
+    return std::any_cast<CppType<ValueType::Integer>::type>(unit.value);
 }
 
 template<>
 inline double CscHandler::getValue<double>(crString name){
-    const auto &value = m_context.getValue(name);
-    if(value.type != ValueType::Double){
+    const auto &unit = m_context.getValueUnit(name);
+    if(unit.type != ValueType::Double){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>).name()));
     }
 
-    return std::any_cast<CppType<ValueType::Double>::type>(value);
+    return std::any_cast<CppType<ValueType::Double>::type>(unit.value);
 }
 
 template<>
 inline String CscHandler::getValue<String>(crString name){
-    const auto &value = m_context.getValue(name);
-    if(value.type != ValueType::String){
+    const auto &unit = m_context.getValueUnit(name);
+    if(unit.type != ValueType::String){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>).name()));
     }
 
-    return std::any_cast<CppType<ValueType::String>::type>(value);
+    return std::any_cast<CppType<ValueType::String>::type>(unit.value);
 }
 
 template<>
 inline array_bool CscHandler::getValue<array_bool>(crString name){
     array_bool array;
 
-    const auto &values = m_context.getValues(name);
-    if(values.type() != ValueType::Bool){
+    const auto &accessor = m_context.getValueAccessor(name);
+    if(accessor.type() != ValueType::Bool){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>).name()));
     }
 
-    for(Size_t index = 0; index < values.size(); index++){
+    for(Size_t index = 0; index < accessor.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Bool>::type>(values.val(index))
+            std::any_cast<CppType<ValueType::Bool>::type>(accessor.value(index))
         );
     }
 
@@ -120,15 +120,15 @@ template<>
 inline array_int CscHandler::getValue<array_int>(crString name){
     array_int array;
 
-    const auto &values = m_context.getValues(name);
-    if(values.type() != ValueType::Integer){
+    const auto &accessor = m_context.getValueAccessor(name);
+    if(accessor.type() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(int).name()));
     }
 
-    for(Size_t index = 0; index < values.size(); index++){
+    for(Size_t index = 0; index < accessor.size(); index++){
         array.push_back(
             static_cast<int>(
-                std::any_cast<CppType<ValueType::Integer>::type>(values.val(index))
+                std::any_cast<CppType<ValueType::Integer>::type>(accessor.value(index))
             )
         );
     }
@@ -140,14 +140,14 @@ template<>
 inline array_long CscHandler::getValue<array_long>(crString name){
     array_long array;
 
-    const auto &values = m_context.getValues(name);
-    if(values.type() != ValueType::Integer){
+    const auto &accessor = m_context.getValueAccessor(name);
+    if(accessor.type() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>).name()));
     }
 
-    for(Size_t index = 0; index < values.size(); index++){
+    for(Size_t index = 0; index < accessor.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Integer>::type>(values.val(index))
+            std::any_cast<CppType<ValueType::Integer>::type>(accessor.value(index))
         );
     }
 
@@ -158,14 +158,14 @@ template<>
 inline array_double CscHandler::getValue<array_double>(crString name){
     array_double array;
 
-    const auto &values = m_context.getValues(name);
-    if(values.type() != ValueType::Double){
+    const auto &accessor = m_context.getValueAccessor(name);
+    if(accessor.type() != ValueType::Double){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>).name()));
     }
 
-    for(Size_t index = 0; index < values.size(); index++){
+    for(Size_t index = 0; index < accessor.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Double>::type>(values.val(index))
+            std::any_cast<CppType<ValueType::Double>::type>(accessor.value(index))
         );
     }
 
@@ -176,14 +176,14 @@ template<>
 inline array_string CscHandler::getValue<array_string>(crString name){
     array_string array;
 
-    const auto &values = m_context.getValues(name);
-    if(values.type() != ValueType::String){
+    const auto &accessor = m_context.getValueAccessor(name);
+    if(accessor.type() != ValueType::String){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>).name()));
     }
 
-    for(Size_t index = 0; index < values.size(); index++){
+    for(Size_t index = 0; index < accessor.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::String>::type>(values.val(index))
+            std::any_cast<CppType<ValueType::String>::type>(accessor.value(index))
         );
     }
 
@@ -198,8 +198,8 @@ inline Tp CscHandler::enterAndGet(crString path){
         throw CscExcept("Invalid path: " + path);
     }
 
-    if(helper.count() > 1){
-        enter(helper.buildPath(helper.count() - 1));
+    if(helper.size() > 1){
+        enter(helper.buildPath(helper.size() - 1));
     }
     
     return getValue<Tp>(helper.lastItem());
