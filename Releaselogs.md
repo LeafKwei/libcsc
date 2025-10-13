@@ -1,3 +1,11 @@
+**0.6.5**
+
+1. 将Context底层的数据保存单位从std::string更改为了std::any，为了避免类型转换错误，请确保保存到Context中的值与ValueType相匹配
+2. 添加了CppType模板用于将ValueType映射为对应的C++内置类型(如bool、long)
+3. 添加了Operand和ValueMaker，负责将Token转换为可供CmdExecutor和Context使用的对象
+4. 将PureLexer的TokenReader添加方式从内部输入转换为外部输入，并提供了对应的initializer函数用以初始化，同时引入了LexerAgent作为友元，以便在不添加public函数的情况下让外部函数可以向PureLexer添加TokenReader
+5. 重命名了一些using别名
+
 **0.6.1**
 
 1. 添加了action模块

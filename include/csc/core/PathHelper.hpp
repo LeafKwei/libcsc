@@ -26,6 +26,7 @@ private:
     bool              m_absolute;
     PathItemList m_items;
 
+    void classify(crString path);
     bool splitPath(crString path, int index);
 };
 

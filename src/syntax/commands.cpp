@@ -21,7 +21,7 @@ void CommonCmd::genKey(InitTokens tokens){
         key.append(Operand(token).key()).append("_");
     }
 
-    key.pop_back();  //删除末尾多余的_
+    if(tokens.size() > 1) key.pop_back();  //删除末尾多余的_
     m_key = key;
 }
 

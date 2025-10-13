@@ -13,7 +13,7 @@
 #include "csc/core/types.hpp"
 CSC_BEGIN
 
-String valueToString(crValue value, ValueType tp);
+String valueToString(crValue value, ValueType type);
 String toEscapingString(crString str);
 
 //=================== 内联函数 //===================

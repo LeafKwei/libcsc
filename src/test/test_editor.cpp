@@ -10,15 +10,15 @@ int main(void){
     CscHandler handler;
     CscEditor editor = handler.editor();
     editor.autoEnterOn().makeScope("custom")
-        .makeVariable("u", {}, ValueType::Integer).extendValues("u", {98L, 203L, 494L})
-        .makeVariable("z", {}, ValueType::Bool).extendValues("z", {true, false})
+        .makeVariable<int>("u", {}, ValueType::Integer).extendValues("u", {98, 203, 494})
+        .makeVariable<bool>("z", {}, ValueType::Bool).extendValues("z", {true, false})
         .makeVariable("k", {4.5}, ValueType::Double)
     .leaveScope()
-    .makeVariable("h", {39L, 89L}, ValueType::Integer)
+    .makeVariable("h", {39, 89}, ValueType::Integer)
     .makeScope("user")
         .makeVariable("name", {"Jerry"}, ValueType::String)
-        .makeVariable("age", {10L}, ValueType::Integer)
+        .makeVariable("age", {10}, ValueType::Integer)
     .leaveScope();
 
-    std::cout << handler.toString() << std::endl;
+    std::cout << handler.enter("/").toString() << std::endl;
 }

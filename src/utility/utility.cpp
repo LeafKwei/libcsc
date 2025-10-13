@@ -10,10 +10,10 @@ const String KW_FALSE("false");
 const String KW_ACTION("action");
 
 //=================== 通用工具函数 ===================
-String valueToString(crValue value, ValueType tp){
+String valueToString(crValue value, ValueType type){
     std::stringstream sstream;
 
-    switch(tp){
+    switch(type){
         case ValueType::Bool:
             sstream << (std::any_cast<CppType<ValueType::Bool>::type>(value) ? "true" : "false");
             break;

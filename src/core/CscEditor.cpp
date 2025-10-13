@@ -33,16 +33,6 @@ CscEditor& CscEditor::leaveScope(){
     return *this;
 }
 
-CscEditor& CscEditor::makeVariable(crString name, InitValues values, ValueType type){
-    m_context.makeVariable(name, values, type);
-    return *this;
-}
-
-CscEditor& CscEditor::extendValues(crString name, InitValues values){
-    m_context.extendValues(name, values);
-    return *this;
-}
-
 CscEditor& CscEditor::cleanVariable(crString name){
     m_context.cleanVariable(name);
     return *this;
