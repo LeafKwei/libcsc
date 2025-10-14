@@ -51,7 +51,7 @@ void CharMngr::seek(SeekOption option, int offset){
             m_index += offset;
             break;
         case End:
-            m_index = m_str.size() - 1;
+            m_index = (m_str.size() > 0) ? m_str.size() - 1 : 0;
             m_index += offset;
             break;
         default:

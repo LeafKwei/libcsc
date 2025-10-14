@@ -198,7 +198,7 @@ inline Tp CscHandler::enterAndGet(crString path){
         throw CscExcept("Invalid path: " + path);
     }
 
-    auto endidx = helper.size() == 0 ? 0 : helper.size() - 1;
+    auto endidx = (helper.size() > 0) ? helper.size() - 1 : 0;
     enter(helper.buildPath(endidx));
 
     return getValue<Tp>(helper.lastItem());

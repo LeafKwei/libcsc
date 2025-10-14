@@ -9,18 +9,18 @@ CscHandler::CscHandler(crString script){
 bool CscHandler::accessible(crString path, bool v){
     PathHelper helper(path);
     if(!helper.valid()) return false;
-    if(helper.isRoot()) return true; //对于根路径'/'的特别处理
+    if(helper.isRoot()) return !(v); //对于根路径'/'的特别处理，当参数v为true时，由于根目录不是变量，所以要返回false
 
+    auto end = (helper.size() > 0) ? helper.size() - 1 : 0;                   //仅遍历路径最后一个item之前的item
     Detector detector = m_context.detector(helper.isAbsolute());
-    for(Size_t i = 0; i < helper.size(); i++){
-        if(v && i == helper.size() - 1){                             //当检查variable路径时，将最后一个item作为variable名称处理
-            if(!detector.detectVariable(helper.item(i))) return false;
-        }
 
-        if(!detector.tryEnter(helper.item(i))) return false;    //其他情况下都做scope名称处理
+    /* 对于路径的前面部分，都视作scope名称检查 */
+    for(Size_t i = 0; i < end; i++){
+        if(!detector.tryEnter(helper.item(i))) return false;
     }
 
-    return true;
+    /* 最后一部分则根据参数v决定是作为scope名称还是variable名称检查 */
+    return (v) ? detector.detectVariable(helper.lastItem()) : detector.detectScope(helper.lastItem());
 }
 
 String CscHandler::absolutePath(){
