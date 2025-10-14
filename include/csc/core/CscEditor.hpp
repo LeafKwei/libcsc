@@ -1,6 +1,7 @@
 #ifndef CSC_EDITOR_HPP
 #define CSC_EDITOR_HPP
 
+#include <utility>
 #include "csc/context/Context.hpp"
 CSC_BEGIN
 
@@ -19,10 +20,19 @@ public:
     CscEditor& leaveScope();
     CscEditor& cleanScope(crString name);
 
-    template<typename T>
-    CscEditor& makeVariable(crString name, std::initializer_list<T> values, ValueType type);
-    template<typename T>
-    CscEditor& extendValues(crString name, std::initializer_list<T> values);
+    template<typename... T>
+    CscEditor& makeVariable(crString name, ValueType type, T &&...values);
+    template<typename... T>
+    CscEditor& makeVariable(crString name, ValueType type, int value1, T &&...values);                //通过重载函数模板并将value1指定为int，从而让编译器优先选择此版本处理int类型的数据
+    template<typename... T>
+    CscEditor& makeVariable(crString name, ValueType type, const char *value1, T &&...values);  //通过重载函数模板并将value1指定为const char*，从而让编译器优先选择此版本处理char*类型的数据
+    template<typename... T>
+    CscEditor& extendValues(crString name, T &&...values);
+    template<typename... T>
+    CscEditor& extendValues(crString name, int value1, T &&...values);
+    template<typename... T>
+    CscEditor& extendValues(crString name, const char *value1, T &&...values);
+
     CscEditor& cleanVariable(crString name);
 
 private:
@@ -30,52 +40,60 @@ private:
     Context &m_context;
 };
 
-/**
- * What can I say.
- * 项目写到最后才发现用std::any会导致int和const char*没法隐式转换到long和std::string，所以只能将CscEditor内的这两个函数
- * 改成模板，然后通过模板特例化对int和const char*进行特殊处理。
- */
-template<typename T>
-inline CscEditor& CscEditor::extendValues(crString name, std::initializer_list<T> values){
-    for(auto &v : values){
-        m_context.extendValues(name, {v});
-    }
+template<typename... T>
+inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, T &&...values){
+    m_context.makeVariable(name, type, {std::forward<T>(values)...});
     return *this;
 }
 
-template<>
-inline CscEditor& CscEditor::extendValues<int>(crString name, std::initializer_list<int> values){
-    for(auto &v : values){
-        m_context.extendValues(name, {CppType<ValueType::Integer>::type{v}});
-    }
+template<typename... T>
+inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, int value1, T &&...values){
+    m_context.makeVariable(
+        name, 
+        type,
+        {CppType<ValueType::Integer>::type{value1}, CppType<ValueType::Integer>::type{std::forward<T>(values)}...}
+    );
+
     return *this;
 }
 
-template<>
-inline CscEditor& CscEditor::extendValues<const char*>(crString name, std::initializer_list<const char*> values){
-    for(auto &v : values){
-        m_context.extendValues(name, {CppType<ValueType::String>::type{v}});
-    }
+template<typename... T>
+inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, const char *value1, T &&...values){
+    m_context.makeVariable(
+        name, 
+        type,
+        {CppType<ValueType::String>::type{value1}, CppType<ValueType::String>::type{std::forward<T>(values)}...}
+    );
+
     return *this;
 }
 
-template<typename T>
-inline CscEditor& CscEditor::makeVariable(crString name, std::initializer_list<T> values, ValueType type){
-    m_context.makeVariable(name, {}, type);
-    return extendValues(name, values);
+template<typename... T>
+inline CscEditor& CscEditor::extendValues(crString name, T &&...values){
+    m_context.extendValues(name, {std::forward<T>(values)...});
+    return *this;
 }
 
-template<>
-inline CscEditor& CscEditor::makeVariable<int>(crString name, std::initializer_list<int> values, ValueType type){
-    m_context.makeVariable(name, {}, type);
-    return extendValues(name, values);
+template<typename... T>
+inline CscEditor& CscEditor::extendValues(crString name, int value1, T &&...values){
+    m_context.extendValues(
+        name, 
+        {CppType<ValueType::Integer>::type{value1}, CppType<ValueType::Integer>::type{std::forward<T>(values)}...}
+    );
+
+    return *this;
 }
 
-template<>
-inline CscEditor& CscEditor::makeVariable<const char*>(crString name, std::initializer_list<const char*> values, ValueType type){
-    m_context.makeVariable(name, {}, type);
-    return extendValues(name, values);
+template<typename... T>
+inline CscEditor& CscEditor::extendValues(crString name, const char *value1, T &&...values){
+    m_context.extendValues(
+        name, 
+        {CppType<ValueType::String>::type{value1}, CppType<ValueType::String>::type{std::forward<T>(values)}...}
+    );
+
+    return *this;
 }
+
 
 CSC_END
 #endif

@@ -10,7 +10,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.5.0"
+version = "0.6.8"
 
 ;This is a scope
 Dummy::
@@ -143,9 +143,9 @@ String toString()
     从当前作用域开始，将其中的所有内容字符串化后返回。如果需要从根作用域字符串化，请先调用enter("/")进入根作用域
 CscEditor editor()
     返回一个CscEditor对象，可用于编辑CscHandler中的内容
-Tp getValue(crString name)
+Tp getValue<Tp>(crString name)
     获取当前作用域下指定名称的变量值，需要指定该变量值所需转换的类型
-Tp enterAndGet(crString path)
+Tp enterAndGet<Tp>(crString path)
     获取指定路径下的变量值，需要指定该变量值所需转换的类型
 ```
 
@@ -166,10 +166,10 @@ CscEditor& leaveScope()
 	离开当前作用域，回到它的父作用域。当位于根作用域时，调用此函数将引发异常
 CscEditor& cleanScope(crString name)
 	清除当前作用域下指定名称的作用域
-CscEditor& makeVariable(crString name, InitValues values, ValueType type)
-	在当前作用域中创建指定名称的变量，values用于指定变量值，type指定变量的类型，该类型将提供给getValue函数进行类型检查。
+CscEditor& makeVariable(crString name, ValueType type, T &&...values)
+	在当前作用域中创建指定名称的变量，type指定变量的类型，values是一组指定变量值的可变参数，请确保其都为同一类型
     当创建一个已存在的变量时，将会直接使用values替代该变量中的变量值
-CscEditor& extendValues(crString name, InitValues values)
+CscEditor& extendValues(crString name, T &&...values)
 	追加当前作用域中指定名称的变量的变量值
 CscEditor& cleanVariable(crString name)
 	清除当前作用域中指定名称的变量
@@ -199,12 +199,12 @@ bool
 int
 long
 double
-String/std::string
-array_bool/std::vector<bool>
-array_int/std::vector<int>
-array_long/std::vector<long>
-array_double/std::vector<double>
-array_string/std::vector<std::string>
+String      等同于std::string
+ArrBool     等同于std::vector<bool>
+ArrInt      等同于std::vector<int>
+ArrLong     等同于std::vector<long>
+ArrDouble   等同于std::vector<double>
+ArrString   等同于std::vector<std::string>
 ```
 
 

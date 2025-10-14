@@ -44,8 +44,8 @@ public:
     void           setPostion(const Pos &pos);                                /* 将当前作用域设置为pos所指定的作用域 */
     String        relation(crString separator=" ") const;                 /* 获取从根作用域到当前作用域之间经过的每个作用域的名称组成的字符串，separator用于指定分隔符 */
     
-    Context&   makeVariable(crString name, crValue value, ValueType type);      /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
-    Context&   makeVariable(crString name, InitValues values, ValueType type); /* 在当前作用域创建变量时一次性设置多个值 */
+    Context&   makeVariable(crString name, ValueType type, crValue value);      /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
+    Context&   makeVariable(crString name, ValueType type, InitValues values); /* 在当前作用域创建变量时一次性设置多个值 */
     Context&   cleanVariable(crString name);                               /* 删除一个当前作用域中的变量 */  
     Unit            getValueUnit(crString name) const;                       /* 获取一个当前作用域的变量的首个值及类型 */
     Accessor    getValueAccessor(crString name) const;               /* 获取一个当前作用域的变量的ValueAccessor对象，可按索引获取变量的每个值 */

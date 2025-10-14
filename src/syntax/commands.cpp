@@ -95,8 +95,8 @@ void AssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
     );
     context.makeVariable(
         operands.at(0).str(),
-        operands.at(2).value(),
-        vtype
+        vtype,
+        operands.at(2).value()
     );
 }
 
@@ -129,8 +129,8 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
     );
     context.makeVariable(       //创建一个空变量
         operands.at(0).str(),
-        {},
-        atype
+        atype,
+        {}
     );
 
     auto &name = operands.at(0).str();
@@ -202,7 +202,7 @@ void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
             context.setPostion(action.postion());
             if(action.type() == ActionType::MakeScope){
                 if(!context.probeVariable("_sidx_")){
-                    context.makeVariable("_sidx_", {std::any_cast<String>(action.extraData())}, ValueType::String);
+                    context.makeVariable("_sidx_",  ValueType::String, {std::any_cast<String>(action.extraData())});
                     return true;
                 }
                 context.extendValues("_sidx_", {std::any_cast<String>(action.extraData())});
@@ -210,7 +210,7 @@ void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
             }
             else if(action.type() == ActionType::MakeVariable){
                  if(!context.probeVariable("_vidx_")){
-                    context.makeVariable("_vidx_", {std::any_cast<String>(action.extraData())}, ValueType::String);
+                    context.makeVariable("_vidx_", ValueType::String, {std::any_cast<String>(action.extraData())});
                     return true;
                 }
                 context.extendValues("_vidx_", {std::any_cast<String>(action.extraData())});

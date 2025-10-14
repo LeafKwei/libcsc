@@ -85,11 +85,11 @@ String Context::relation(crString separator) const{
     return stream.str();
 }
 
-Context& Context::makeVariable(crString name, crValue value, ValueType type){
-    return makeVariable(name, {value}, type);
+Context& Context::makeVariable(crString name, ValueType type, crValue value){
+    return makeVariable(name, type, {value});
 }
 
-Context& Context::makeVariable(crString name, InitValues values, ValueType type){
+Context& Context::makeVariable(crString name, ValueType type, InitValues values){
     /* 变量存在时，替换原变量值和类型 */
     auto iterator = m_current -> variables.find(name);
     if(iterator != m_current -> variables.end()){

@@ -99,8 +99,8 @@ inline String CscHandler::getValue<String>(crString name){
 }
 
 template<>
-inline array_bool CscHandler::getValue<array_bool>(crString name){
-    array_bool array;
+inline ArrBool CscHandler::getValue<ArrBool>(crString name){
+    ArrBool array;
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::Bool){
@@ -117,8 +117,8 @@ inline array_bool CscHandler::getValue<array_bool>(crString name){
 }
 
 template<>
-inline array_int CscHandler::getValue<array_int>(crString name){
-    array_int array;
+inline ArrInt CscHandler::getValue<ArrInt>(crString name){
+    ArrInt array;
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::Integer){
@@ -137,8 +137,8 @@ inline array_int CscHandler::getValue<array_int>(crString name){
 }
 
 template<>
-inline array_long CscHandler::getValue<array_long>(crString name){
-    array_long array;
+inline ArrLong CscHandler::getValue<ArrLong>(crString name){
+    ArrLong array;
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::Integer){
@@ -155,8 +155,8 @@ inline array_long CscHandler::getValue<array_long>(crString name){
 }
 
 template<>
-inline array_double CscHandler::getValue<array_double>(crString name){
-    array_double array;
+inline ArrDouble CscHandler::getValue<ArrDouble>(crString name){
+    ArrDouble array;
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::Double){
@@ -173,8 +173,8 @@ inline array_double CscHandler::getValue<array_double>(crString name){
 }
 
 template<>
-inline array_string CscHandler::getValue<array_string>(crString name){
-    array_string array;
+inline ArrString CscHandler::getValue<ArrString>(crString name){
+    ArrString array;
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::String){

@@ -1,3 +1,8 @@
+**0.6.8**
+
+1. 将CscEditor对int和const char*的特殊处置方式从模板特例化转变为了可变参数+函数模板重载
+2. 重命名了一些using别名
+
 **0.6.5**
 
 1. 将Context底层的数据保存单位从std::string更改为了std::any，为了避免类型转换错误，请确保保存到Context中的值与ValueType相匹配

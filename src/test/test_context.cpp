@@ -5,15 +5,15 @@ using namespace csc;
 int main(void){
     Context context;
 
-    context.makeVariable("what", "Hello World!", ValueType::String);
+    context.makeVariable("what", ValueType::String, "Hello World!");
     context.makeScope("users", true)
         .makeScope("tom", true)
-            .makeVariable("name", "tom", ValueType::String)
-            .makeVariable("age", "18", ValueType::String)
+            .makeVariable("name", ValueType::String, "tom")
+            .makeVariable("age", ValueType::String, "18")
             .leaveScope()
         .makeScope("jerry", true)
-            .makeVariable("name", "jerry", ValueType::String)
-            .makeVariable("age", "18", ValueType::String);
+            .makeVariable("name", ValueType::String, "jerry")
+            .makeVariable("age", ValueType::String, "18");
 
     context.restart();
     std::cout << std::any_cast<String>(context.getValueUnit("what").value) << std::endl;
@@ -24,7 +24,7 @@ int main(void){
     context.clean();
 
     context.makeScope("Kunkun", true)
-        .makeVariable("music", "Chicken you are so beautiful.", ValueType::String);
+        .makeVariable("music", ValueType::String, "Chicken you are so beautiful.");
 
     auto pos = context.postion();
     context.restart();
