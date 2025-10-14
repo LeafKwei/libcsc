@@ -68,10 +68,7 @@ ValueType ValueMaker::getValueTypeof(const Token &token) const{
         case TokenType::Keyword:
             return (isBoolString(token.str)) ? ValueType::Bool : ValueType::Unknown;
         case TokenType::Number:
-            if(token.tag == TokenTag::Float)
-                return ValueType::Double;
-            else
-                return ValueType::Integer;
+            return (token.tag == TokenTag::Float) ? ValueType::Double : ValueType::Integer;
         case TokenType::String:
             return ValueType::String;
         default:

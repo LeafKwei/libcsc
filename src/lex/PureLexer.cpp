@@ -30,9 +30,9 @@ LexResult PureLexer::nextResultFrom(CharMngr &mngr){
         return result;
     }
 
-    /* 如果已遍历完string，则放弃读取 */
+    /* 如果已遍历完string，则设置hint为Aborted */
     if(!mngr.valid()){
-        return LexResult{LexHint::Aborted};
+        result.hint = LexHint::Aborted;
     }
 
     /* 如果string还有剩余内容，并且没有任何reader可读取，则视为未知token */
