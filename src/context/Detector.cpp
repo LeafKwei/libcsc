@@ -35,7 +35,7 @@ bool Detector::detectVariable(crString name){
 }
 
 void Detector::assertValidPtr() const noexcept{
-    assert(m_ptr.expired() || m_ptr.lock() == nullptr);
+    assert(!m_ptr.expired());
 }
 
 CSC_END
