@@ -18,8 +18,8 @@ void CmdDriver::drive(crString script, Context &context){
         if(result.hint == LexHint::Aborted) break;  //此语句必不可少，由于lexer会自动丢弃空白字符和注释，因此即使valid函数返回true，lexer也可能会因为后续字符全是空白字符或注释时返回Aborted
         if(result.token.type == TokenType::Unknown) throw CommandExcept("Unexcepted token at: " + makeExceptMessage(script, lexer.locator(-(result.token.str.size()))));
         
-        /* 检查是否已超过最长的key长度，即已无Command可以适配当前的token序列 */
-        if(m_executor.exceed()){
+        /* 检查是否已达到最长的key长度，即已无Command可以适配当前的token序列 */
+        if(m_executor.reached()){
             throw CommandExcept("Mismatched token sequence at nearby: " + makeExceptMessage(script, lexer.locator()));
         }
 

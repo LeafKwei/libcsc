@@ -11,8 +11,8 @@ bool CmdExecutor::hasOperand() const noexcept{
     return m_operands.size() > 0;
 }
 
-bool CmdExecutor::exceed() const noexcept{
-    return m_keyseq.size() > m_maxKeySize;         //按照CmdDriver的使用方式，此处可以写成>=，但是不符合exceed的语义
+bool CmdExecutor::reached() const noexcept{
+    return m_keyseq.size() >= m_maxKeySize;
 }
 
 void CmdExecutor::pushToken(const Token &token){
