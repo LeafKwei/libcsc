@@ -50,7 +50,7 @@ template<>
 inline bool CscHandler::getValue<bool>(crString name){
     const auto &unit = m_context.getValueUnit(name);
     if(unit.type != ValueType::Bool){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>::type).name()));
     }
 
     return std::any_cast<CppType<ValueType::Bool>::type>(unit.value);
@@ -72,7 +72,7 @@ template<>
 inline long CscHandler::getValue<long>(crString name){
     const auto &unit = m_context.getValueUnit(name);
     if(unit.type != ValueType::Integer){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>::type).name()));
     }
 
     return std::any_cast<CppType<ValueType::Integer>::type>(unit.value);
@@ -82,7 +82,7 @@ template<>
 inline double CscHandler::getValue<double>(crString name){
     const auto &unit = m_context.getValueUnit(name);
     if(unit.type != ValueType::Double){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>::type).name()));
     }
 
     return std::any_cast<CppType<ValueType::Double>::type>(unit.value);
@@ -92,7 +92,7 @@ template<>
 inline String CscHandler::getValue<String>(crString name){
     const auto &unit = m_context.getValueUnit(name);
     if(unit.type != ValueType::String){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>::type).name()));
     }
 
     return std::any_cast<CppType<ValueType::String>::type>(unit.value);
@@ -104,7 +104,7 @@ inline ArrBool CscHandler::getValue<ArrBool>(crString name){
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::Bool){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>::type).name()));
     }
 
     for(Size_t index = 0; index < accessor.size(); index++){
@@ -142,7 +142,7 @@ inline ArrLong CscHandler::getValue<ArrLong>(crString name){
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::Integer){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>::type).name()));
     }
 
     for(Size_t index = 0; index < accessor.size(); index++){
@@ -160,7 +160,7 @@ inline ArrDouble CscHandler::getValue<ArrDouble>(crString name){
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::Double){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>::type).name()));
     }
 
     for(Size_t index = 0; index < accessor.size(); index++){
@@ -178,7 +178,7 @@ inline ArrString CscHandler::getValue<ArrString>(crString name){
 
     const auto &accessor = m_context.getValueAccessor(name);
     if(accessor.type() != ValueType::String){
-        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>).name()));
+        throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>::type).name()));
     }
 
     for(Size_t index = 0; index < accessor.size(); index++){
