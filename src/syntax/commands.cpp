@@ -44,7 +44,6 @@ void EnterScopeCmd::run(crOperandList operands, Context &context, ActionCtl &ctl
          context.enterScope(name);
     }
     else{
-        ctl.sendAction(ActionType::MakeScope, name, context.scopeMetaData());
         context.makeScope(name, true);
     }
 }
@@ -67,7 +66,6 @@ void ExitScopeCmd::run(crOperandList operands, Context &context, ActionCtl &ctl)
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
     }
 
-    ctl.sendInnerAction(InnerAction::ExitScope, context.scopeMetaData());
     context.leaveScope();
 }
 
@@ -88,11 +86,6 @@ void AssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
     auto vtype = operands.at(2).typeofValue();
     if(operands.at(2).typeofValue() == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
 
-    ctl.sendAction(
-        ActionType::MakeVariable, 
-        operands.at(0).str(),
-        context.scopeMetaData()
-    );
     context.makeVariable(
         operands.at(0).str(),
         vtype,
@@ -122,11 +115,7 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
     /* 获取数组的类型 */
     auto atype = operands.at(2).typeofValue();
     if(atype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
-    ctl.sendAction(
-        ActionType::MakeVariable, 
-        operands.at(0).str(),
-        context.scopeMetaData()
-    );
+
     context.makeVariable(       //创建一个空变量
         operands.at(0).str(),
         atype,
@@ -193,35 +182,7 @@ void ActionCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
  * 供迭代使用
  */
 void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
-    ctl.addActor(
-        [](crAction action) -> bool{
-            return (action.type() == ActionType::MakeScope) || (action.type() == ActionType::MakeVariable);
-        },
-
-        [](crAction action, Context &context) -> bool{
-            context.setPostion(action.postion());
-            if(action.type() == ActionType::MakeScope){
-                if(!context.probeVariable("_sidx_")){
-                    context.makeVariable("_sidx_",  ValueType::String, {std::any_cast<String>(action.extraData())});
-                    return true;
-                }
-                context.extendValues("_sidx_", {std::any_cast<String>(action.extraData())});
-                return true;
-            }
-            else if(action.type() == ActionType::MakeVariable){
-                 if(!context.probeVariable("_vidx_")){
-                    context.makeVariable("_vidx_", ValueType::String, {std::any_cast<String>(action.extraData())});
-                    return true;
-                }
-                context.extendValues("_vidx_", {std::any_cast<String>(action.extraData())});
-                return true;
-            }
-
-            return false;
-        },
-
-        scopeid, Livetime::Scoped
-    );
+    
 }
 
 CSC_END

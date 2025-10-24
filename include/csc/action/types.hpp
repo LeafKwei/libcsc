@@ -6,22 +6,7 @@
 #include "csc/context/Context.hpp"
 CSC_BEGIN
 
-class Action;
-using crAction             = const Action&;
-using ActProcessable  = std::function<bool(crAction)>;
-using ActProcessor     = std::function<bool(crAction,Context&)>;
 
-enum class Livetime{
-    Oneshot, Scoped
-};
-
-enum class ActionType{
-    Inner, MakeScope, EnterScope, ExitScope, MakeVariable
-};
-
-enum class InnerAction{
-    ExitScope
-};
 
 CSC_END
 #endif

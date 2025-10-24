@@ -5,6 +5,7 @@
 #include "csc/lex/Locator.hpp"
 #include "csc/action/ActionHub.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
+#include "csc/syntax/initializer.hpp"
 
 CSC_BEGIN
 

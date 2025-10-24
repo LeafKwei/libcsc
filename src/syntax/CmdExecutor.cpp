@@ -46,8 +46,12 @@ bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
             continue;
         }
 
-        /* 执行Command，随后清空Token列表和重设m_key  */
+        /* 执行Command，在执行Command前/后将该Command的相关信息发送到ActionHub，检查并执行适当的Action */
+        notifyActionBefore();
         cmd -> run(m_operands, context, ctl);
+        notifyActionAfter();
+
+        /* 执行Command后，清空Operand列表，重设m_key */
         reset();
         return true;
     }
