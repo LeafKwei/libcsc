@@ -11,6 +11,11 @@ enum class OperandType{
     Identifier, Keyword, Operator, Value, Values
 };
 
+enum class CommandType{
+    Unknwon,
+    EnterScope, ExitScope, Assign, ArrayAssign, Action
+};
+
 struct Command;
 class  CmdExecutorAgent;
 

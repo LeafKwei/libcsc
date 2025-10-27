@@ -33,6 +33,10 @@ EnterScopeCmd::EnterScopeCmd() : CommonCmd(
     }
 ){}
 
+CommandType EnterScopeCmd::type(){
+    return CommandType::EnterScope;
+}
+
 bool EnterScopeCmd::runnable(crOperandList operands){
     return true;
 }
@@ -56,6 +60,10 @@ ExitScopeCmd::ExitScopeCmd() : CommonCmd(
     }
 ){}
 
+CommandType ExitScopeCmd::type(){
+    return CommandType::ExitScope;
+}
+
 bool ExitScopeCmd::runnable(crOperandList operands){
     return true;
 }
@@ -77,6 +85,10 @@ AssignCmd::AssignCmd() : CommonCmd(
         {TokenType::String, TokenTag::None, ""}              //OperandType::Value可以由TokenType::Number、Bool、String等转换，所以此处可以任意填写其中一个
     }
 ){}
+
+CommandType AssignCmd::type(){
+    return CommandType::Assign;
+}
 
 bool AssignCmd::runnable(crOperandList operands){
     return true;
@@ -101,6 +113,10 @@ ArrayAssignCmd::ArrayAssignCmd() : CommonCmd(
         {TokenType::Array, TokenTag::None, ""}
     }
 ){}
+
+CommandType ArrayAssignCmd::type(){
+    return CommandType::ArrayAssign;
+}
 
 bool ArrayAssignCmd::runnable(crOperandList operands){
     return true;
@@ -155,7 +171,7 @@ void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ct
             throw CommandExcept("Elements in array are not a same type.");
         }
 
-        context.extendValues(name, {op.value()});
+        context.extendValue(name, op.value());
     }
 }
 
@@ -166,6 +182,10 @@ ActionCmd::ActionCmd() : CommonCmd(
         {TokenType::String, TokenTag::None, ""}
     }
 ){}
+
+CommandType ActionCmd::type(){
+    return CommandType::Action;
+}
 
 bool ActionCmd::runnable(crOperandList operands){
     return operands.at(1).typeofValue() == ValueType::String;
@@ -182,7 +202,33 @@ void ActionCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
  * 供迭代使用
  */
 void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
-    
+    ctl.addActionBefore(scopeid, 
+        [](CommandType type, const OperandList &operands, Context &context) -> bool {
+            return (type == CommandType::EnterScope || type == CommandType::Assign || type == CommandType::ArrayAssign);
+        },
+
+        [](CommandType type, const OperandList &operands, Context &context) -> bool {
+            /* 生成Scope的索引*/
+            if(type == CommandType::EnterScope && !context.probeScope(operands.at(0).str())){
+                if(!context.probeVariable("_sidx_")){
+                    context.makeVariable("_sidx_", ValueType::String, {});
+                }
+                context.extendValue("_sidx_", operands.at(0).str());
+                return true;
+            }
+
+            /* 生成变量的索引 */
+            if(!context.probeVariable(operands.at(0).str())){
+                if(!context.probeVariable("_vidx_")){
+                    context.makeVariable("_vidx_", ValueType::String, {});
+                }
+                context.extendValue("_vidx_", operands.at(0).str());
+                return true;
+            }
+
+            return false;
+        }
+    );
 }
 
 CSC_END

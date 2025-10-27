@@ -3,7 +3,6 @@
 
 #include "csc/csc.hpp"
 #include "csc/lex/Locator.hpp"
-#include "csc/action/ActionHub.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
 #include "csc/syntax/initializer.hpp"
 
@@ -19,8 +18,8 @@ public:
     void drive(crString script, Context &context);   /* 使用给定的Context对象开始对script进行解析执行 */
 
 private:
-    ActionHub     m_acthub;
     CmdExecutor m_executor;
+    ActionMngr   m_mngr;
 
     void    do_execute(Context &context);
     void    installCommands();

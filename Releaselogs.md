@@ -1,3 +1,8 @@
+**0.6.9**
+
+1. 重构了action模块，将原本的发送Action+处理Action的事件处理模式改变为了通过检测Command及Operand触发的模式
+2. 添加了CommandExecutorAgent以及初始化CmdExecutor的初始化器stdexec_initializer
+
 **0.6.8**
 
 1. 将CscEditor对int和const char*的特殊处置方式从模板特例化转变为了可变参数+函数模板重载

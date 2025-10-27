@@ -24,7 +24,7 @@ public:
     using Unit                   = ValueUnit;
     using Accessor            = ValueAccessor;
     using Pos                     = ScopePos;
-    using crScopeMeta     = const ScopeMetaData&;
+    using crScopeMetaData     = const ScopeMetaData&;
     using InitValues           = std::initializer_list<Value>;
 
 public:
@@ -38,7 +38,6 @@ public:
     Context&  cleanScope(crString name);                                 /* 删除当前作用域的一个子作用域，同时也删除其中的所有变量及该子作用域的子作用域 */
     bool          probeScope(crString name) const;                      /* 如果当前作用域中存在指定名称的子作用域，则返回true */
     bool          isRootScope() const;                                             /* 如果当前作用域是根作用域，返回true */
-    crScopeMeta  scopeMetaData() const noexcept;                 /* 获取当前作用域的元数据 */
     Pos            postion() const;                                                     /* 获取当前作用域的Pos对象(对指针的包装) */
     Detector    detector(bool absolute) const;                              /* 使用根scope的指针(absoluted为true时)或当前scope的指针生成一个Detector */
     void           setPostion(const Pos &pos);                                /* 将当前作用域设置为pos所指定的作用域 */
@@ -50,10 +49,12 @@ public:
     Unit            getValueUnit(crString name) const;                       /* 获取一个当前作用域的变量的首个值及类型 */
     Accessor    getValueAccessor(crString name) const;               /* 获取一个当前作用域的变量的ValueAccessor对象，可按索引获取变量的每个值 */
     bool           probeVariable(crString name) const;                     /* 如果当前作用域存在指定名称的变量，则返回true */
-    Context&   extendValues(crString name, InitValues values);   /* 向指定名称的变量中追加值 */                                                       
+    Context&   extendValue(crString name, crValue value);          /* 向指定名称的变量中追加值 */    
+    Context&   extendValues(crString name, InitValues values);   /* 向指定名称的变量中追加多个值 */                                                       
     Context&   restart();                                                                /* 返回到根作用域，即设置当前作用域为根作用域 */
     void            clean();                                                                  /* 清除所有的作用域和变量，随后重新创建一个新的根作用域 */
     void            iterate(ContextSeeker &seeker) const;                 /* 从当前作用域开始，按DFS迭代其中的每个变量及每个子作用域 */
+    crScopeMetaData  scopeMetaData() const noexcept;          /* 获取当前作用域的元数据 */
 
 private:
     UID         m_idCounter;

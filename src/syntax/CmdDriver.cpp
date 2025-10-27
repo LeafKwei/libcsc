@@ -40,7 +40,7 @@ void CmdDriver::drive(crString script, Context &context){
 }
 
 void CmdDriver::do_execute(Context &context){
-    m_executor.execute(context, m_acthub);
+    m_executor.execute(context, m_mngr);
 }
 
 void CmdDriver::installCommands(){

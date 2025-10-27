@@ -10,7 +10,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.6.8"
+version = "0.6.9"
 
 ;This is a scope
 Dummy::
@@ -211,7 +211,7 @@ ArrString   等同于std::vector<std::string>
 
 ## 4.3.扩展功能
 
-libcsc通过action模块提供了在Command对象之外操作Context的能力，该模块可用于实现那些仅依靠Command对象无法实现的功能，例如生成Scope和Variable的索引。下方是使用ActionHub模块为libcsc增加的扩展功能的列举：
+libcsc通过action模块提供了在Command对象之外操作Context的能力，该模块可用于实现那些仅依靠Command对象无法实现的功能，例如生成Scope和Variable的索引。下方是使用ActionMngr模块为libcsc增加的扩展功能的列举：
 
 ### 索引生成
 

@@ -8,8 +8,8 @@ CSC_BEGIN
 
 class CommonReader : public TokenReader{
 public:
-    bool          readable(CharMngr &mngr) override;
-    Token        read(CharMngr &mngr) override;
+    bool           readable(CharMngr &mngr) override;
+    Token         read(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -18,7 +18,7 @@ protected:
 
 class BlankReader : public CommonReader{
 public:
-    bool readable(CharMngr &mngr) override;
+    bool           readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -27,7 +27,7 @@ protected:
 
 class DescriptionReader : public CommonReader{
 public:
-    bool readable(CharMngr &mngr) override;
+    bool           readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -36,7 +36,7 @@ protected:
 
 class IdentifierReader : public CommonReader{
 public:
-    bool readable(CharMngr &mngr) override;
+    bool           readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -45,7 +45,7 @@ protected:
 
 class OperatorReader: public CommonReader{
 public:
-    bool readable(CharMngr &mngr) override;
+    bool           readable(CharMngr &mngr) override;
     TokenType type() override;
 
 protected:
@@ -54,9 +54,9 @@ protected:
 
 class NumberReader : public CommonReader{
 public:
-    bool readable(CharMngr &mngr) override;
-    Token read(CharMngr &mngr) override;
-    TokenType type() override;
+    bool            readable(CharMngr &mngr) override;
+    Token          read(CharMngr &mngr) override;
+    TokenType   type() override;
 
 private:
     int m_num;        //实际读取的数字字符个数
@@ -69,8 +69,8 @@ private:
 
 class StringReader : public CommonReader{
 public:
-    bool readable(CharMngr &mngr) override;
-    Token read(CharMngr &mngr) override;
+    bool           readable(CharMngr &mngr) override;
+    Token         read(CharMngr &mngr) override;
     TokenType type() override;
 
 private:
@@ -79,9 +79,9 @@ private:
 
 class ArrayReader : public CommonReader{
 public:
-    bool readable(CharMngr &mngr) override;
-    Token read(CharMngr &mngr) override;
-    TokenType type() override;
+    bool             readable(CharMngr &mngr) override;
+    Token           read(CharMngr &mngr) override;
+    TokenType   type() override;
 };
 
 

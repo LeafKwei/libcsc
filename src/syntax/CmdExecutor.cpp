@@ -34,7 +34,7 @@ bool CmdExecutor::executable() const{
     return (cmdListPtr != end) && (cmdListPtr -> second.size() > 0);
 }
 
-bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
+bool CmdExecutor::execute(Context &context, ActionMngr &mngr){
     auto cmdListPtr = m_cmdListMap.find(m_keyseq);
     auto &cmdList = cmdListPtr -> second;
     auto end = m_cmdListMap.end();
@@ -46,10 +46,10 @@ bool CmdExecutor::execute(Context &context, ActionCtl &ctl){
             continue;
         }
 
-        /* 执行Command，在执行Command前/后将该Command的相关信息发送到ActionHub，检查并执行适当的Action */
-        notifyActionBefore();
-        cmd -> run(m_operands, context, ctl);
-        notifyActionAfter();
+        /* 执行Command，在执行Command前/后将该Command的相关信息发送到ActionMngr，检查并执行适当的Action */
+        mngr.notifyActionBefore(cmd -> type(), m_operands, context);
+        cmd -> run(m_operands, context, mngr);
+        mngr.notifyActionAfter(cmd -> type(), m_operands, context);
 
         /* 执行Command后，清空Operand列表，重设m_key */
         reset();

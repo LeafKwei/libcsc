@@ -59,7 +59,7 @@ bool Context::isRootScope() const{
     return !(m_current -> parent.expired());
 }
 
-Context::crScopeMeta Context::scopeMetaData() const noexcept{
+Context::crScopeMetaData Context::scopeMetaData() const noexcept{
     return m_current -> meta;
 }
 
@@ -136,6 +136,10 @@ Context::Accessor Context::getValueAccessor(crString name) const{
 
 bool Context::probeVariable(crString name) const{
     return (m_current -> variables.find(name)) != (m_current -> variables.end());
+}
+
+Context& Context::extendValue(crString name, crValue value){
+    return extendValues(name, {value});
 }
 
 Context& Context::extendValues(crString name, InitValues values){
