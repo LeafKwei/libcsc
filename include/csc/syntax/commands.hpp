@@ -62,6 +62,7 @@ public:
 
 private:
     void run_genidx(ActionCtl &ctl, UID scopeid);
+    void run_detail(ActionCtl &ctl, UID scopeid);
 };
 
 CSC_END

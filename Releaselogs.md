@@ -2,6 +2,7 @@
 
 1. 重构了action模块，将原本的发送Action+处理Action的事件处理模式改变为了通过检测Command及Operand触发的模式
 2. 添加了CommandExecutorAgent以及初始化CmdExecutor的初始化器stdexec_initializer
+2. 添加了关键字`action "detail"`，用于打印解析过程中执行的命令信息
 
 **0.6.8**
 

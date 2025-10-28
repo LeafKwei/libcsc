@@ -193,6 +193,7 @@ bool ActionCmd::runnable(crOperandList operands){
 
 void ActionCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
     if(operands.at(1).str() == "genidx") run_genidx(ctl, context.scopeMetaData().id);
+    else if(operands.at(1).str() == "detail")   run_detail(ctl, context.scopeMetaData().id);
     else throw ActionExcept(String("Unsupport action: ") + operands.at(1).str());
 }
 
@@ -227,6 +228,29 @@ void ActionCmd::run_genidx(ActionCtl &ctl, UID scopeid){
             }
 
             return false;
+        }
+    );
+}
+
+/**
+ * 关键字：action "detail"
+ * 在解析csc文件的过程中，打印出每一条执行的Command的信息
+ */
+void ActionCmd::run_detail(ActionCtl &ctl, UID scopeid){
+    ctl.addActionBefore(0,
+        [](CommandType type, const OperandList &operands, Context &context) -> bool{
+            return true;
+        },
+
+        [](CommandType type, const OperandList &operands, Context &context) -> bool{
+            std::cout << "Command type: " << static_cast<int>(type);
+            std::cout << "; Operands: ";
+            for(Size_t idx = 0; idx < operands.size(); idx++){
+                std::cout << operands.at(idx).str();
+                if(idx < operands.size() - 1) std::cout << ", ";
+            }
+            std::cout << "; Scope id: " << context.scopeMetaData().id << std::endl;
+            return true;
         }
     );
 }

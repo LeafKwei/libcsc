@@ -2,6 +2,7 @@
 ; Note if you want to use this file to test libcsc on linux, please use 'dos2unix' convert CR-LF to LF
 
 action "genidx"
+action "detail"
 
 player = "Smith"
 isMale = false

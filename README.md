@@ -262,6 +262,37 @@ custom::
 
 
 
+### 打印命令信息
+
+**基本信息**
+
+* 引入版本：v0.6.9
+* 关键字：`action`
+* 作用域：Global(全局有效)
+* 使用方式：`action "detail"`
+* 作用：打印后续所有命令的信息，包括命令类型、操作数、执行时的作用域ID
+
+**使用方式**
+
+在csc文件内插入
+
+```
+action "detail"
+custom::
+	name = "tom"
+::custom
+```
+
+在解析阶段可以看到终端中的如下输出
+
+```
+Command type: 1; Operands: custom, ::; Scope id: 1
+Command type: 3; Operands: name, =, tom; Scope id: 2
+Command type: 2; Operands: ::, custom; Scope id: 2
+```
+
+
+
 # 5.项目结构
 
 ## 5.1.目录结构

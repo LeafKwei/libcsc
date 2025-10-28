@@ -22,7 +22,9 @@ private:
     ScopedActionMap m_beforeActions;
     ScopedActionMap m_afterActions;
 
-    void do_notifyAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context);
+    void do_notifyScopedAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context);
+    void do_notifyGlobalAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context);
+    void do_notifyAction(ScopedActionMap &map, int scopeid, CommandType type, const OperandList &operands, Context &context);
     void do_addAction(ScopedActionMap &map, int scopeid, const Action::FuncRunnable &runnable, const Action::FuncRun &run);
     void checkAndRemoveAction(ScopedActionMap &map, CommandType type, int scopeid);
 };
