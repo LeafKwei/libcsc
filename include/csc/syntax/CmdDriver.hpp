@@ -18,8 +18,8 @@ public:
     void drive(crString script, Context &context);   /* 使用给定的Context对象开始对script进行解析执行 */
 
 private:
-    CmdExecutor m_executor;
-    ActionMngr   m_mngr;
+    CmdExecutor executor_;
+    ActionMngr   mngr_;
 
     void    do_execute(Context &context);
     void    installCommands();

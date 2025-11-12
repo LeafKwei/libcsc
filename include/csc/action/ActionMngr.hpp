@@ -19,8 +19,8 @@ public:
     void addActionAfter(int scopeid, Action::FuncRunnable runnable, Action::FuncRun run) override;   /* 添加Action到afterAction队列 */
 
 private:
-    ScopedActionMap m_beforeActions;
-    ScopedActionMap m_afterActions;
+    ScopedActionMap beforeActions_;
+    ScopedActionMap afterActions_;
 
     void do_notifyScopedAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context);
     void do_notifyGlobalAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context);

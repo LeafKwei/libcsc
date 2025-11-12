@@ -16,11 +16,7 @@ public:
     static Value makeZero(ValueType type); //生成给定ValueType枚举对应CppType的零值
 
 private:
-    ValueUnit m_unit;
-
-    Value         getValueof(const Token &token);
-    ValueType getValueTypeof(const Token &token) const;
-    ValueType getArrayValueTypeof(const Token &token) const;
+    ValueUnit unit_;
 };
 
 CSC_END

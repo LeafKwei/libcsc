@@ -24,9 +24,9 @@ public:
     String               key() const;                                    //获取Operand对应的key，key将用于CmdExecutor的命令查找
 
 private:
-    Token               m_token;
-    OperandType   m_type;
-    ValueMaker      m_maker;
+    Token               token_;
+    OperandType   type_;
+    ValueMaker      maker_;
 
     void                updateOperandType();
     OperandType getOperandTypeof(const Token &token) const;

@@ -22,9 +22,9 @@ public:
     crString lastItem() const;                   //获取最末尾的item
 
 private:
-    bool              m_valid;
-    bool              m_absolute;
-    PathItemList m_items;
+    bool              valid_;
+    bool              absolute_;
+    PathItemList items_;
 
     void classify(crString path);
     bool splitPath(crString path, int index);

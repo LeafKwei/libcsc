@@ -1,51 +1,28 @@
 #ifndef CSC_LEX_TYPES_HPP
 #define CSC_LEX_TYPES_HPP
 
-#include <cstdint>
-#include <utility>
-#include <functional>
-#include <memory>
 #include "csc/csc.hpp"
-#include "csc/types.hpp"
+#include "csc/alias.hpp"
 CSC_BEGIN
 
-enum class TokenTag{
-    None, Float, Hex
+enum class TokenerState{
+    OK, Ignored, Aborted
+};
+
+enum class TokenerType{
+    Unknown, Single, Multipe
 };
 
 enum class TokenType{
-    Unknown, Description,
-    Keyword,
-    Blank, Identifier, Operator, 
-    Number, String, Array
-};
-
-/**
- * LexHint决定了上层功能对token的取舍，OK表示该token可以正常使用，Ignored表示该token应该被忽略，
- * Aborted表示已没有可以读取的token
- */
-enum class LexHint{
-    OK, Ignored,
-    Aborted
+    Unknown, Blank, Description, 
+    Keyword, Operator,
+    Integer, HexInteger, Float, String
 };
 
 struct Token{
-    TokenType type;
-    TokenTag   tag;
     String         str;
+    TokenType type;
 };
-
-struct LexResult{
-    LexHint hint;
-    Token    token;
-};
-
-/* 声明LexerAgent这个名字，以便PureLexer可以将其声明为友元 */
-class LexerAgent;
-
-/* 别名 */
-class TokenReader;
-using ReaderPtr = std::shared_ptr<TokenReader>;
 
 CSC_END
 #endif

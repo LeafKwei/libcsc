@@ -11,17 +11,17 @@ CSC_BEGIN
 /* ValueAccessor是对ValueKeeper的包装，对外提供多变量值的访问功能 */
 class ValueAccessor{
 public:
-    ValueAccessor(const ValueKeeper &keeper, ValueType type) : m_keeper(keeper), m_type(type){}
-    ValueType type() const        { return m_type; }
-    bool          isEmpty() const  { return m_keeper.empty(); }
-    Size_t        size() const         { return m_keeper.size(); }
-    Value        value() const       { return (m_keeper.size() > 0) ?  m_keeper.at(0) :  ValueMaker::makeZero(m_type);}
-    Value        value(int index) const          { return m_keeper.at(index); }
-    Value        operator[] (int index) const { return m_keeper[index]; }
+    ValueAccessor(const ValueKeeper &keeper, ValueType type) : keeper_(keeper), type_(type){}
+    ValueType type() const        { return type_; }
+    bool          isEmpty() const  { return keeper_.empty(); }
+    Size_t        size() const         { return keeper_.size(); }
+    Value        value() const       { return (keeper_.size() > 0) ?  keeper_.at(0) :  ValueMaker::makeZero(type_);}
+    Value        value(int index) const          { return keeper_.at(index); }
+    Value        operator[] (int index) const { return keeper_[index]; }
 
 private:
-    const ValueKeeper &m_keeper;
-    ValueType                 m_type;
+    const ValueKeeper &keeper_;
+    ValueType                 type_;
 };
 
 CSC_END

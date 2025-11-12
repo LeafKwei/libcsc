@@ -1,6 +1,4 @@
 #include "csc/syntax/commands.hpp"
-#include "csc/lex/PureLexer.hpp"
-#include "csc/lex/initializers.hpp"
 #include "csc/action/types.hpp"
 CSC_BEGIN
 
@@ -10,7 +8,7 @@ CommonCmd::CommonCmd(InitTokens tokens){
 }
 
 crString CommonCmd::key(){
-    return m_key;
+    return key_;
 }
 
 /* 派生类通过构造函数将一组Token传递给CommonCmd，后者将每个token转换为key item，并最终生成一个key */
@@ -22,7 +20,7 @@ void CommonCmd::genKey(InitTokens tokens){
     }
 
     if(tokens.size() > 1) key.pop_back();  //删除末尾多余的_
-    m_key = key;
+    key_ = key;
 }
 
 //============== EnterScopeCmd =============

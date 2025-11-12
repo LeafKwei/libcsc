@@ -3,15 +3,15 @@
 CSC_BEGIN
 
 void ActionMngr::notifyActionBefore(CommandType type, const OperandList &operands, Context &context){
-    do_notifyScopedAction(m_beforeActions, type, operands, context);
-    do_notifyGlobalAction(m_beforeActions, type, operands, context);
-    checkAndRemoveAction(m_beforeActions, type, context.scopeMetaData().id);
+    do_notifyScopedAction(beforeActions_, type, operands, context);
+    do_notifyGlobalAction(beforeActions_, type, operands, context);
+    checkAndRemoveAction(beforeActions_, type, context.scopeMetaData().id);
 }
 
 void ActionMngr::notifyActionAfter(CommandType type, const OperandList &operands, Context &context){
-    do_notifyScopedAction(m_afterActions, type, operands, context);
-    do_notifyGlobalAction(m_afterActions, type, operands, context);
-    checkAndRemoveAction(m_afterActions, type, context.scopeMetaData().id);
+    do_notifyScopedAction(afterActions_, type, operands, context);
+    do_notifyGlobalAction(afterActions_, type, operands, context);
+    checkAndRemoveAction(afterActions_, type, context.scopeMetaData().id);
 }
 
 /**
@@ -21,11 +21,11 @@ void ActionMngr::notifyActionAfter(CommandType type, const OperandList &operands
  *   0 --- Action为全局action，即无论Context中的scopeid是多少，都会尝试执行该Action
  */
 void ActionMngr::addActionBefore(int scopeid, Action::FuncRunnable runnable, Action::FuncRun run){
-    do_addAction(m_beforeActions, scopeid, runnable, run);
+    do_addAction(beforeActions_, scopeid, runnable, run);
 }
 
 void ActionMngr::addActionAfter(int scopeid, Action::FuncRunnable runnable, Action::FuncRun run){
-    do_addAction(m_afterActions, scopeid, runnable, run);
+    do_addAction(afterActions_, scopeid, runnable, run);
 }
 
 void ActionMngr::do_notifyScopedAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context){

@@ -57,9 +57,9 @@ public:
     crScopeMetaData  scopeMetaData() const noexcept;          /* 获取当前作用域的元数据 */
 
 private:
-    UID         m_idCounter;
-    ScopePtr m_root;
-    ScopePtr m_current;
+    UID         idCounter_;
+    ScopePtr root_;
+    ScopePtr current_;
 
     inline UID nextID() noexcept;
     void do_makeScope(crString name);
@@ -74,7 +74,7 @@ private:
 };
 
 inline UID Context::nextID() noexcept{
-    return m_idCounter++;
+    return idCounter_++;
 }
 
 CSC_END

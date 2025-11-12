@@ -16,8 +16,8 @@ public:
     String toString();
 
 private:
-    int m_nest;
-    std::stringstream m_buffer;
+    int nest_;
+    std::stringstream buffer_;
 
     void writeIndent();
     void writeValue(crString value,  ValueType type);

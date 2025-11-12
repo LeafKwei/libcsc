@@ -39,10 +39,10 @@ public:
 
 private:
     friend            CmdExecutorAgent;
-    Size_t            m_maxKeySize;
-    String            m_keyseq;
-    OperandList  m_operands;
-    CmdListMap m_cmdListMap;
+    Size_t            maxKeySize_;
+    String            keyseq_;
+    OperandList  operands_;
+    CmdListMap cmdListMap_;
 
     void addCommand(CmdPtr cmd);
     void updateKeyseq(const Operand &operand);

@@ -9,4 +9,6 @@
 #define CSC_INNER_END }
 #define CSC_VERSION_STR "Version: 0.6.9"
 
+struct Token;
+
 #endif

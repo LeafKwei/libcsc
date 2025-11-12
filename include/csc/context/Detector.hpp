@@ -17,7 +17,7 @@ public:
     bool detectVariable(crString name); //检查当前scope下是否存在指定名称的variable
 
 private:
-    ScopeWkr m_ptr;
+    ScopeWkr ptr_;
 
     void assertValidPtr() const noexcept;
 };

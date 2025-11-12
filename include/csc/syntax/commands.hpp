@@ -16,7 +16,7 @@ public:
     crString key() override;
 
 private:
-    String m_key;
+    String key_;
 
     void genKey(InitTokens tokens);
 };

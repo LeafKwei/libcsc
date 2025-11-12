@@ -6,9 +6,9 @@
 #include "csc/context/ContextSeeker.hpp"
 #include "csc/core/types.hpp"
 #include "csc/core/CscEditor.hpp"
-#include "csc/core/PathHelper.hpp"
 #include "csc/syntax/CmdDriver.hpp"
 #include "csc/utility/utility.hpp"
+#include "csc/utility/PathHelper.hpp"
 
 CSC_BEGIN
 
@@ -35,8 +35,8 @@ public:
     Tp enterAndGet(crString path);
 
 private:
-    Context      m_context;
-    CmdDriver m_driver;
+    Context      context_;
+    CmdDriver driver_;
 };
 
 
@@ -48,7 +48,7 @@ inline Tp getValue(crString name){
 
 template<>
 inline bool CscHandler::getValue<bool>(crString name){
-    const auto &unit = m_context.getValueUnit(name);
+    const auto &unit = context_.getValueUnit(name);
     if(unit.type != ValueType::Bool){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>::type).name()));
     }
@@ -58,7 +58,7 @@ inline bool CscHandler::getValue<bool>(crString name){
 
 template<>
 inline int CscHandler::getValue<int>(crString name){
-    const auto &unit = m_context.getValueUnit(name);
+    const auto &unit = context_.getValueUnit(name);
     if(unit.type != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(int).name()));
     }
@@ -70,7 +70,7 @@ inline int CscHandler::getValue<int>(crString name){
 
 template<>
 inline long CscHandler::getValue<long>(crString name){
-    const auto &unit = m_context.getValueUnit(name);
+    const auto &unit = context_.getValueUnit(name);
     if(unit.type != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>::type).name()));
     }
@@ -80,7 +80,7 @@ inline long CscHandler::getValue<long>(crString name){
 
 template<>
 inline double CscHandler::getValue<double>(crString name){
-    const auto &unit = m_context.getValueUnit(name);
+    const auto &unit = context_.getValueUnit(name);
     if(unit.type != ValueType::Double){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>::type).name()));
     }
@@ -90,7 +90,7 @@ inline double CscHandler::getValue<double>(crString name){
 
 template<>
 inline String CscHandler::getValue<String>(crString name){
-    const auto &unit = m_context.getValueUnit(name);
+    const auto &unit = context_.getValueUnit(name);
     if(unit.type != ValueType::String){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>::type).name()));
     }
@@ -102,7 +102,7 @@ template<>
 inline ArrBool CscHandler::getValue<ArrBool>(crString name){
     ArrBool array;
 
-    const auto &accessor = m_context.getValueAccessor(name);
+    const auto &accessor = context_.getValueAccessor(name);
     if(accessor.type() != ValueType::Bool){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>::type).name()));
     }
@@ -120,7 +120,7 @@ template<>
 inline ArrInt CscHandler::getValue<ArrInt>(crString name){
     ArrInt array;
 
-    const auto &accessor = m_context.getValueAccessor(name);
+    const auto &accessor = context_.getValueAccessor(name);
     if(accessor.type() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(int).name()));
     }
@@ -140,7 +140,7 @@ template<>
 inline ArrLong CscHandler::getValue<ArrLong>(crString name){
     ArrLong array;
 
-    const auto &accessor = m_context.getValueAccessor(name);
+    const auto &accessor = context_.getValueAccessor(name);
     if(accessor.type() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>::type).name()));
     }
@@ -158,7 +158,7 @@ template<>
 inline ArrDouble CscHandler::getValue<ArrDouble>(crString name){
     ArrDouble array;
 
-    const auto &accessor = m_context.getValueAccessor(name);
+    const auto &accessor = context_.getValueAccessor(name);
     if(accessor.type() != ValueType::Double){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>::type).name()));
     }
@@ -176,7 +176,7 @@ template<>
 inline ArrString CscHandler::getValue<ArrString>(crString name){
     ArrString array;
 
-    const auto &accessor = m_context.getValueAccessor(name);
+    const auto &accessor = context_.getValueAccessor(name);
     if(accessor.type() != ValueType::String){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>::type).name()));
     }
