@@ -5,12 +5,8 @@
 #include "csc/alias.hpp"
 CSC_BEGIN
 
-enum class TokenerState{
+enum class TokenHolderType{
     OK, Ignored, Aborted
-};
-
-enum class TokenerType{
-    Unknown, Single, Multipe
 };
 
 enum class TokenType{
