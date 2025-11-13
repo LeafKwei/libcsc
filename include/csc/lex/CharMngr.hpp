@@ -10,9 +10,9 @@ public:
     enum SeekOption{Set, Cur, End};
     CharMngr(crString str, int index=0);
     
-    int         index() const;
-    int         length() const;
-    bool      valid() const;
+    int         index() const noexcept;
+    int         length() const noexcept;
+    bool      valid() const noexcept;
     Char      at(int index) const;
     Char      getch() const;
     Char      forward();

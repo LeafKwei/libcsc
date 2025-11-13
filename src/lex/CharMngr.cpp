@@ -6,15 +6,15 @@ CharMngr::CharMngr(crString str, int index) : m_str(str), m_index(index){
     else if(m_index > m_str.size()) m_index = m_str.size();
 }
 
-int CharMngr::index() const{
+int CharMngr::index() const noexcept{
     return m_index;
 }
 
-int CharMngr::length() const{
+int CharMngr::length() const noexcept{
     return m_str.size();
 }
 
-bool CharMngr::valid() const{
+bool CharMngr::valid() const noexcept{
     return (m_index >= 0) && (m_index < m_str.size());
 }
 

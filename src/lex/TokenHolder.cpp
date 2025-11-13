@@ -2,10 +2,6 @@
 #include "csc/lex/TokenHolder.hpp"
 CSC_BEGIN
 
-TokenHolder::TokenHolder(){
-    tokenlist_.emplace_back();
-}
-
 Token& TokenHolder::TokenHolder::newToken(){
     return tokenlist_.emplace_back();
 }
@@ -13,6 +9,11 @@ Token& TokenHolder::TokenHolder::newToken(){
 Token& TokenHolder::firstToken(){
     assert(tokenlist_.size() > 0);
     return tokenlist_.at(0);
+}
+
+Token& TokenHolder::lastToken(){
+    assert(tokenlist_.size() > 0);
+    return tokenlist_.at(tokenlist_.size() - 1);
 }
 
 Token& TokenHolder::tokenAt(int index){

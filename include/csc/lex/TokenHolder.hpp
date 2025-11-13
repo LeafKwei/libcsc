@@ -12,12 +12,13 @@ public:
     using TokenList  = std::vector<Token>;
 
 public:
-    TokenHolder();
-    Token&         newToken();                      //新增一个Token对象到tokenlist_末尾，并返回其引用
-    Token&         firstToken();                       //获取tokenlist中的首个Token对象
-    Token&         tokenAt(int index);           //获取tokenlist中指定位置的Token对象
-    Size_t            size() const noexcept;      //获取tokenlist中的Token对象数量
-    Type              type() const noexcept;    //获取TokenHolder的类型
+    Token&         newToken();                      /* 新增一个Token对象到tokenlist_末尾，并返回其引用 */
+    Token&         firstToken();                      /* 获取tokenlist中的首个Token对象 */
+    Token&         lastToken();                       /* 获取tokenlist中的最后一个Token对象 */
+    Token&         tokenAt(int index);           /* 获取tokenlist中指定位置的Token对象 * /
+    Size_t            size() const noexcept;      /* 获取tokenlist中的Token对象数量 */
+    Type              type() const noexcept;    /* 获取TokenHolder的类型 */
+    void              setType(Type type);         /* 设置TokenHolder的类型 */
 
 private:
     Type              type_;
