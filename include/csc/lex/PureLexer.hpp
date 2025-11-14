@@ -15,11 +15,12 @@ public:
     using ReaderList            = std::vector<TokenReaderPtr>;
     using ReaderIDList        = std::vector<int>;
     using ReaderIDMapper = std::map<Char, ReaderIDList>;
+    using ReaderIDListPos  = ReaderIDMapper::iterator;
     using InitTokenTypes     = std::initializer_list<TokenType>;
     using DropedTypeList   = std::vector<TokenType>;
 
 public:
-    LexerFlag nextFrom(TokenHolder &holder, CharMngr &mngr);   /* 基于mngr进行下一次的token读取 */
+    LexerState nextFrom(TokenHolder &holder, CharMngr &mngr);   /* 基于mngr进行下一次的token读取，返回true代表读取成功，返回false代表无更多内容可读取 */
 
 private:
     friend                   PureLexerAgent;
@@ -33,6 +34,7 @@ private:
     void addDropedType(InitTokenTypes types);                  /* 添加指定的TokenType到dropedTypeList_，当读取到该列表中所包含的类型的Token时，丢弃该Token */
     void makeIDListFor(Char ch);
     void appendID(Char ch, int id);
+    int findReaderID(CharMngr &mngr);
 };
 
 CSC_END

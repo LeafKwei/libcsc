@@ -10,8 +10,8 @@ CSC_BEGIN
 
 class TokenReader{
 public:
-    virtual bool          readable(const CharMngr &mngr) const =0;
-    virtual LexerFlag  read(TokenHolder &holder) const =0;
+    virtual bool              readable(const CharMngr &mngr) const =0;
+    virtual void  read(Token &token) const =0;
 };
 
 

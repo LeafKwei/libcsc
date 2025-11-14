@@ -2,20 +2,6 @@
 #include "csc/lex/TokenHolder.hpp"
 CSC_BEGIN
 
-Token& TokenHolder::TokenHolder::newToken(){
-    return tokenlist_.emplace_back();
-}
-
-Token& TokenHolder::firstToken(){
-    assert(tokenlist_.size() > 0);
-    return tokenlist_.at(0);
-}
-
-Token& TokenHolder::lastToken(){
-    assert(tokenlist_.size() > 0);
-    return tokenlist_.at(tokenlist_.size() - 1);
-}
-
 Token& TokenHolder::tokenAt(int index){
     return tokenlist_.at(index);
 }
@@ -26,6 +12,10 @@ Size_t TokenHolder::size() const noexcept{
 
 TokenHolder::Type TokenHolder::type() const noexcept{
     return type_;
+}
+
+void TokenHolder::setType(TokenHolder::Type type){
+    type_ = type;
 }
 
 CSC_END

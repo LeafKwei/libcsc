@@ -2,7 +2,12 @@
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
-LexerFlag PureLexer::nextFrom(TokenHolder &holder, CharMngr &mngr){
+LexerState PureLexer::nextFrom(TokenHolder &holder, CharMngr &mngr){
+    if(!mngr.valid()) return LexerState::Finish;
+
+    auto id = findReaderID(mngr);
+    if(id == -1) return LexerState::Unexcepted;
+
     
 }
 
@@ -41,6 +46,22 @@ void PureLexer::makeIDListFor(Char ch){
 void PureLexer::appendID(Char ch, int id){
     auto pos = readerIDMapper_.find(ch);
     pos -> second.push_back(id);
+}
+
+int PureLexer::findReaderID(CharMngr &mngr){
+    /* 根据首个字符寻找是否存在对应的ID列表 */
+    auto pos = readerIDMapper_.find(mngr.getch());
+    if(pos == readerIDMapper_.end()) return -1;
+
+    /* 根据ID列表中的ID遍历对应的TokenReader，如果其readable函数返回为true，则返回该Reader的ID */
+    const auto &idList = pos -> second;
+    for(auto id : idList){
+        if(readerList_.at(id) -> readable(mngr)){
+            return id;
+        }
+    }
+
+    return -1;
 }
 
 CSC_END

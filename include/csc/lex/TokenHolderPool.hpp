@@ -11,7 +11,7 @@ public:
     using HolderList = std::vector<HolderPtr>;
     
 public:
-    TokenHolder& newHolder();                    //在holderlist末尾创建一个TokenHolder对象并返回引用
+    
     TokenHolder& useLastHolder();               //返回holderlist末尾的TokenHolder的引用
     HolderPtr         takeFirstHolder();            //获取holderlist中首个TokenHolder的指针，相应的，该指针将从holderlist中删除
     Size_t               size() const noexcept;      //获取holderlist中的TokenHolder的数量
