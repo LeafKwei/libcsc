@@ -5,13 +5,12 @@
 #include "csc/alias.hpp"
 #include "csc/lex/types.hpp"
 #include "csc/lex/CharMngr.hpp"
-#include "csc/lex/TokenHolder.hpp"
 CSC_BEGIN
 
 class TokenReader{
 public:
-    virtual bool              readable(const CharMngr &mngr) const =0;
-    virtual void  read(Token &token) const =0;
+    virtual bool            readable(const CharMngr &mngr) const =0;
+    virtual ReaderFlag read(Token &token) const =0;
 };
 
 

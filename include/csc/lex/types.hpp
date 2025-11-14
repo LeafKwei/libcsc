@@ -5,22 +5,23 @@
 #include "csc/alias.hpp"
 CSC_BEGIN
 
-enum class LexerState{
-    OK,      //读取成功
-    Finish, //无更多可读取内容
-    Unexcepted, //出现不可识别的字符
-};
-
-enum class LexerCond{
-    Done,        //单个token读取完毕
-    Begin,        //开始一组连续的token的读取
-    End           //结束读取
+enum class LexerEnvid{
+    General = 0,    /* 通用解析环境，可以解析所有合法的Token */
+    OnlyValue,      /* 仅可解析值，用于数组、参数等Token的解析 */
 };
 
 enum class TokenType{
     Unknown, Blank, Description,       
     Keyword, Operator, Limitor, Separator, //Limitor指数组、参数的边界符号，例如{}和()；Separator指,这类分隔符
-    Integer, HexInteger, Float, String,
+    Integer, HexInteger, Float, String
+};
+
+enum class LexerFlag{
+    OK, Finish, Wrong
+};
+
+enum class ReaderFlag{
+    OK, Broken
 };
 
 struct Token{
@@ -32,8 +33,6 @@ struct CharRange{
     Char lch;
     Char rch;
 };
-
-class PureLexerAgent;
 
 CSC_END
 #endif
