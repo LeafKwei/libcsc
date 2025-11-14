@@ -9,10 +9,9 @@ CSC_BEGIN
 
 class TokenReader{
 public:
-    virtual bool            readable(const CharMngr &mngr) const =0;
-    virtual ReaderFlag read(Token &token) const =0;
+    virtual bool            readable(const CharMngr &mngr) =0;
+    virtual ReaderFlag read(Token &token) =0;
 };
-
 
 using TokenReaderPtr = std::shared_ptr<TokenReader>;
 

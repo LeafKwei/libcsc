@@ -2,6 +2,8 @@
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
+PureLexer::PureLexer() : envid_(0){}
+
 void PureLexer::selectEnv(LexerEnvid id){
     envid_ = static_cast<int>(id);
 }
@@ -13,14 +15,25 @@ int PureLexer::addReader(TokenReaderPtr reader){
 }
 
 void PureLexer::mappingReader(const String &chs, int id){
+    /* 如果chs中的内容仅有三个字符，并且满足a-z这类格式，则执行区间式映射 */
+    if(chs.size() == 3 && chs.at(1) == '-'){
+        rangedMapping(chs.at(0), chs.at(2), id);
+        return;
+    }
+
+    /* 否则执行枚举式映射 */
+    enumedMapping(chs, id);
+}
+
+void PureLexer::enumedMapping(const String &chs, int id){
     for(const auto &ch : chs){
         makeIDListFor(ch);
         appendID(ch, id);
     }
 }
 
-void PureLexer::mappingReader(const CharRange &range, int id){
-    for(auto ch = range.lch; ch <= range.rch; ch++){
+void PureLexer::rangedMapping(Char lch, Char rch, int id){
+    for(auto ch = lch; ch <= rch; ch++){
         makeIDListFor(ch);
         appendID(ch, id);
     }

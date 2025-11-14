@@ -29,10 +29,7 @@ struct Token{
     TokenType type;
 };
 
-struct CharRange{
-    Char lch;
-    Char rch;
-};
+class LexerAgent;
 
 CSC_END
 #endif
