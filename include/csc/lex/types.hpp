@@ -5,9 +5,9 @@
 #include "csc/alias.hpp"
 CSC_BEGIN
 
-enum class LexerEnvid{
-    General = 0,    /* 通用解析环境，可以解析所有合法的Token */
-    OnlyValue,      /* 仅可解析值，用于数组、参数等Token的解析 */
+enum class LexerLevel{
+    Low,
+    General
 };
 
 enum class TokenType{

@@ -1,6 +1,7 @@
 #ifndef CSC_TOKENREADER_HPP
 #define CSC_TOKENREADER_HPP
 
+#include <map>
 #include <memory>
 #include "csc/alias.hpp"
 #include "csc/lex/types.hpp"
@@ -9,8 +10,11 @@ CSC_BEGIN
 
 class TokenReader{
 public:
-    virtual bool            readable(const CharMngr &mngr) =0;
-    virtual ReaderFlag read(Token &token) =0;
+    using Result = std::pair<ReaderFlag, Token>;
+
+public:
+    virtual bool    readable(const CharMngr &mngr) =0;
+    virtual Result  read(Token &token) =0;
 };
 
 using TokenReaderPtr = std::shared_ptr<TokenReader>;
