@@ -10,14 +10,19 @@ enum class LexerLevel{
     General
 };
 
-enum class TokenType{
-    Unknown, Blank, Description, Identifer,
-    Keyword, Operator, Limitor, Separator, //Limitor指数组、参数的边界符号，例如{}和()；Separator指,这类分隔符
-    Integer, HexInteger, Float, String
+enum class LexerMode{
+    Single,
+    Multiple
 };
 
 enum class LexerFlag{
     OK, Finish, Wrong
+};
+
+enum class TokenType{
+    Unknown, Blank, Description, Identifer,
+    Keyword, Operator, Limitor, Separator, //Limitor指数组、参数的边界符号，例如{}和()；Separator指,这类分隔符
+    Integer, HexInteger, Float, String
 };
 
 enum class ReaderFlag{
@@ -27,6 +32,11 @@ enum class ReaderFlag{
 struct Token{
     String         str;
     TokenType type;
+};
+
+struct LexerGuide{
+    LexerLevel level;
+    LexerMode mode;
 };
 
 class LexerAgent;

@@ -11,6 +11,7 @@ public:
     void addIDMapping(PureLexer &p, const String &chs, int id)                             { p.addIDMapping(chs, id); }
     void addDropedType(PureLexer &p, PureLexer::InitTokenTypes types)               { p.addDropedType(types); }
     void addIdentMapping(PureLexer &p, const String &identier, TokenType type) {p.addIdentMapping(identier, type); }
+    void addGuideMapping(PureLexer &p, Char ch, LexerGuide guide)                    { p.addGuideMapping(ch, guide);}
 };
 
 CSC_END
