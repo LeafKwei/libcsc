@@ -51,6 +51,7 @@
         "sstream": "cpp",
         "any": "cpp",
         "list": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "*.2": "cpp"
     }
 }

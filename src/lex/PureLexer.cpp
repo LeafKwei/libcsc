@@ -2,28 +2,20 @@
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
-PureLexer::PureLexer() : 
-    level_(0), 
-    guide_{LexerLevel::Low, LexerMode::Single}
-{
+PureLexer::PureLexer(){}
 
+PureLexer::Flag PureLexer::nextFrom(CharMngr &mngr, TokenHolder &holder){
+    initialize();
 }
 
-bool PureLexer::guide(CharMngr &mngr){
-    if(!mngr.valid()) return false;
-
-    auto pos = guideMap_.find(mngr.forward());
-    if(pos == guideMap_.end()){
-        return mngr.valid();                   //使用forward提取字符后，CharMngr可能已达到末尾，所以要返回valid函数的结果
-    }
-
-    guide_ = pos -> second;
-    level_ = static_cast<int>(guide_.level);
-    return mngr.valid();
+int PureLexer::addReader(TokenReaderPtr reader){
+    if(reader == nullptr) throw LexExcept("Can't add reader pointed to nullptr.");
+    readers_.push_back(reader);
+    return readers_.size() - 1;
 }
 
-void PureLexer::selectLevel(LexerLevel id){
-    level_ = static_cast<int>(id);
+void initialize(){
+
 }
 
 int PureLexer::addReader(TokenReaderPtr reader){
@@ -45,26 +37,22 @@ void PureLexer::addIDMapping(const String &chs, int id){
 
 void PureLexer::addDropedType(PureLexer::InitTokenTypes types){
     for(auto type : types){
-        dropedTypes_[level_].push_back(type);
+        dropedTypes_.push_back(type);
     }
 }
 
- void PureLexer::addIdentMapping(const String &identier, TokenType type){
-    identMaps_[level_].insert({identier, type});
+ void PureLexer::addIdentifierMapping(const String &identier, TokenType type){
+    identifierMap_.insert({identier, type});
  }
 
- void PureLexer::addGuideMapping(Char ch, LexerGuide guide){
-    guideMap_.insert({ch, guide});
- }
-
-void PureLexer::makeIDListFor(Char ch){
-    auto pos = idMaps_[level_].find(ch);
-    if(pos != idMaps_[level_].end()) return;
-    idMaps_[level_].emplace(ch);
+ void PureLexer::makeIDListFor(Char ch){
+    auto pos = idMap_.find(ch);
+    if(pos != idMap_.end()) return;
+    idMap_.emplace(ch);
 }
 
 void PureLexer::appendID(Char ch, int id){
-    auto pos = idMaps_[level_].find(ch);
+    auto pos = idMap_.find(ch);
     pos -> second.push_back(id);
 }
 
@@ -83,20 +71,11 @@ void PureLexer::rangedMapping(Char lch, Char rch, int id){
 }
 
 int PureLexer::findReaderID(CharMngr &mngr){
-    for(Size_t i = level_; i < idMaps_.size(); i++){
-        auto id = findReaderIDOnLevel(mngr, i);
-        if(id != -1) return id;
-    }
+    /* 根据首个字符寻找是否存在对应的迭代器 */
+    auto pos = idMap_.find(mngr.getch());
+    if(pos == idMap_.end()) return -1;
 
-    return -1;
-}
-
-int PureLexer::findReaderIDOnLevel(CharMngr &mngr, int level){
-    /* 根据首个字符寻找是否存在对应的ID列表 */
-    auto pos = idMaps_[level].find(mngr.getch());
-    if(pos == idMaps_[level].end()) return -1;
-
-    /* 根据ID列表中的ID遍历对应的TokenReader，如果其readable函数返回为true，则返回该Reader的ID */
+    /* 获取ID列表并遍历，找到匹配的TokenReader并返回ID */
     const auto &idList = pos -> second;
     for(auto id : idList){
         if(readers_.at(id) -> readable(mngr)){
@@ -108,39 +87,20 @@ int PureLexer::findReaderIDOnLevel(CharMngr &mngr, int level){
 }
 
 bool PureLexer::isDropedToken(TokenType type){
-    for(Size_t i = level_; i < dropedTypes_.size(); i++){
-        auto b = isDropedTokenOnLevel(type, i);
-        if(b) return b;
+    for(auto i = 0UL; i < dropedTypes_.size(); i++){
+        if(dropedTypes_.at(i) == type) return true;
     }
 
-    return false;
-}
-
-bool PureLexer::isDropedTokenOnLevel(TokenType type, int level){
-    for(auto i = 0UL; i < dropedTypes_[level].size(); i++){
-        if(dropedTypes_[level].at(i) == type) return true;
-    }
     return false;
 }
 
 void PureLexer::setIdentifierType(Token &token){
-    if(token.type != TokenType::Identifer) return;
-
-    for(auto i = 0UL; i < identMaps_.size(); i++){
-        if(setIdentifierTypeOnLevel(token, i)) return;
-    }
-}
-
-bool PureLexer::setIdentifierTypeOnLevel(Token &token, int level){
-    /* 没有找到对应的TokenType时，返回false，使setIdentifierType继续迭代 */
-    auto pos = identMaps_.at(level).find(token.str);
-    if(pos == identMaps_.at(level).end()){
-        return false;
+    auto pos = identifierMap_.find(token.str);
+    if(pos == identifierMap_.end()){
+        return;
     }
 
-    /* 找到TokenType时返回true，不进行后续迭代  */
     token.type = pos -> second;
-    return true;
 }
 
 CSC_END
