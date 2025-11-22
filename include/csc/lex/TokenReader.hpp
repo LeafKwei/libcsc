@@ -3,19 +3,20 @@
 
 #include <map>
 #include <functional>
+#include "csc/lex/types.hpp"
 #include "csc/lex/CharMngr.hpp"
 CSC_BEGIN
 
-enum class Todo {
-
+enum class RdErrno {
+    OK, Broken
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-using TokenPair           = std::pair<int, Token>;
+using TokenPair           = std::pair<RdErrno, Token>;
 using ReaderInitor       = std::function<void(Any &local)>;
 using ReaderReadable = std::function<bool(CharMngr &mngr, Any &local)>;
-using ReaderRead        = std::function<WhatTheFuck(CharMngr &mngr, Any &local)>;
+using ReaderRead        = std::function<TokenPair(CharMngr &mngr, Any &local)>;
 using ReaderFintor      =  std::function<void(Any &local)>;
 using ReaderFlag         = unsigned long long; 
 
@@ -32,7 +33,7 @@ struct TokenReader{
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr ReaderFlag RFLAG_NONE = 0;
+constexpr ReaderFlag RDFLAG_NONE = 0;
 
 
 CSC_END

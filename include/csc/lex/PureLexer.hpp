@@ -7,13 +7,14 @@ CSC_BEGIN
 
 class PureLexer{
 public:
-    using IDType = int;
+    using RID = int;
     using ReaderList = std::vector<TokenReader>;
 
 public:
-    IDType addReader(const ReaderInitor &initor, const ReaderReadable &readable, 
+    RID addReader(const ReaderReadable &readable, const ReaderRead &read);
+    RID addReader(const ReaderReadable &readable, const ReaderRead &read, ReaderFlag flag);
+    RID addReader(const ReaderInitor &initor, const ReaderReadable &readable, 
         const ReaderRead &read, const ReaderFintor &fintor, ReaderFlag flag);
-    IDType addReader(const ReaderReadable &readable, const ReaderRead &read, ReaderFlag flag);
 
 private:
     ReaderList   readers_;
