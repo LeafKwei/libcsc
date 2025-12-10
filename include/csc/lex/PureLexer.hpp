@@ -2,22 +2,15 @@
 #define CSC_PURELEXER_HPP
 
 #include <vector>
-#include "csc/lex/readers.hpp"
+#include "csc/lex/ReaderTree.hpp"
 CSC_BEGIN
 
 class PureLexer{
 public:
-    using RID = int;
-    using ReaderList = std::vector<TokenReader>;
-
-public:
-    RID addReader(const ReaderReadable &readable, const ReaderRead &read);
-    RID addReader(const ReaderReadable &readable, const ReaderRead &read, ReaderFlag flag);
-    RID addReader(const ReaderInitor &initor, const ReaderReadable &readable, 
-        const ReaderRead &read, const ReaderFintor &fintor, ReaderFlag flag);
+    ReaderTree& tree();
 
 private:
-    ReaderList   readers_;
+    ReaderTree readertree_;
 };
 
 CSC_END
