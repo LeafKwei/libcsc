@@ -11,10 +11,10 @@ class Detector{
 public:
     Detector(ScopeWkr wkr);
 
-    bool tryEnter(crString name);            //进入指定名称的scope(更新m_ptr)，如果不存在则返回false
-    bool detect(crString name);              //检查当前scope下是否存在指定名称的scope或variable
-    bool detectScope(crString name);    //检查当前scope下是否存在指定名称的scope
-    bool detectVariable(crString name); //检查当前scope下是否存在指定名称的variable
+    bool tryEnter(const String &name);            //进入指定名称的scope(更新m_ptr)，如果不存在则返回false
+    bool detect(const String &name);              //检查当前scope下是否存在指定名称的scope或variable
+    bool detectScope(const String &name);    //检查当前scope下是否存在指定名称的scope
+    bool detectVariable(const String &name); //检查当前scope下是否存在指定名称的variable
 
 private:
     ScopeWkr ptr_;

@@ -8,7 +8,7 @@ CSC_BEGIN
 class CharMngr{
 public:
     enum SeekOption{Set, Cur, End};
-    CharMngr(crString str, int index=0);
+    CharMngr(const String &str, int index=0);
     
     int         index() const noexcept;
     int         length() const noexcept;
@@ -17,8 +17,8 @@ public:
     Char      getch() const;
     Char      forward();
     Char      backward();
-    crString str() const;
     void       seek(SeekOption option, int offset);
+    const String &str() const;
 
 private:
     String m_str;

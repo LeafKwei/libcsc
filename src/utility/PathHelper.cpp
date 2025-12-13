@@ -2,7 +2,7 @@
 #include "csc/utility/PathHelper.hpp"
 CSC_BEGIN
 
-PathHelper::PathHelper(crString path){
+PathHelper::PathHelper(const String &path){
     classify(path);
 }
 
@@ -34,16 +34,16 @@ String PathHelper::buildPath(int endidx) const{
     return path;
 }
 
-crString PathHelper::item(int index) const{
+const String& PathHelper::item(int index) const{
     return items_.at(index);
 }
 
-crString PathHelper::lastItem() const{
+const String& PathHelper::lastItem() const{
     assert(items_.size() > 0);
     return items_.at(items_.size() - 1);
 }
 
-void PathHelper::classify(crString path){
+void PathHelper::classify(const String &path){
     if(path.find('/') == 0){
         absolute_ = true;
         valid_ = splitPath(path, 1);        //index设置为1是为了跳过绝对路径的'/'
@@ -54,7 +54,7 @@ void PathHelper::classify(crString path){
     }
 }
 
-bool PathHelper::splitPath(crString path, int index){
+bool PathHelper::splitPath(const String &path, int index){
     Size_t idx = index;
 
     if(path == "/"){                         //对仅存在根路径的情况做特殊处理

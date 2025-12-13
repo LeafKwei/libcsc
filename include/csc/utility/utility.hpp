@@ -13,11 +13,11 @@
 #include "csc/core/types.hpp"
 CSC_BEGIN
 
-String valueToString(crValue value, ValueType type);
-String toEscapingString(crString str);
+String valueToString(const Value &value, ValueType type);
+String toEscapingString(const String &str);
 
 //=================== 内联函数 //===================
-inline bool isBoolString(crString str){
+inline bool isBoolString(const String &str){
     return (str == "true") || (str == "false");
 }
 

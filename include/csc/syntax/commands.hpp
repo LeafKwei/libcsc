@@ -13,7 +13,7 @@ public:
 public:
     CommonCmd() =default;
     CommonCmd(InitTokens types);
-    crString key() override;
+    const String& key() override;
 
 private:
     String key_;
@@ -25,40 +25,40 @@ class EnterScopeCmd : public CommonCmd{
 public:
     EnterScopeCmd();
     CmdType type() override;
-    bool         runnable(crOperandList operands) override;
-    void         run(crOperandList operands, Context &context, ActionCtl &ctl) override;
+    bool         runnable(const OperandList &operands) override;
+    void         run(const OperandList &operands, Context &context, ActionCtl &ctl) override;
 };
 
 class ExitScopeCmd : public CommonCmd{
 public:
     ExitScopeCmd();
     CmdType type() override;
-    bool        runnable(crOperandList operands) override;
-    void         run(crOperandList operands, Context &context, ActionCtl &ctl) override;
+    bool        runnable(const OperandList &operands) override;
+    void         run(const OperandList &operands, Context &context, ActionCtl &ctl) override;
 };
 
 class AssignCmd : public CommonCmd{
 public:
     AssignCmd();
     CmdType  type() override;
-    bool          runnable(crOperandList operands) override;
-    void          run(crOperandList operands, Context &context, ActionCtl &ctl) override;
+    bool          runnable(const OperandList &operands) override;
+    void          run(const OperandList &operands, Context &context, ActionCtl &ctl) override;
 };
 
 class ArrayAssignCmd : public CommonCmd{
 public:
     ArrayAssignCmd();
     CmdType type() override;
-    bool        runnable(crOperandList operands) override;
-    void        run(crOperandList operands, Context &context, ActionCtl &ctl) override;
+    bool        runnable(const OperandList &operands) override;
+    void        run(const OperandList &operands, Context &context, ActionCtl &ctl) override;
 };
 
 class ActionCmd : public CommonCmd{
 public:
     ActionCmd();
     CmdType type() override;
-    bool         runnable(crOperandList operands) override;
-    void         run(crOperandList operands, Context &context, ActionCtl &ctl) override;
+    bool         runnable(const OperandList &operands) override;
+    void         run(const OperandList &operands, Context &context, ActionCtl &ctl) override;
 
 private:
     void run_genidx(ActionCtl &ctl, UID scopeid);

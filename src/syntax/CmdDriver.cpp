@@ -8,7 +8,7 @@ CmdDriver::CmdDriver(){
     installCommands();
 }
 
-void CmdDriver::drive(crString script, Context &context){
+void CmdDriver::drive(const String &script, Context &context){
 
 }
 
@@ -20,7 +20,7 @@ void CmdDriver::installCommands(){
     stdexec_initializer(executor_);
 }
 
-String CmdDriver::makeExceptMessage(crString script, const Locator &locator){
+String CmdDriver::makeExceptMessage(const String &script, const Locator &locator){
     std::stringstream sstream;
     sstream << "row " << locator.row() << ", col " << locator.col() << ".";
     sstream << "text: " << script.substr(locator.index(), 32);

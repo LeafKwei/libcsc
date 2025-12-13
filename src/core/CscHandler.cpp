@@ -2,11 +2,11 @@
 #include "csc/core/CscStrSeeker.hpp"
 CSC_BEGIN
 
-CscHandler::CscHandler(crString script){
+CscHandler::CscHandler(const String &script){
     driver_.drive(script, context_);
 }
 
-bool CscHandler::accessible(crString path, bool v){
+bool CscHandler::accessible(const String &path, bool v){
     PathHelper helper(path);
     if(!helper.valid()) return false;
     if(helper.isRoot()) return !(v); //对于根路径'/'的特别处理，当参数v为true时，由于根目录不是变量，所以要返回false
@@ -27,7 +27,7 @@ String CscHandler::absolutePath(){
     return String("/") + context_.relation("/");
 }
 
-CscHandler& CscHandler::enter(crString path){
+CscHandler& CscHandler::enter(const String &path){
     PathHelper helper(path);
     if(!helper.valid()) throw CscExcept("Invalid path: " + path);
     if(helper.isAbsolute()){  //如果是根路径'/'，由于helper.size()为0，所以下方的循环不会执行

@@ -10,9 +10,9 @@ CSC_BEGIN
 class CscStrSeeker : public ContextSeeker{
 public:
     CscStrSeeker();
-    void enterScope(UID id, crString name) override;
-    void leaveScope(UID id, crString name) override;
-    void values(crString name, const ValueAccessor &accessor) override;
+    void enterScope(UID id, const String &name) override;
+    void leaveScope(UID id, const String &name) override;
+    void values(const String &name, const ValueAccessor &accessor) override;
     String toString();
 
 private:
@@ -20,7 +20,7 @@ private:
     std::stringstream buffer_;
 
     void writeIndent();
-    void writeValue(crString value,  ValueType type);
+    void writeValue(const String &value,  ValueType type);
     ValueType arrayToValue(ValueType type);
 };
 

@@ -129,13 +129,13 @@ CscHandler可用于解析csc文件内容并获取其中的变量值，用户需�
 ```C++
 CscHandler()
     默认构造函数，创建一个带有根作用域的空CscHandler对象，通常结合editor函数和toString函数来创建csc文件的内容
-CscHandler(crString script)
+CscHandler(const String &script)
     按csc语法解析script中的内容到CscHandler对象中
-bool accessible(crString path, bool v=false)
+bool accessible(const String &path, bool v=false)
     检查给定的路径是否存在，默认将path视为作用域路径，当v为true时，将path视为变量路径
 String absolutePath()
     获取从根作用域到当前作用域的绝对路径
-CscHandler& enter(crString path)
+CscHandler& enter(const String &path)
     进入path对应的作用域，当path为"/"时，进入根作用域
 CscHandler& iterate(ContextSeeker &seeker)
     按DFS算法迭代当前作用域的所有变量以及其中的子作用域，用户需要提供一个ContextSeeker的派生类对象
@@ -143,9 +143,9 @@ String toString()
     从当前作用域开始，将其中的所有内容字符串化后返回。如果需要从根作用域字符串化，请先调用enter("/")进入根作用域
 CscEditor editor()
     返回一个CscEditor对象，可用于编辑CscHandler中的内容
-Tp getValue<Tp>(crString name)
+Tp getValue<Tp>(const String &name)
     获取当前作用域下指定名称的变量值，需要指定该变量值所需转换的类型
-Tp enterAndGet<Tp>(crString path)
+Tp enterAndGet<Tp>(const String &path)
     获取指定路径下的变量值，需要指定该变量值所需转换的类型
 ```
 
@@ -158,20 +158,20 @@ CscEditor& autoEnterOn()
 	开启autoEnter功能，当使用makeScope函数创建作用域后，自动进入该作用域而无需调用enterScope函数
 CscEditor& autoEnterOff()
 	关闭autoEnter功能
-CscEditor& makeScope(crString name)
+CscEditor& makeScope(const String &name)
 	在当前作用域下创建一个指定名称的作用域
-CscEditor& enterScope(crString name)
+CscEditor& enterScope(const String &name)
 	进入当前作用域下指定名称的子作用域
 CscEditor& leaveScope()
 	离开当前作用域，回到它的父作用域。当位于根作用域时，调用此函数将引发异常
-CscEditor& cleanScope(crString name)
+CscEditor& cleanScope(const String &name)
 	清除当前作用域下指定名称的作用域
-CscEditor& makeVariable(crString name, ValueType type, T &&...values)
+CscEditor& makeVariable(const String &name, ValueType type, T &&...values)
 	在当前作用域中创建指定名称的变量，type指定变量的类型，values是一组指定变量值的可变参数，请确保其都为同一类型
     当创建一个已存在的变量时，将会直接使用values替代该变量中的变量值
-CscEditor& extendValues(crString name, T &&...values)
+CscEditor& extendValues(const String &name, T &&...values)
 	追加当前作用域中指定名称的变量的变量值
-CscEditor& cleanVariable(crString name)
+CscEditor& cleanVariable(const String &name)
 	清除当前作用域中指定名称的变量
 ```
 
@@ -180,11 +180,11 @@ CscEditor& cleanVariable(crString name)
 ContextSeeker定义了用于迭代CscHandler内容的相关接口。用户可参考*csc/core/CscStrSeeker*实现自己的迭代功能：
 
 ```C++
-void enterScope(UID id, crString name)
+void enterScope(UID id, const String &name)
     当进入一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
-void leaveScope(UID id, crString name)
+void leaveScope(UID id, const String &name)
     当离开一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
-void values(crString name, const ValueAccessor &accessor)
+void values(const String &name, const ValueAccessor &accessor)
     当获取到该作用域中的一个变量时，将调用此函数。name是变量名称，values是变量值列表
 ```
 

@@ -6,7 +6,7 @@ Context::Context() : idCounter_(1){           //作用域ID从1开始，0作为�
     clean();
 }
 
-Context& Context::makeScope(crString name, bool entered){
+Context& Context::makeScope(const String &name, bool entered){
     if(probeScope(name)){
         throw ContextExcept("Can't make repetitive scope.");
     }
@@ -20,7 +20,7 @@ Context& Context::makeScope(crString name, bool entered){
     return *this;
 }
 
-Context& Context::enterScope(crString name, bool created){
+Context& Context::enterScope(const String &name, bool created){
     if(!probeScope(name)){
         if(!created){
             throw ContextExcept(std::string("No such scope: ") + name);
@@ -42,7 +42,7 @@ Context& Context::leaveScope(){
     return *this;
 }
 
-Context& Context::cleanScope(crString name){
+Context& Context::cleanScope(const String &name){
     if(!probeScope(name)){
         throw ContextExcept(std::string("No such scope: ") + name);
     }
@@ -51,7 +51,7 @@ Context& Context::cleanScope(crString name){
     return *this;
 }   
 
-bool Context::probeScope(crString name) const{
+bool Context::probeScope(const String &name) const{
     return (current_ -> scopes.find(name)) != (current_ -> scopes.end());
 }   
 
@@ -59,7 +59,7 @@ bool Context::isRootScope() const{
     return !(current_ -> parent.expired());
 }
 
-Context::crScopeMetaData Context::scopeMetaData() const noexcept{
+const ScopeMetaData& Context::scopeMetaData() const noexcept{
     return current_ -> meta;
 }
 
@@ -79,17 +79,17 @@ void Context::setPostion(const Pos &pos){
     current_ = pos.scope.lock();
 }
 
-String Context::relation(crString separator) const{
+String Context::relation(const String &separator) const{
     std::stringstream stream;
     do_relation(current_, stream, separator);
     return stream.str();
 }
 
-Context& Context::makeVariable(crString name, ValueType type, crValue value){
+Context& Context::makeVariable(const String &name, ValueType type, const Value &value){
     return makeVariable(name, type, {value});
 }
 
-Context& Context::makeVariable(crString name, ValueType type, InitValues values){
+Context& Context::makeVariable(const String &name, ValueType type, InitValues values){
     /* 变量存在时，替换原变量值和类型 */
     auto iterator = current_ -> variables.find(name);
     if(iterator != current_ -> variables.end()){
@@ -102,7 +102,7 @@ Context& Context::makeVariable(crString name, ValueType type, InitValues values)
     return *this;
 }
 
-Context& Context::cleanVariable(crString name){
+Context& Context::cleanVariable(const String &name){
     if(!probeVariable(name)){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
@@ -111,7 +111,7 @@ Context& Context::cleanVariable(crString name){
     return *this;
 }
 
-Context::Unit Context::getValueUnit(crString name) const{
+Context::Unit Context::getValueUnit(const String &name) const{
     auto iterator = current_ -> variables.find(name);
     if(iterator == current_ -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -124,7 +124,7 @@ Context::Unit Context::getValueUnit(crString name) const{
         Unit{ValueMaker::makeZero(variable -> type), variable -> type};
 }
 
-Context::Accessor Context::getValueAccessor(crString name) const{
+Context::Accessor Context::getValueAccessor(const String &name) const{
     auto iterator = current_ -> variables.find(name);
     if(iterator == current_ -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -134,15 +134,15 @@ Context::Accessor Context::getValueAccessor(crString name) const{
     return ValueAccessor(variable -> values, variable -> type);
 }
 
-bool Context::probeVariable(crString name) const{
+bool Context::probeVariable(const String &name) const{
     return (current_ -> variables.find(name)) != (current_ -> variables.end());
 }
 
-Context& Context::extendValue(crString name, crValue value){
+Context& Context::extendValue(const String &name, const Value &value){
     return extendValues(name, {value});
 }
 
-Context& Context::extendValues(crString name, InitValues values){
+Context& Context::extendValues(const String &name, InitValues values){
     auto iterator = current_ -> variables.find(name);
     if(iterator == current_ -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -175,14 +175,14 @@ void Context::iterate(ContextSeeker &seeker) const{
     do_iterate(current_, seeker);
 }
 
-void Context::do_makeScope(crString name){
+void Context::do_makeScope(const String &name){
     auto scope = std::make_shared<Scope>();
     scope -> meta = {nextID(), name, scope};
     scope -> parent = current_;
     current_ -> scopes.insert({name, scope});
 }
 
-void Context::do_enterScope(crString name){
+void Context::do_enterScope(const String &name){
     current_ = (current_ -> scopes.find(name)) -> second;
 }
 
@@ -190,15 +190,15 @@ void Context::do_leaveScope(){
     current_ = current_ -> parent.lock();
 }
 
-void Context::do_cleanScope(crString name){
+void Context::do_cleanScope(const String &name){
     current_ -> scopes.erase(name);
 }
 
-void Context::do_cleanVariable(crString name){
+void Context::do_cleanVariable(const String &name){
     current_ -> variables.erase(name);
 }
 
-void Context::do_makeVariable(crString name, InitValues values, ValueType type){
+void Context::do_makeVariable(const String &name, InitValues values, ValueType type){
     auto variable = std::make_shared<Variable>();
     variable -> name = name;
     variable -> type = type;
@@ -252,7 +252,7 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     }
 }
 
-void Context::do_relation(ScopePtr scope, std::stringstream &stream, crString separator) const{
+void Context::do_relation(ScopePtr scope, std::stringstream &stream, const String &separator) const{
     if(scope -> parent.expired()){   //忽略根作用域的名称
         return;
     }

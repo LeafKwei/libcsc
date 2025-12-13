@@ -6,15 +6,15 @@ using namespace csc;
 
 class AnySeeker : public ContextSeeker{
 public:
-    void enterScope(UID id, crString name){
+    void enterScope(UID id, const String &name){
         std::cout << "enter: " << name << ", ID = " << id << std::endl;
     }
 
-    void leaveScope(UID id, crString name){
+    void leaveScope(UID id, const String &name){
         std::cout << "leave: " << name << ", ID = " << id << std::endl;
     }
 
-    void values(crString name, const ValueAccessor &accessor){
+    void values(const String &name, const ValueAccessor &accessor){
         std::cout << name <<" = ";
         for(int i = 0; i < accessor.size(); i++){
             std::cout << valueToString(accessor.value(), accessor.type()) << ",";

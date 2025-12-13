@@ -43,7 +43,6 @@ struct CppType<ValueType::String>{
 struct Variable;
 struct Scope;
 using Value = std::any;
-using crValue = const Value&;
 using VariablePtr = std::shared_ptr<Variable>;
 using ScopePtr = std::shared_ptr<Scope>;
 using ScopeWkr = std::weak_ptr<Scope>;

@@ -10,7 +10,7 @@ const String KW_FALSE("false");
 const String KW_ACTION("action");
 
 //=================== 通用工具函数 ===================
-String valueToString(crValue value, ValueType type){
+String valueToString(const Value &value, ValueType type){
     std::stringstream sstream;
 
     switch(type){
@@ -33,7 +33,7 @@ String valueToString(crValue value, ValueType type){
     return sstream.str();
 }
 
-String toEscapingString(crString str){
+String toEscapingString(const String &str){
     String tmp(str);
 
     auto pos = tmp.find('\"');

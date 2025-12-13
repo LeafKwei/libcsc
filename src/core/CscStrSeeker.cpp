@@ -4,19 +4,19 @@ CSC_BEGIN
 
 CscStrSeeker::CscStrSeeker() : nest_(0){}
 
-void CscStrSeeker::enterScope(UID id, crString name){
+void CscStrSeeker::enterScope(UID id, const String &name){
     writeIndent();
     buffer_ << name << "::" << std::endl;
     ++nest_;
 }
 
-void CscStrSeeker::leaveScope(UID id, crString name){
+void CscStrSeeker::leaveScope(UID id, const String &name){
     --nest_;
     writeIndent();
     buffer_ << "::" << name << std::endl;
 }
 
-void CscStrSeeker::values(crString name, const ValueAccessor &accessor){
+void CscStrSeeker::values(const String &name, const ValueAccessor &accessor){
     writeIndent();
 
     if(accessor.size() == 1){                              //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
@@ -53,7 +53,7 @@ void CscStrSeeker::writeIndent(){
     }
 }
 
-void CscStrSeeker::writeValue(crString value,  ValueType type){
+void CscStrSeeker::writeValue(const String &value,  ValueType type){
     switch(type){
         case ValueType::Bool:
         case ValueType::Integer:

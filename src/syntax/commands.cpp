@@ -7,7 +7,7 @@ CommonCmd::CommonCmd(InitTokens tokens){
     genKey(tokens);
 }
 
-crString CommonCmd::key(){
+const String& CommonCmd::key(){
     return key_;
 }
 
@@ -35,11 +35,11 @@ CommandType EnterScopeCmd::type(){
     return CommandType::EnterScope;
 }
 
-bool EnterScopeCmd::runnable(crOperandList operands){
+bool EnterScopeCmd::runnable(const OperandList &operands){
     return true;
 }
 
-void EnterScopeCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+void EnterScopeCmd::run(const OperandList &operands, Context &context, ActionCtl &ctl){
     auto &name = operands.at(0).str();
     
     if(context.probeScope(name)){
@@ -62,11 +62,11 @@ CommandType ExitScopeCmd::type(){
     return CommandType::ExitScope;
 }
 
-bool ExitScopeCmd::runnable(crOperandList operands){
+bool ExitScopeCmd::runnable(const OperandList &operands){
     return true;
 }
 
-void ExitScopeCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+void ExitScopeCmd::run(const OperandList &operands, Context &context, ActionCtl &ctl){
     auto &name = operands.at(1).str();
     if(name != context.scopeMetaData().name){
         throw CommandExcept("Can't leave a scope that name is not same to current scope.");
@@ -88,11 +88,11 @@ CommandType AssignCmd::type(){
     return CommandType::Assign;
 }
 
-bool AssignCmd::runnable(crOperandList operands){
+bool AssignCmd::runnable(const OperandList &operands){
     return true;
 }
 
-void AssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+void AssignCmd::run(const OperandList &operands, Context &context, ActionCtl &ctl){
     auto vtype = operands.at(2).typeofValue();
     if(operands.at(2).typeofValue() == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
 
@@ -116,7 +116,7 @@ CommandType ArrayAssignCmd::type(){
     return CommandType::ArrayAssign;
 }
 
-bool ArrayAssignCmd::runnable(crOperandList operands){
+bool ArrayAssignCmd::runnable(const OperandList &operands){
     return true;
 }
 
@@ -125,7 +125,7 @@ bool ArrayAssignCmd::runnable(crOperandList operands){
  * 依次读取数组字符串中的每个元素，并将其追加到Context的变量中。每个被读入的元素都会被判断类型，如果类型和第一个元素
  * 不同，则视为出错
  */
-void ArrayAssignCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+void ArrayAssignCmd::run(const OperandList &operands, Context &context, ActionCtl &ctl){
     /* 获取数组的类型 */
     auto atype = operands.at(2).typeofValue();
     if(atype == ValueType::Unknown) throw CommandExcept("Invalid value in assignment.");
@@ -185,11 +185,11 @@ CommandType ActionCmd::type(){
     return CommandType::Action;
 }
 
-bool ActionCmd::runnable(crOperandList operands){
+bool ActionCmd::runnable(const OperandList &operands){
     return operands.at(1).typeofValue() == ValueType::String;
 }
 
-void ActionCmd::run(crOperandList operands, Context &context, ActionCtl &ctl){
+void ActionCmd::run(const OperandList &operands, Context &context, ActionCtl &ctl){
     if(operands.at(1).str() == "genidx") run_genidx(ctl, context.scopeMetaData().id);
     else if(operands.at(1).str() == "detail")   run_detail(ctl, context.scopeMetaData().id);
     else throw ActionExcept(String("Unsupport action: ") + operands.at(1).str());

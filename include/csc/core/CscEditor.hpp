@@ -15,25 +15,25 @@ public:
 
     CscEditor& autoEnterOn();                  /* 启用自动进入作用域的功能，当makeScope函数创建作用域后，自动进入该作用域 */
     CscEditor& autoEnterOff();                  /* 禁用自动进入作用域的功能(默认) */
-    CscEditor& makeScope(crString name);
-    CscEditor& enterScope(crString name);
+    CscEditor& makeScope(const String &name);
+    CscEditor& enterScope(const String &name);
     CscEditor& leaveScope();
-    CscEditor& cleanScope(crString name);
+    CscEditor& cleanScope(const String &name);
 
     template<typename... T>
-    CscEditor& makeVariable(crString name, ValueType type, T &&...values);
+    CscEditor& makeVariable(const String &name, ValueType type, T &&...values);
     template<typename... T>
-    CscEditor& makeVariable(crString name, ValueType type, int value1, T &&...values);                //通过重载函数模板并将value1指定为int，从而让编译器优先选择此版本处理int类型的数据
+    CscEditor& makeVariable(const String &name, ValueType type, int value1, T &&...values);                //通过重载函数模板并将value1指定为int，从而让编译器优先选择此版本处理int类型的数据
     template<typename... T>
-    CscEditor& makeVariable(crString name, ValueType type, const char *value1, T &&...values);  //通过重载函数模板并将value1指定为const char*，从而让编译器优先选择此版本处理char*类型的数据
+    CscEditor& makeVariable(const String &name, ValueType type, const char *value1, T &&...values);  //通过重载函数模板并将value1指定为const char*，从而让编译器优先选择此版本处理char*类型的数据
     template<typename... T>
-    CscEditor& extendValues(crString name, T &&...values);
+    CscEditor& extendValues(const String &name, T &&...values);
     template<typename... T>
-    CscEditor& extendValues(crString name, int value1, T &&...values);
+    CscEditor& extendValues(const String &name, int value1, T &&...values);
     template<typename... T>
-    CscEditor& extendValues(crString name, const char *value1, T &&...values);
+    CscEditor& extendValues(const String &name, const char *value1, T &&...values);
 
-    CscEditor& cleanVariable(crString name);
+    CscEditor& cleanVariable(const String &name);
 
 private:
     bool m_autoEnter;
@@ -41,13 +41,13 @@ private:
 };
 
 template<typename... T>
-inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, T &&...values){
+inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, T &&...values){
     m_context.makeVariable(name, type, {std::forward<T>(values)...});
     return *this;
 }
 
 template<typename... T>
-inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, int value1, T &&...values){
+inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, int value1, T &&...values){
     m_context.makeVariable(
         name, 
         type,
@@ -58,7 +58,7 @@ inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, int val
 }
 
 template<typename... T>
-inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, const char *value1, T &&...values){
+inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, const char *value1, T &&...values){
     m_context.makeVariable(
         name, 
         type,
@@ -69,13 +69,13 @@ inline CscEditor& CscEditor::makeVariable(crString name, ValueType type, const c
 }
 
 template<typename... T>
-inline CscEditor& CscEditor::extendValues(crString name, T &&...values){
+inline CscEditor& CscEditor::extendValues(const String &name, T &&...values){
     m_context.extendValues(name, {std::forward<T>(values)...});
     return *this;
 }
 
 template<typename... T>
-inline CscEditor& CscEditor::extendValues(crString name, int value1, T &&...values){
+inline CscEditor& CscEditor::extendValues(const String &name, int value1, T &&...values){
     m_context.extendValues(
         name, 
         {CppType<ValueType::Integer>::type{value1}, CppType<ValueType::Integer>::type{std::forward<T>(values)}...}
@@ -85,7 +85,7 @@ inline CscEditor& CscEditor::extendValues(crString name, int value1, T &&...valu
 }
 
 template<typename... T>
-inline CscEditor& CscEditor::extendValues(crString name, const char *value1, T &&...values){
+inline CscEditor& CscEditor::extendValues(const String &name, const char *value1, T &&...values){
     m_context.extendValues(
         name, 
         {CppType<ValueType::String>::type{value1}, CppType<ValueType::String>::type{std::forward<T>(values)}...}

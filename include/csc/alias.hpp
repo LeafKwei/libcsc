@@ -11,7 +11,6 @@ CSC_BEGIN
 //===================== Alias ===================
 using Char = char;
 using String = std::string;
-using crString = const String&;
 using UID = unsigned long long;     //U means unique.
 using Size_t = std::size_t;
 using Any = std::any;

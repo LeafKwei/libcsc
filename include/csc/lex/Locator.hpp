@@ -7,7 +7,7 @@ CSC_BEGIN
 
 class Locator{
 public:
-    Locator(crString str, int index);
+    Locator(const String &str, int index);
     int col() const;
     int row() const;
     int index() const;

@@ -4,7 +4,7 @@ CSC_BEGIN
 
 Detector::Detector(ScopeWkr wkr) : ptr_(wkr){}
 
-bool Detector::tryEnter(crString name){
+bool Detector::tryEnter(const String &name){
     assertValidPtr();
     auto ptr = ptr_.lock();
     auto pos = ptr -> scopes.find(name);
@@ -17,18 +17,18 @@ bool Detector::tryEnter(crString name){
     return true;
 }
 
-bool Detector::detect(crString name){
+bool Detector::detect(const String &name){
     assertValidPtr();
     return detectScope(name) || detectVariable(name);
 }
 
-bool Detector::detectScope(crString name){
+bool Detector::detectScope(const String &name){
     assertValidPtr();
     auto ptr = ptr_.lock();
      return (ptr -> scopes.find(name) != ptr -> scopes.end());
 }
 
-bool Detector::detectVariable(crString name){
+bool Detector::detectVariable(const String &name){
     assertValidPtr();
     auto ptr = ptr_.lock();
      return (ptr -> variables.find(name) != ptr -> variables.end());
