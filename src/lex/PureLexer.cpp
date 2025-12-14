@@ -3,7 +3,9 @@
 #include "csc/lex/PureLexer.hpp"
 CSC_BEGIN
 
-PureLexer::PureLexer(){}
+PureLexer::PureLexer(){
+    installReaders();
+}
 
 LxErrno PureLexer::readToken(CharMngr &mngr, TokenPool &pool){
     if(!mngr.valid()) return LxErrno::Done;
@@ -14,7 +16,6 @@ LxErrno PureLexer::readToken(CharMngr &mngr, TokenPool &pool){
     }
 
     auto &reader = readers_.at(id);
-    reader.initor(reader.local);
     const auto &pair = reader.read(mngr, reader.local);
     reader.fintor(reader.local);
 
@@ -39,9 +40,11 @@ int PureLexer::findReader(CharMngr &mngr){
     const auto & vec = pos -> second;
     for(auto id : vec){
         auto &reader = readers_.at(id);
+        reader.initor(reader.local);   //在readable调用前调用initor初始化local字段
         if(reader.readable(mngr, reader.local)){
             return id;
         }
+        reader.fintor(reader.local);   //如果当前reader不是我们需要的reader，则立刻调用fintor释放local字段
     }
 
     return -1;

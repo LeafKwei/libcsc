@@ -25,12 +25,12 @@ private:
     CharMapping    chmapping_;
 
     void installReaders();
-    int   findReader(CharMngr &mngr);
+    int    findReader(CharMngr &mngr);
     void addCharMapping(Char ch, int id);
     void addCharMapping(const String &chs, int id);
-    int addReader(ReaderReadable readable, ReaderRead read);
-    int addReader(ReaderReadable readable, ReaderRead read, ReaderFlag flag);
-    int addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFintor fintor, ReaderFlag flag);
+    int    addReader(ReaderReadable readable, ReaderRead read);
+    int    addReader(ReaderReadable readable, ReaderRead read, ReaderFlag flag);
+    int    addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFintor fintor, ReaderFlag flag);
 };
 
 CSC_END
