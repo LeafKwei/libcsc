@@ -23,7 +23,16 @@ void TokenPool::addToken(Token &&token){
 }
 
 TokenHolder TokenPool::nextHolder(){
+    TokenHolder holder;
+    if(tokens_.empty()) return holder;
+    
+    /* 如果是数组等具有复数个元素的token  */
+    if(isPuralToken((*tokens_.front()))){
+        todo
+        return holder;
+    }
 
+    return holder;
 }
 
 bool TokenPool::empty() const noexcept{
@@ -37,12 +46,19 @@ Size_t TokenPool::size() const noexcept{
 void TokenPool::initIgnoredToken(){
     ignored_.insert(TokenType::Blank);
     ignored_.insert(TokenType::Description);
+    ignored_.insert(TokenType::Separator);
 }
 
 void TokenPool::initConvToken(){
     conv_.insert({"true", TokenType::Keyword});
     conv_.insert({"false", TokenType::Keyword});
     conv_.insert({"action", TokenType::Keyword});
+}
+
+void TokenPool::initPluralRule(){
+    rule_.push_back({Token{"[", TokenType::Limitor}, Token{"]", TokenType::Limitor}});
+    rule_.push_back({Token{"(", TokenType::Limitor}, Token{")", TokenType::Limitor}});
+    rule_.push_back({Token{"{", TokenType::Limitor}, Token{"}", TokenType::Limitor}});
 }
 
 void TokenPool::appendToken(const TokenPtr &ptr){
@@ -57,6 +73,16 @@ void TokenPool::convertTokenType(Token &token){
     auto pos = conv_.find(token.str);
     if(pos == conv_.end()) return;
     token.type = pos -> second;
+}
+
+bool TokenPool::isPuralToken(const Token &token){
+    for(const auto &rule : rule_){
+        if(rule.first.str == token.str && rule.first.type == token.type){  //如果接下来要读取的token是数组一类的具有复数个元素的token
+            return true;
+        }
+    }
+
+    return false;
 }
 
 CSC_END

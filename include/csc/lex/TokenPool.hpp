@@ -16,6 +16,7 @@ public:
     using TokenList = std::list<TokenPtr>;
     using TokenTypeSet  = std::set<TokenType>;
     using TokenConvMap = std::map<String, TokenType>;
+    using PluralTokenRule = std::vector<std::pair<Token, Token>>;
 
 public:
     TokenPool();
@@ -29,12 +30,15 @@ private:
     TokenList           tokens_;
     TokenTypeSet   ignored_;
     TokenConvMap conv_;
+    PluralTokenRule rule_;
 
     void initIgnoredToken();
     void initConvToken();
+    void initPluralRule();
     void appendToken(const TokenPtr &ptr);
     bool isIgnoredToken(TokenType type);
     void convertTokenType(Token &token);
+    bool isPuralToken(const Token &token);
 };
 
 CSC_END

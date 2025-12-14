@@ -1,11 +1,25 @@
 #ifndef CSC_TOKENHOLDER_HPP
 #define CSC_TOKENHOLDER_HPP
 
-#include "csc/alias.hpp"
+#include <vector>
+#include <memory>
+#include "csc/lex/types.hpp"
 CSC_BEGIN
 
 class TokenHolder{
+public:
+    using TokenPtr = std::shared_ptr<Token>;
+    using TokenList = std::vector<TokenPtr>;
 
+public:
+    void      addToken(const TokenPtr &token);
+    Token& token();
+    Token& tokenAt(int index);
+    bool      empty() const noexcept;
+    Size_t    size() const noexcept;
+
+private:
+    TokenList tokens_;
 };
 
 CSC_END
