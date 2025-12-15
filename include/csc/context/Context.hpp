@@ -16,8 +16,8 @@ CSC_BEGIN
  * 作用域Scope同样是一个基于std::map的容器，用于保存Variable。
  * 变量Variable是由名称name和值values组成的一个键值对，name为字符串，values是一个可以含有多个值的列表，值可以是任意类型(std::any)。一个变量可以拥有多个值。
  * 
- * 当创建一个Context对象时，会默认创建一个根作用域，将其指针保存到成员m_root中，同时m_current也被设置为m_root，表示当前作用域
- * 为根作用域。Context中的所有操作都是基于当前作用域(m_current)进行。
+ * 当创建一个Context对象时，会默认创建一个根作用域，将其指针保存到成员root_中，同时current_也被设置为root_，表示当前作用域
+ * 为根作用域。Context中的所有操作都是基于当前作用域(current_)进行。
  */
 class Context{
 public:

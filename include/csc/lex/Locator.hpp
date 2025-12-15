@@ -13,9 +13,9 @@ public:
     int index() const;
 
 private:
-    int m_row;
-    int m_col;
-    int m_index;
+    int row_;
+    int col_;
+    int index_;
 };
 
 CSC_END

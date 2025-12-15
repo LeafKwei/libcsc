@@ -36,19 +36,19 @@ public:
     CscEditor& cleanVariable(const String &name);
 
 private:
-    bool m_autoEnter;
-    Context &m_context;
+    bool autoEnter_;
+    Context &context_;
 };
 
 template<typename... T>
 inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, T &&...values){
-    m_context.makeVariable(name, type, {std::forward<T>(values)...});
+    context_.makeVariable(name, type, {std::forward<T>(values)...});
     return *this;
 }
 
 template<typename... T>
 inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, int value1, T &&...values){
-    m_context.makeVariable(
+    context_.makeVariable(
         name, 
         type,
         {CppType<ValueType::Integer>::type{value1}, CppType<ValueType::Integer>::type{std::forward<T>(values)}...}
@@ -59,7 +59,7 @@ inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, in
 
 template<typename... T>
 inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, const char *value1, T &&...values){
-    m_context.makeVariable(
+    context_.makeVariable(
         name, 
         type,
         {CppType<ValueType::String>::type{value1}, CppType<ValueType::String>::type{std::forward<T>(values)}...}
@@ -70,13 +70,13 @@ inline CscEditor& CscEditor::makeVariable(const String &name, ValueType type, co
 
 template<typename... T>
 inline CscEditor& CscEditor::extendValues(const String &name, T &&...values){
-    m_context.extendValues(name, {std::forward<T>(values)...});
+    context_.extendValues(name, {std::forward<T>(values)...});
     return *this;
 }
 
 template<typename... T>
 inline CscEditor& CscEditor::extendValues(const String &name, int value1, T &&...values){
-    m_context.extendValues(
+    context_.extendValues(
         name, 
         {CppType<ValueType::Integer>::type{value1}, CppType<ValueType::Integer>::type{std::forward<T>(values)}...}
     );
@@ -86,7 +86,7 @@ inline CscEditor& CscEditor::extendValues(const String &name, int value1, T &&..
 
 template<typename... T>
 inline CscEditor& CscEditor::extendValues(const String &name, const char *value1, T &&...values){
-    m_context.extendValues(
+    context_.extendValues(
         name, 
         {CppType<ValueType::String>::type{value1}, CppType<ValueType::String>::type{std::forward<T>(values)}...}
     );

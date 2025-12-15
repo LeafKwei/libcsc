@@ -11,9 +11,11 @@ public:
     CharMngr(const String &str, int index=0);
     
     int         index() const noexcept;
-    int         length() const noexcept;
+    Size_t    length() const noexcept;
+    Size_t    surplus() const noexcept;
     bool      valid() const noexcept;
     Char      at(int index) const;
+    Char      near(int offset) const;          //获取index附近的Char
     Char      getch() const;
     Char      forward();
     Char      backward();
@@ -21,8 +23,8 @@ public:
     const String &str() const;
 
 private:
-    String m_str;
-    Size_t m_index;
+    String str_;
+    Size_t index_;
 };
 
 CSC_END

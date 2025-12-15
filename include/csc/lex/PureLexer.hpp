@@ -30,6 +30,8 @@ private:
     void addCharMapping(const String &chs, int id);
     int    addReader(ReaderReadable readable, ReaderRead read);
     int    addReader(ReaderReadable readable, ReaderRead read, ReaderFlag flag);
+    int    addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read);
+    int    addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFlag flag);
     int    addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFintor fintor, ReaderFlag flag);
 };
 

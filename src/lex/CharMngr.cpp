@@ -1,58 +1,66 @@
 #include "csc/lex/CharMngr.hpp"
 CSC_BEGIN
 
-CharMngr::CharMngr(const String &str, int index) : m_str(str), m_index(index){
-    if(m_index < 0) m_index = 0;
-    else if(m_index > m_str.size()) m_index = m_str.size();
+CharMngr::CharMngr(const String &str, int index) : str_(str), index_(index){
+    if(index_ < 0) index_ = 0;
+    else if(index_ > str_.size()) index_ = str_.size();
 }
 
 int CharMngr::index() const noexcept{
-    return m_index;
+    return index_;
 }
 
-int CharMngr::length() const noexcept{
-    return m_str.size();
+Size_t CharMngr::length() const noexcept{
+    return str_.size();
+}
+
+Size_t CharMngr::surplus() const noexcept{
+    return (str_.size() - index_);
 }
 
 bool CharMngr::valid() const noexcept{
-    return (m_index >= 0) && (m_index < m_str.size());
+    return (index_ >= 0) && (index_ < str_.size());
 }
 
 Char CharMngr::at(int index) const{
-    return m_str.at(index);
+    return str_.at(index);
+}
+
+Char CharMngr::near(int offset) const{
+    return str_.at(index_ + offset);
 }
 
 Char CharMngr::getch() const{
-    return m_str.at(m_index);
+    return str_.at(index_);
 }
 
 Char CharMngr::forward(){
-    auto index = m_index;
-    ++m_index;
+    auto index = index_;
+    ++index_;
     return at(index);
 }
 
 Char CharMngr::backward(){
-    auto index =m_index;
-    --m_index;
+    auto index =index_;
+    --index_;
     return at(index);
 }
 
 const String& CharMngr::str() const{
-    return m_str;
+    return str_;
 }
 
 void CharMngr::seek(SeekOption option, int offset){
     switch(option){
         case Set:
-            m_index = offset;
+            index_ = offset;
             break;
         case Cur:
-            m_index += offset;
+            index_ += offset;
             break;
         case End:
-            m_index = (m_str.size() > 0) ? m_str.size() - 1 : 0;
-            m_index += offset;
+            index_ = (str_.size() > 0) ? str_.size() - 1 : 0;
+            index_ += offset;
             break;
         default:
             break;

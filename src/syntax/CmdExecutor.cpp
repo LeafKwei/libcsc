@@ -51,7 +51,7 @@ bool CmdExecutor::execute(Context &context, ActionMngr &mngr){
         cmd -> run(operands_, context, mngr);
         mngr.notifyActionAfter(cmd -> type(), operands_, context);
 
-        /* 执行Command后，清空Operand列表，重设m_key */
+        /* 执行Command后，清空Operand列表，重设key_ */
         reset();
         return true;
     }

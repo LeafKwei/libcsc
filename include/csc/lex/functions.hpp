@@ -51,12 +51,14 @@ inline bool isOperator(Char ch) noexcept{
     }
 }
 
-inline bool isDelimitor(Char ch) noexcept{
+inline bool isLimitor(Char ch) noexcept{
     switch(ch){
-        case '\''  :
-        case '\"' :
         case '{'   :
         case '}'   :
+        case '('   :
+        case ')'   :
+        case '['   :
+        case ']'   :
             return true;
         default:
             return false;

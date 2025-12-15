@@ -23,13 +23,47 @@ LxErrno PureLexer::readToken(CharMngr &mngr, TokenPool &pool){
         return LxErrno::Bad;
     }
 
-    /* todo 保存token到pool */
-    
+    pool.addToken(pair.second);    
     return LxErrno::OK;
 }
 
 void PureLexer::installReaders(){
+    int id = 0;
 
+    ////////////////////////////////////////////////////////////////////////////////////////Blank
+    id = addReader(blank_readable, blank_read);
+    addCharMapping(" \t\n", id);   //注意有个空格
+
+    ////////////////////////////////////////////////////////////////////////////////////////Description
+    id = addReader(description_readable, description_read);
+    addCharMapping(";", id);
+
+    ////////////////////////////////////////////////////////////////////////////////////////Limitor
+    id = addReader(limitor_readable, limitor_read);
+    addCharMapping("{}()[]", id);
+
+    ////////////////////////////////////////////////////////////////////////////////////////Separator
+    id = addReader(separator_readable, separator_read);
+    addCharMapping(",", id);
+
+    ////////////////////////////////////////////////////////////////////////////////////////Identifier
+    id = addReader(identifier_readable, identifier_read);
+    addCharMapping("A-Z", id);
+    addCharMapping("a-z", id);
+    addCharMapping("_", id);
+
+    ////////////////////////////////////////////////////////////////////////////////////////Operator
+    id = addReader(operator_readable, operator_read);
+    addCharMapping(":=", id);
+
+    ////////////////////////////////////////////////////////////////////////////////////////Number
+    id = addReader(number_initor, number_readable, number_read);
+    addCharMapping("+-", id);
+    addCharMapping('0-9', id);
+
+    ////////////////////////////////////////////////////////////////////////////////////////String
+    id = addReader(string_readable, string_read);
+    addCharMapping("\"", id);
 }
 
 int PureLexer::findReader(CharMngr &mngr){
@@ -84,6 +118,14 @@ int PureLexer::addReader(ReaderReadable readable, ReaderRead read){
 
 int PureLexer::addReader(ReaderReadable readable, ReaderRead read, ReaderFlag flag){
     addReader(default_initor, readable, read, default_fintor, flag);
+}
+
+int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read){
+    addReader(initor, readable, read, default_fintor, 0);
+}
+
+int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFlag flag){
+    addReader(initor, readable, read, default_fintor, flag);
 }
 
 int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFintor fintor, ReaderFlag flag){

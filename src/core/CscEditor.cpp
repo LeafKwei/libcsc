@@ -1,40 +1,40 @@
 #include "csc/core/CscEditor.hpp"
 CSC_BEGIN
 
-CscEditor::CscEditor(Context &context) : m_autoEnter(false), m_context(context){}
+CscEditor::CscEditor(Context &context) : autoEnter_(false), context_(context){}
 
 CscEditor& CscEditor::autoEnterOn(){
-    m_autoEnter = true;
+    autoEnter_ = true;
     return *this;
 }
 
 CscEditor& CscEditor::autoEnterOff(){
-    m_autoEnter = false;
+    autoEnter_ = false;
     return *this;
 }
 
 CscEditor& CscEditor::makeScope(const String &name){
-    m_context.makeScope(name, m_autoEnter);
+    context_.makeScope(name, autoEnter_);
     return *this;
 }
 
 CscEditor& CscEditor::enterScope(const String &name){
-    m_context.enterScope(name);
+    context_.enterScope(name);
     return *this;
 }
 
 CscEditor& CscEditor::cleanScope(const String &name){
-    m_context.cleanScope(name);
+    context_.cleanScope(name);
     return *this;
 }
 
 CscEditor& CscEditor::leaveScope(){
-    m_context.leaveScope();
+    context_.leaveScope();
     return *this;
 }
 
 CscEditor& CscEditor::cleanVariable(const String &name){
-    m_context.cleanVariable(name);
+    context_.cleanVariable(name);
     return *this;
 }
 
