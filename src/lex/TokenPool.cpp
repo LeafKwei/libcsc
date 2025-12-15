@@ -1,3 +1,4 @@
+#include "csc/types.hpp"
 #include "csc/lex/TokenPool.hpp"
 CSC_BEGIN
 
@@ -25,11 +26,13 @@ void TokenPool::addToken(Token &&token){
 TokenHolder TokenPool::nextHolder(){
     TokenHolder holder;
     if(tokens_.empty()) return holder;
-    
-    /* 如果是数组等具有复数个元素的token  */
-    if(isPuralToken((*tokens_.front()))){
-        todo
-        return holder;
+
+    switch(tokens_.front() -> type){
+        case TokenType::Limitor:
+            fillHolderAsPlural(holder);
+            break;
+        default:
+            fillHolderAsNonPlural(holder);
     }
 
     return holder;
@@ -56,9 +59,9 @@ void TokenPool::initConvToken(){
 }
 
 void TokenPool::initPluralRule(){
-    rule_.push_back({Token{"[", TokenType::Limitor}, Token{"]", TokenType::Limitor}});
-    rule_.push_back({Token{"(", TokenType::Limitor}, Token{")", TokenType::Limitor}});
-    rule_.push_back({Token{"{", TokenType::Limitor}, Token{"}", TokenType::Limitor}});
+    rule_.push_back({    "{", "}"   });
+    rule_.push_back({    "(", ")"   });
+    rule_.push_back({    "[", "]"   });
 }
 
 void TokenPool::appendToken(const TokenPtr &ptr){
@@ -75,14 +78,42 @@ void TokenPool::convertTokenType(Token &token){
     token.type = pos -> second;
 }
 
-bool TokenPool::isPuralToken(const Token &token){
+bool TokenPool::isPluralTokenBegin(const String &str){
     for(const auto &rule : rule_){
-        if(rule.first.str == token.str && rule.first.type == token.type){  //如果接下来要读取的token是数组一类的具有复数个元素的token
-            return true;
-        }
+        if(rule.first == str) return true;
     }
 
     return false;
+}
+
+bool TokenPool::isPluralTokenEnd(const String &str){
+    for(const auto &rule : rule_){
+        if(rule.second == str) return true;
+    }
+
+    return false;
+}
+
+void TokenPool::fillHolderAsPlural(TokenHolder &holder){
+    if(!isPluralTokenBegin(tokens_.front() -> str)) throw LexExcept("Invalid limitor token: " + tokens_.front() -> str);
+    tokens_.pop_front();  //跳过作为起始的limitor
+
+    /* 持续添加后续token，直到遇到作为结尾的limitor */
+    while(!tokens_.empty()){
+        auto tp = tokens_.front();
+        if(tp -> type == TokenType::Limitor && isPluralTokenEnd(tp -> str)){
+            tokens_.pop_back();      //清理掉结尾的limitor
+            break;
+        }
+
+        holder.addToken(tp);
+        tokens_.pop_front();        //每添加一个token，删除list中对应的token
+    }
+}
+
+void TokenPool::fillHolderAsNonPlural(TokenHolder &holder){
+    holder.addToken(tokens_.front());
+    tokens_.pop_front();
 }
 
 CSC_END

@@ -15,6 +15,10 @@ Token& TokenHolder::tokenAt(int index){
     return *(tokens_.at(index));
 }
 
+bool TokenHolder::plural() const noexcept{
+    return tokens_.size() > 1;
+}
+
 bool TokenHolder::empty() const noexcept{
     return tokens_.empty();
 }
