@@ -28,10 +28,12 @@ TokenHolder TokenPool::nextHolder(){
     if(tokens_.empty()) return holder;
 
     switch(tokens_.front() -> type){
-        case TokenType::Limitor:
+        case TokenType::Limitor:              //如果当前token是一个定界符，那么则以多token模式填充TokenHolder
+            holder.plural_ = true;
             fillHolderAsPlural(holder);
             break;
-        default:
+        default:                                        //默认以单token模式填充TokenHolder
+            holder.plural_ = false;
             fillHolderAsNonPlural(holder);
     }
 
@@ -102,7 +104,7 @@ void TokenPool::fillHolderAsPlural(TokenHolder &holder){
     while(!tokens_.empty()){
         auto tp = tokens_.front();
         if(tp -> type == TokenType::Limitor && isPluralTokenEnd(tp -> str)){
-            tokens_.pop_back();      //清理掉结尾的limitor
+            tokens_.pop_front();      //清理掉结尾的limitor
             break;
         }
 

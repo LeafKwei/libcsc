@@ -67,6 +67,7 @@ void PureLexer::installReaders(){
 }
 
 int PureLexer::findReader(CharMngr &mngr){
+    /* 在chmapping中寻找是否有与指定字符对应的vector */
     auto pos = chmapping_.find(mngr.getch());
     if(pos == chmapping_.end()) return -1;
 

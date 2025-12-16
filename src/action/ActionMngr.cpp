@@ -20,11 +20,11 @@ void ActionMngr::notifyActionAfter(CommandType type, const OperandList &operands
  * 同时，当scope id为小于等于0的值时，将具有以下意义：
  *   0 --- Action为全局action，即无论Context中的scopeid是多少，都会尝试执行该Action
  */
-void ActionMngr::addActionBefore(int scopeid, Action::FuncRunnable runnable, Action::FuncRun run){
+void ActionMngr::addActionBefore(int scopeid, Action::ActRunnable runnable, Action::ActRun run){
     do_addAction(beforeActions_, scopeid, runnable, run);
 }
 
-void ActionMngr::addActionAfter(int scopeid, Action::FuncRunnable runnable, Action::FuncRun run){
+void ActionMngr::addActionAfter(int scopeid, Action::ActRunnable runnable, Action::ActRun run){
     do_addAction(afterActions_, scopeid, runnable, run);
 }
 
@@ -52,7 +52,7 @@ void ActionMngr::do_notifyAction(ScopedActionMap &map, int scopeid, CommandType 
     }
 }
 
-void ActionMngr::do_addAction(ScopedActionMap &map, int scopeid, const Action::FuncRunnable &runnable, const Action::FuncRun &run){
+void ActionMngr::do_addAction(ScopedActionMap &map, int scopeid, const Action::ActRunnable &runnable, const Action::ActRun &run){
     auto actions = map.find(scopeid);
     if(actions == map.end()){         //如果scope id在action map中没有对应的Action队列，则创建一个空队列
         map.insert({scopeid, ActionQueue()});

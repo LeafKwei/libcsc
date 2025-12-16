@@ -2,6 +2,7 @@
 #define CSC_COMMAND_HPP
 
 #include <vector>
+#include <functional>
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/lex/types.hpp"
@@ -10,15 +11,15 @@
 #include "csc/syntax/Operand.hpp"
 CSC_BEGIN
 
-class Command{
-public:
-    using OperandList = std::vector<Operand>;
+using OperandList    = std::vector<Operand>;
+using CmdRunnable = std::function<bool(const OperandList &operands)>;
+using CmdRun          = std::function<void(const OperandList &operands, Context &context, ActionCtl &ctl)>;
 
-public:
-    virtual bool       runnable(const OperandList &operands) =0;                                                /* 检查operand列表中的operand是否是当前命令所需 */
-    virtual void       run(const OperandList &operands, Context &context, ActionCtl &ctl) =0;   /* 使用给定的operand列表、Context对象和ActionCtl对象执行命令 */
-    virtual CommandType type() =0;                                                                                   /* 获取此命令的类型 */
-    virtual const String&   key() =0;                                                                                    /* 获取此命令的key。key需要根据此命令依赖的Token序列生成。CmdExecuter使用key来归纳和匹配命令 */
+struct Command{
+    String                key;
+    CommandType type;
+    CmdRunnable   runnable;
+    CmdRun            run;
 };
 
 CSC_END

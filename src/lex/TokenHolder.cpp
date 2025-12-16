@@ -16,7 +16,7 @@ Token& TokenHolder::tokenAt(int index){
 }
 
 bool TokenHolder::plural() const noexcept{
-    return tokens_.size() > 1;
+    return plural_;
 }
 
 bool TokenHolder::empty() const noexcept{

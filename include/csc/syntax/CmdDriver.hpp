@@ -4,7 +4,6 @@
 #include "csc/csc.hpp"
 #include "csc/lex/Locator.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
-#include "csc/syntax/initializer.hpp"
 
 CSC_BEGIN
 

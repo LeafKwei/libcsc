@@ -5,7 +5,7 @@
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
-#include "csc/context/ValueMaker.hpp"
+#include "csc/context/valtool.hpp"
 CSC_BEGIN
 
 /* ValueAccessor是对ValueKeeper的包装，对外提供多变量值的访问功能 */
@@ -15,7 +15,7 @@ public:
     ValueType type() const        { return type_; }
     bool          isEmpty() const  { return keeper_.empty(); }
     Size_t        size() const         { return keeper_.size(); }
-    Value        value() const       { return (keeper_.size() > 0) ?  keeper_.at(0) :  ValueMaker::makeZero(type_);}
+    Value        value() const       { return (keeper_.size() > 0) ?  keeper_.at(0) :  makeZeroValue(type_);}
     Value        value(int index) const          { return keeper_.at(index); }
     Value        operator[] (int index) const { return keeper_[index]; }
 

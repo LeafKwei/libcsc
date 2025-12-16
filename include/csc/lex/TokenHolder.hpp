@@ -6,6 +6,7 @@
 #include "csc/lex/types.hpp"
 CSC_BEGIN
 
+class TokenPool;
 class TokenHolder{
 public:
     using TokenPtr = std::shared_ptr<Token>;
@@ -20,6 +21,8 @@ public:
     Size_t    size() const noexcept;
 
 private:
+    friend      TokenPool;
+    bool         plural_;
     TokenList tokens_;
 };
 

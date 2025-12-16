@@ -9,8 +9,8 @@ CSC_BEGIN
 
 class ActionCtl{
 public:
-    virtual void addActionBefore(int scopeid, Action::FuncRunnable runnable, Action::FuncRun run) =0; /* 添加Action到beforeActions队列 */
-    virtual void addActionAfter(int scopeid, Action::FuncRunnable runnable, Action::FuncRun run) =0;   /* 添加Action到afterAction队列 */
+    virtual void addActionBefore(int scopeid, Action::ActRunnable runnable, Action::ActRun run) =0; /* 添加Action到beforeActions队列 */
+    virtual void addActionAfter(int scopeid, Action::ActRunnable runnable, Action::ActRun run) =0;   /* 添加Action到afterAction队列 */
 };
 
 CSC_END

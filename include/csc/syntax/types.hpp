@@ -16,8 +16,5 @@ enum class CommandType{
     EnterScope, ExitScope, Assign, ArrayAssign, Action
 };
 
-struct Command;
-class  CmdExecutorAgent;
-
 CSC_END
 #endif
