@@ -10,6 +10,7 @@
 #include "csc/lex/TokenHolder.hpp"
 CSC_BEGIN
 
+class PureLexer;
 class TokenPool{
 public:
     using TokenPtr = std::shared_ptr<Token>;
@@ -20,18 +21,19 @@ public:
 
 public:
     TokenPool();
-    void                addToken(const Token &token);
-    void                addToken(Token &&token);
     TokenHolder  nextHolder();
     bool               empty() const noexcept;
     Size_t             size() const noexcept;
 
 private:
-    TokenList           tokens_;
+    friend               PureLexer;          //addToken函数只提供给PureLexer使用，因此将PureLexer声明为友元，既能让PureLexer访问到addToken函数，又不会增加对外暴露的public函数的数量
+    TokenList          tokens_;
     TokenTypeSet   ignored_;
     TokenConvMap conv_;
     PluralTokenRule rule_;
 
+    void addToken(const Token &token);
+    void addToken(Token &&token);
     void initIgnoredToken();
     void initConvToken();
     void initPluralRule();

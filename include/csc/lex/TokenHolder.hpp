@@ -13,7 +13,6 @@ public:
     using TokenList = std::vector<TokenPtr>;
 
 public:
-    void      addToken(const TokenPtr &token);
     Token& token();
     Token& tokenAt(int index);
     bool      plural() const noexcept;
@@ -24,6 +23,8 @@ private:
     friend      TokenPool;
     bool         plural_;
     TokenList tokens_;
+
+    void addToken(const TokenPtr &token);
 };
 
 CSC_END
