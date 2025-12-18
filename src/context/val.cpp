@@ -1,5 +1,7 @@
 #include <cstdlib>
-#include "csc/context/valtool.hpp"
+#include <iostream>
+#include <sstream>
+#include "csc/context/val.hpp"
 CSC_BEGIN
 
 ValueType valueTypeof(const Token &token){
@@ -47,6 +49,29 @@ Value makeZeroValue(ValueType type){
         default:
             return Value{};
     }
+}
+
+String valueToString(const Value &value, ValueType type){
+    std::stringstream sstream;
+
+    switch(type){
+        case ValueType::Bool:
+            sstream << (std::any_cast<CppType<ValueType::Bool>::type>(value) ? "true" : "false");
+            break;
+        case ValueType::Integer:
+            sstream << std::any_cast<CppType<ValueType::Integer>::type>(value);
+            break;
+        case ValueType::Double:
+            sstream << std::any_cast<CppType<ValueType::Double>::type>(value);
+            break;
+        case ValueType::String:
+            return std::any_cast<CppType<ValueType::String>::type>(value);
+            break;
+        default:
+            return "";
+    }
+
+    return sstream.str();
 }
 
 CSC_END

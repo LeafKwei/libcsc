@@ -13,7 +13,6 @@
 #include "csc/core/types.hpp"
 CSC_BEGIN
 
-String valueToString(const Value &value, ValueType type);
 String toEscapingString(const String &str);
 
 //=================== 内联函数 //===================

@@ -1,4 +1,5 @@
 #include "csc/core/CscStrSeeker.hpp"
+#include "csc/context/val.hpp"
 #include "csc/utility/utility.hpp"
 CSC_BEGIN
 
@@ -16,14 +17,16 @@ void CscStrSeeker::leaveScope(UID id, const String &name){
     buffer_ << "::" << name << std::endl;
 }
 
-void CscStrSeeker::values(const String &name, const ValueAccessor &accessor){
+void CscStrSeeker::values(const String &name, const Querier &querier){
     writeIndent();
 
-    if(accessor.size() == 1){                              //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
+    if(querier.querySize() == 1){                              //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
         buffer_ << name << " = ";
+
+        const auto &unit = querier.queryValue(0);
         writeValue(
-            valueToString(accessor.value(), accessor.type()), 
-            accessor.type()
+            valueToString(unit.value, unit.type),
+            unit.type
         );
 
         buffer_ << std::endl;
@@ -31,11 +34,12 @@ void CscStrSeeker::values(const String &name, const ValueAccessor &accessor){
     else{                                                             //否则按照数组格式处理，挨个处理每个值
         buffer_ << name << " = " << "{"; 
 
-        for(Size_t index = 0; index < accessor.size(); index++){
+        for(Size_t index = 0; index < querier.querySize(); index++){
             if(index > 0) buffer_ << ", ";
+            const auto &unit = querier.queryValue(index);
             writeValue(
-                valueToString(accessor.value(index), accessor.type()), 
-                accessor.type()
+                valueToString(unit.value, unit.type), 
+                unit.type
             );
         }
 

@@ -5,15 +5,15 @@ using namespace csc;
 int main(void){
     Context context;
 
-    context.makeVariable("what", ValueType::String, "Hello World!");
+    context.makeVariable("what", ValueType::String, String("Hello World!"));
     context.makeScope("users", true)
         .makeScope("tom", true)
-            .makeVariable("name", ValueType::String, "tom")
+            .makeVariable("name", ValueType::String, String("tom"))
             .makeVariable("age", ValueType::String, "18")
             .leaveScope()
         .makeScope("jerry", true)
-            .makeVariable("name", ValueType::String, "jerry")
-            .makeVariable("age", ValueType::String, "18");
+            .makeVariable("name", ValueType::String, String("jerry"))
+            .makeVariable("age", ValueType::String, String("18"));
 
     context.restart();
     std::cout << std::any_cast<String>(context.getValueUnit("what").value) << std::endl;
@@ -24,7 +24,7 @@ int main(void){
     context.clean();
 
     context.makeScope("Kunkun", true)
-        .makeVariable("music", ValueType::String, "Chicken you are so beautiful.");
+        .makeVariable("music", ValueType::String, String("Chicken you are so beautiful."));
 
     auto pos = context.postion();
     context.restart();
@@ -32,4 +32,14 @@ int main(void){
     context.setPostion(pos);
     std::cout << "Relation after setPostion: " << context.relation() << std::endl;
     std::cout << "Kunkun::music: " <<  std::any_cast<String>(context.getValueUnit("music").value) << std::endl;
+
+    std::cout << "----------------------------" << std::endl;
+    context.makeVariable("names", ValueType::String, {String("Tom"), String("Jerry"), String("Jimi"), String("Smith"), String("Amili")});
+    Querier querier = context.querier();
+    if(querier.hasVariable("names")){
+        querier.captureVariable("names");
+        for(auto i = 0; i < querier.querySize(); i++){
+            std::cout << std::any_cast<String>(querier.queryValue(i).value) << std::endl;
+        }
+    }
 }

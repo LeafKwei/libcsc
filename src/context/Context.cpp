@@ -67,10 +67,6 @@ Context::Pos Context::postion() const{
     return Pos{current_};
 }
 
-Detector Context::detector(bool absoluted) const{
-    return absoluted ? Detector(root_) : Detector(current_);
-}
-
 void Context::setPostion(const Pos &pos){
     if(pos.scope.expired()){
         throw ContextExcept(std::string("Expired scope postion."));
@@ -83,6 +79,19 @@ String Context::relation(const String &separator) const{
     std::stringstream stream;
     do_relation(current_, stream, separator);
     return stream.str();
+}
+
+Querier Context::querier(bool absolute) const{
+    return (absolute) ? Querier{root_} : Querier{current_};
+}
+
+Querier Context::querier(const String &name) const{
+    auto pos = current_ -> scopes.find(name);
+    if(pos == current_ -> scopes.end()){
+        throw ContextExcept(std::string("No such scope: ") + name);
+    }
+
+    return Querier(pos -> second);
 }
 
 Context& Context::makeVariable(const String &name, ValueType type, const Value &value){
@@ -112,26 +121,13 @@ Context& Context::cleanVariable(const String &name){
 }
 
 Context::Unit Context::getValueUnit(const String &name) const{
-    auto iterator = current_ -> variables.find(name);
-    if(iterator == current_ -> variables.end()){
+    Querier querier(current_);
+
+    if(!querier.hasVariable(name)){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
 
-    /* 当变量中存在值时，返回首个值，如果变量不存在任何值(空变量)，则返回变量类型对应的零值 */
-    auto variable = iterator -> second;
-    return (variable -> values.size() > 0) ? 
-        Unit{variable -> values.at(0), variable -> type} : 
-        Unit{ValueMaker::makeZero(variable -> type), variable -> type};
-}
-
-Context::Accessor Context::getValueAccessor(const String &name) const{
-    auto iterator = current_ -> variables.find(name);
-    if(iterator == current_ -> variables.end()){
-        throw ContextExcept(std::string("No such variable: ") + name);
-    }
-
-    auto variable = iterator -> second;
-    return ValueAccessor(variable -> values, variable -> type);
+    return querier.directValue(name);
 }
 
 bool Context::probeVariable(const String &name) const{
@@ -235,7 +231,9 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     auto &variables = scope -> variables;
     if(variables.size() != 0){
         for(auto &variable : variables){
-            seeker.values(variable.second -> name, ValueAccessor(variable.second -> values, variable.second -> type));
+            Querier querier(scope);
+            querier.captureVariable(variable.second -> name);
+            seeker.values(variable.second -> name, querier);
         }
     }
 

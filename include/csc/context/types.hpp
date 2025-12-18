@@ -44,6 +44,7 @@ struct Variable;
 struct Scope;
 using Value = std::any;
 using VariablePtr = std::shared_ptr<Variable>;
+using VariableWkr = std::weak_ptr<Variable>;
 using ScopePtr = std::shared_ptr<Scope>;
 using ScopeWkr = std::weak_ptr<Scope>;
 using VariableKeeper = std::map<String, VariablePtr>;

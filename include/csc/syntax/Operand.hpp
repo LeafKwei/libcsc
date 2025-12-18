@@ -4,7 +4,7 @@
 #include "csc/csc.hpp"
 #include "csc/lex/TokenHolder.hpp"
 #include "csc/context/types.hpp"
-#include "csc/context/valtool.hpp"
+#include "csc/context/val.hpp"
 #include "csc/syntax/types.hpp"
 CSC_BEGIN
 

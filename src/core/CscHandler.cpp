@@ -12,15 +12,15 @@ bool CscHandler::accessible(const String &path, bool v){
     if(helper.isRoot()) return !(v); //对于根路径'/'的特别处理，当参数v为true时，由于根目录不是变量，所以要返回false
 
     auto end = (helper.size() > 0) ? helper.size() - 1 : 0;                   //仅遍历路径最后一个item之前的item
-    Detector detector = context_.detector(helper.isAbsolute());
+    auto querier = context_.querier(helper.isAbsolute());
 
     /* 对于路径的前面部分，都视作scope名称检查 */
     for(Size_t i = 0; i < end; i++){
-        if(!detector.tryEnter(helper.item(i))) return false;
+        if(!querier.tryEnter(helper.item(i))) return false;
     }
 
     /* 最后一部分则根据参数v决定是作为scope名称还是variable名称检查 */
-    return (v) ? detector.detectVariable(helper.lastItem()) : detector.detectScope(helper.lastItem());
+    return (v) ? querier.hasVariable(helper.lastItem()) : querier.hasScope(helper.lastItem());
 }
 
 String CscHandler::absolutePath(){

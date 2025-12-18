@@ -102,14 +102,15 @@ template<>
 inline ArrBool CscHandler::getValue<ArrBool>(const String &name){
     ArrBool array;
 
-    const auto &accessor = context_.getValueAccessor(name);
-    if(accessor.type() != ValueType::Bool){
+    auto querier = context_.querier();
+    querier.captureVariable(name);
+    if(querier.queryType() != ValueType::Bool){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>::type).name()));
     }
 
-    for(Size_t index = 0; index < accessor.size(); index++){
+    for(Size_t index = 0; index < querier.querySize(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Bool>::type>(accessor.value(index))
+            std::any_cast<CppType<ValueType::Bool>::type>(querier.queryValue(index))
         );
     }
 
@@ -120,15 +121,16 @@ template<>
 inline ArrInt CscHandler::getValue<ArrInt>(const String &name){
     ArrInt array;
 
-    const auto &accessor = context_.getValueAccessor(name);
-    if(accessor.type() != ValueType::Integer){
+    auto querier = context_.querier();
+    querier.captureVariable(name);
+    if(querier.queryType() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(int).name()));
     }
 
-    for(Size_t index = 0; index < accessor.size(); index++){
+    for(Size_t index = 0; index < querier.querySize(); index++){
         array.push_back(
             static_cast<int>(
-                std::any_cast<CppType<ValueType::Integer>::type>(accessor.value(index))
+                std::any_cast<CppType<ValueType::Integer>::type>(querier.queryValue(index))
             )
         );
     }
@@ -140,14 +142,15 @@ template<>
 inline ArrLong CscHandler::getValue<ArrLong>(const String &name){
     ArrLong array;
 
-    const auto &accessor = context_.getValueAccessor(name);
-    if(accessor.type() != ValueType::Integer){
+    auto querier = context_.querier();
+    querier.captureVariable(name);
+    if(querier.queryType() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>::type).name()));
     }
 
-    for(Size_t index = 0; index < accessor.size(); index++){
+    for(Size_t index = 0; index < querier.querySize(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Integer>::type>(accessor.value(index))
+            std::any_cast<CppType<ValueType::Integer>::type>(querier.queryValue(index))
         );
     }
 
@@ -158,14 +161,15 @@ template<>
 inline ArrDouble CscHandler::getValue<ArrDouble>(const String &name){
     ArrDouble array;
 
-    const auto &accessor = context_.getValueAccessor(name);
-    if(accessor.type() != ValueType::Double){
+    auto querier = context_.querier();
+    querier.captureVariable(name);
+    if(querier.queryType() != ValueType::Double){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>::type).name()));
     }
 
-    for(Size_t index = 0; index < accessor.size(); index++){
+    for(Size_t index = 0; index < querier.querySize(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Double>::type>(accessor.value(index))
+            std::any_cast<CppType<ValueType::Double>::type>(querier.queryValue(index))
         );
     }
 
@@ -176,14 +180,15 @@ template<>
 inline ArrString CscHandler::getValue<ArrString>(const String &name){
     ArrString array;
 
-    const auto &accessor = context_.getValueAccessor(name);
-    if(accessor.type() != ValueType::String){
+    auto querier = context_.querier();
+    querier.captureVariable(name);
+    if(querier.queryType() != ValueType::String){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>::type).name()));
     }
 
-    for(Size_t index = 0; index < accessor.size(); index++){
+    for(Size_t index = 0; index < querier.querySize(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::String>::type>(accessor.value(index))
+            std::any_cast<CppType<ValueType::String>::type>(querier.queryValue(index))
         );
     }
 
