@@ -1,51 +1,43 @@
 #include <iostream>
 #include <sstream>
-#include "csc/utility/utility.hpp"
+#include "csc/syntax/opr.hpp"
 #include "csc/syntax/Operand.hpp"
 CSC_BEGIN
 
 Operand::Operand(const TokenHolder &holder) : holder_(holder){
-
+    initOperand();
 }
 
 Operand::Operand(TokenHolder &&holder) : holder_(std::move(holder)){
-
+    initOperand();
 }
 
-const Token& Operand::token() const{
-
+Operand::Holder& Operand::holder(){
+    return holder_;
 }
 
-const Token& Operand::token(int index) const{
-
+String Operand::key() {
+    return genKeyFrom(type_, holder_.token().str);
 }
 
-TokenType Operand::tokenType() const noexcept{
-
+Operand::Type Operand::type() const noexcept{
+    return type_;
 }
 
-TokenType Operand::tokenType(int index) const{
-    
+void Operand::initOperand(){
+    initType();
 }
 
-Size_t Operand::tokenSize() const noexcept{
+void Operand::initType(){
+    auto type = operandTypeOf(holder_.token());
 
-}
+    /* 如果token转换得到的OperandType是Value类型，那么根据Holder内的token数量是否是复数决定此Operand的类型是否是Values类型 */
+    if(type == OperandType::Value && holder_.plural()){
+        type_ = OperandType::Values;
+        return;
+    }
 
-OperandType Operand::operandType() const noexcept{
-
-}
-
-String Operand::key() const{
-
-}
-
-void Operand::updateOperandType(){
-    
-}
-
-OperandType Operand::getOperandTypeof(const Token &token) const{
-
+    type_ = type;
 }
 
 CSC_END

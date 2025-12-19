@@ -33,12 +33,12 @@ public:
 
     bool hasOperand() const noexcept;                                    /* 检查operands_中是否存在operand*/
     bool reached() const noexcept;                                          /* 检查key_的长度是否已达到了cmdListMap_中最长的key的长度 */
-    void pushToken(const Token &token);                               /* 将指定Token转换为operand后压入operand列表，根据Token更新key_字段 */
+    void pushHolder(const TokenHolder &holder);                 /* 将指定TokenHolder转换为operand后压入operand列表，根据TokenHolder更新key_字段 */
+    void pushHolder(TokenHolder &&holder);                        /* 将指定TokenHolder转换为operand后压入operand列表，根据TokenHolder更新key_字段 */
     bool executable() const;                                                     /* 检查当前的key_是否有对应的CmdList，即是否有匹配的可执行命令 */
     bool execute(Context &context, ActionMngr &mngr);      /* 使用当前的Token列表和给定的Context对象执行一条命令(即Command对象)，如果命令执行成功则返回true，如果操作数(而非类型)不匹配则返回false，此时应该继续pushToken以匹配后续命令 */
 
 private:
-    friend            CmdExecutorAgent;
     Size_t            maxKeySize_;
     String            keyseq_;
     OperandList  operands_;

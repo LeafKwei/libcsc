@@ -10,25 +10,23 @@ CSC_BEGIN
 
 class Operand{
 public:
+    using Holder = TokenHolder;
+    using Type    = OperandType;
 
 public:
     Operand(const TokenHolder &holder);
     Operand(TokenHolder &&holder);
 
-    const Token& token() const;                                 //获取token
-    const Token& token(int index) const;                  //获取指定位置的token
-    TokenType      tokenType() const noexcept;         //获取token类型
-    TokenType      tokenType(int index) const;          //获取指定位置的token类型
-    Size_t              tokenSize() const noexcept;         //获取总token数量
-    OperandType operandType() const noexcept;     //获取OperandType类型
-    String              key() const;                                    //获取Operand对应的key，key将用于CmdExecutor的命令查找
+    Holder& holder();
+    String     key();
+    Type       type() const noexcept;
 
 private:
     TokenHolder     holder_;
     OperandType    type_;
-    
-    void                updateOperandType();
-    OperandType getOperandTypeof(const Token &token) const;
+
+    void initOperand();
+    void initType();
 };
 
 CSC_END

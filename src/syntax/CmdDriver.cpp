@@ -17,7 +17,7 @@ void CmdDriver::do_execute(Context &context){
 }
 
 void CmdDriver::installCommands(){
-    stdexec_initializer(executor_);
+    
 }
 
 String CmdDriver::makeExceptMessage(const String &script, const Locator &locator){
