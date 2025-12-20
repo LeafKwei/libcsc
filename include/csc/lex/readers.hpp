@@ -245,6 +245,7 @@ inline TokenPair string_read(CharMngr &mngr, Any &local){
         auto ch = mngr.getch();
 
         if(escape){
+            escape = false;
             pair.second.str.push_back(ch);
             mngr.forward();
             continue;
