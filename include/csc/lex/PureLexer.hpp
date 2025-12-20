@@ -18,6 +18,7 @@ public:
     using CharMapping = std::map<Char, std::vector<int>>;
 
 public:
+    PureLexer();
     LxErrno readToken(CharMngr &mngr, TokenPool &pool);
 
 private:

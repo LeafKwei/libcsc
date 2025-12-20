@@ -18,15 +18,17 @@ public:
     Operand(TokenHolder &&holder);
 
     Holder& holder();
-    String     key();
+    String     key() const noexcept;
     Type       type() const noexcept;
 
 private:
+    String                key_;
     TokenHolder     holder_;
     OperandType    type_;
 
     void initOperand();
     void initType();
+    void initKey();
 };
 
 CSC_END

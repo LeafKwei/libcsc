@@ -16,8 +16,8 @@ Operand::Holder& Operand::holder(){
     return holder_;
 }
 
-String Operand::key() {
-    return genKeyFrom(type_, holder_.token().str);
+String Operand::key() const noexcept{
+    return key_;
 }
 
 Operand::Type Operand::type() const noexcept{
@@ -26,6 +26,7 @@ Operand::Type Operand::type() const noexcept{
 
 void Operand::initOperand(){
     initType();
+    initKey();
 }
 
 void Operand::initType(){
@@ -38,6 +39,10 @@ void Operand::initType(){
     }
 
     type_ = type;
+}
+
+void Operand::initKey(){
+    key_ = genKeyFrom(type_, holder_.token().str);   
 }
 
 CSC_END

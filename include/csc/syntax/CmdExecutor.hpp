@@ -8,6 +8,7 @@
 #include "csc/lex/types.hpp"
 #include "csc/syntax/types.hpp"
 #include "csc/syntax/Operand.hpp"
+#include "csc/syntax/Keyseq.hpp"
 #include "csc/context/Context.hpp"
 #include "csc/action/ActionMngr.hpp"
 CSC_BEGIN
@@ -21,8 +22,7 @@ CSC_BEGIN
  */
 class CmdExecutor{
 public:
-    using CmdPtr  = std::shared_ptr<Command>;
-    using CmdList = std::vector<CmdPtr>;
+    using CmdList = std::vector<Command>;
     using CmdListMap = std::map<String, CmdList>;
     using OperandList = std::vector<Operand>;
 
@@ -40,11 +40,13 @@ public:
 
 private:
     Size_t            maxKeySize_;
-    String            keyseq_;
+    Keyseq          keyseq_;
     OperandList  operands_;
     CmdListMap cmdListMap_;
 
-    void addCommand(CmdPtr cmd);
+    void installCmd();
+    void addCommand(const String &key, CommandType type, CmdRun run);
+    void addCommand(const String &key, CommandType type, CmdRunnable runnable, CmdRun run);
     void updateKeyseq(const Operand &operand);
     void reset();
 };
