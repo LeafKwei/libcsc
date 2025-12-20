@@ -10,6 +10,7 @@ ValueType valueTypeof(const Token &token){
             if(token.str == "true" || token.str == "false") return ValueType::Bool;
             return ValueType::Unknown;
         case TokenType::Integer:
+        case TokenType::HexInteger:
             return ValueType::Integer;
         case TokenType::Float:
             return ValueType::Double;
