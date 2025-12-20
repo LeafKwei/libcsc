@@ -1,6 +1,8 @@
 **0.7.0**
 
-
+1. 由于0.6.9及之前的版本存在一个无法忽视的问题——Lexer解析数组时，如果数组的元素是字符串，并且字符串中含有`}`时，相关的Reader将无法获取到正确的数组边界，从而导致token读取出错，因此在0.7.0版本中，重构了包括Lexer、TokenReader在内的诸多内容。因为Token属于底层组件，因此重构时也影响到了诸多上层组件，主要包括command目录下的commands、CmdExecutor。相应的，添加了TokenHolder作为中间层，并以此提供了对数组等由多个token组成的复杂token的访问能力。
+2. 将Command和TokenReader全部由旧版本的类继承更改为了function实现，使之更加简洁清晰
+3. 添加了TokenPool用于缓存Token/TokenHolder，现在CmdDriver会在script被全部分解为Token后再进行命令处理，可以更早地报告出非法Token
 
 **0.6.9**
 

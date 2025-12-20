@@ -184,8 +184,8 @@ void enterScope(UID id, const String &name)
     当进入一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
 void leaveScope(UID id, const String &name)
     当离开一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
-void values(const String &name, const ValueAccessor &accessor)
-    当获取到该作用域中的一个变量时，将调用此函数。name是变量名称，values是变量值列表
+void values(const String &name, const Querier &querier)
+    当获取到该作用域中的一个变量时，将调用此函数。name是变量名称，querier可用于依次查询变量中的每个值
 ```
 
 
