@@ -210,7 +210,7 @@ inline void number_else(CharMngr &mngr, number_local &local, TokenPair &pair){
             break;
         }
 
-        pair.second.str.push_back('.');
+        pair.second.str.push_back(ch);
         mngr.forward();
     }
 }

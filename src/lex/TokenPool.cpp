@@ -5,6 +5,7 @@ CSC_BEGIN
 TokenPool::TokenPool(){
     initIgnoredToken();
     initConvToken();
+    initPluralRule();
 }
 
 void TokenPool::addToken(const Token &token){
