@@ -1,22 +1,24 @@
 set(CSC_SRC
 	action/ActionMngr.cpp
     context/Context.cpp
-	context/Detector.cpp
-	context/ValueMaker.cpp
+	context/Querier.cpp
+	context/val.cpp
     core/CscEditor.cpp
     core/CscHandler.cpp
     core/CscStrSeeker.cpp
-	core/PathHelper.cpp
     lex/CharMngr.cpp
     lex/Lexer.cpp
     lex/Locator.cpp
     lex/PureLexer.cpp
-    lex/readers.cpp
+    lex/TokenHolder.cpp
+    lex/TokenPool.cpp
     syntax/CmdDriver.cpp
 	syntax/CmdExecutor.cpp
-    syntax/commands.cpp
 	syntax/Operand.cpp
+    syntax/Keyseq.cpp
+    syntax/opr.cpp
     utility/utility.cpp
+    utility/PathHelper.cpp
 )
 
 include_directories(
