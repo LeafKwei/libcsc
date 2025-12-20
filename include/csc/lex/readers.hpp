@@ -141,11 +141,10 @@ inline void number_initor(Any &local){
     local = load;
 }
 
-inline bool number_testHex(CharMngr &mngr, Any &local){
+inline bool number_testHex(CharMngr &mngr, number_local &local){
     if(mngr.surplus() >= 2){
         if(mngr.near(0) == '0' && mngr.near(1) == 'x'){    //如果存在前缀0x
-            auto &load = std::any_cast<number_local&>(local);
-            load.hex = true;
+            local.hex = true;
             return true;
         }
     }
@@ -153,11 +152,10 @@ inline bool number_testHex(CharMngr &mngr, Any &local){
     return false;
 }
 
-inline bool number_testSign(CharMngr &mngr, Any &local){
+inline bool number_testSign(CharMngr &mngr, number_local &local){
     if(mngr.surplus() >= 2){
         if((mngr.near(0) == '+' || mngr.near(0) == '-') && isNumber(mngr.near(1))){
-            auto &load = std::any_cast<number_local&>(local);
-            load.sign = true;
+            local.sign = true;
             return true;
         }
     }
@@ -165,12 +163,13 @@ inline bool number_testSign(CharMngr &mngr, Any &local){
     return false;
 }
 
-inline bool number_testNormal(CharMngr &mngr, Any &local){
+inline bool number_testNormal(CharMngr &mngr, number_local &local){
     return (isNumber(mngr.getch()));
 }
 
 inline bool number_readable(CharMngr &mngr, Any &local){
-    return (number_testNormal(mngr, local)) || (number_testSign(mngr, local)) || (number_testHex(mngr, local)); 
+    auto &load = std::any_cast<number_local&>(local);
+    return (number_testNormal(mngr, load)) || (number_testSign(mngr, load)) || (number_testHex(mngr, load)); 
 }
 
 inline void number_hex(CharMngr &mngr, number_local &local, TokenPair &pair){

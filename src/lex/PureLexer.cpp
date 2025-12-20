@@ -133,10 +133,10 @@ int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRea
     readers_.push_back(TokenReader{
         0,
         0,
-        default_initor,
+        initor,
         readable,
         read,
-        default_fintor
+        fintor
     });
 
     return readers_.size() - 1;
