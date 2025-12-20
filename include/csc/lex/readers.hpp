@@ -67,7 +67,7 @@ inline TokenPair limitor_read(CharMngr &mngr, Any &local){
 
 ////////////////////////////////////////////////////////////////////////////////////////Separator
 inline bool separator_readable(CharMngr &mngr, Any &local){
-    return (isLimitor(mngr.getch()));
+    return (isSeparator(mngr.getch()));
 }
 
 inline TokenPair separator_read(CharMngr &mngr, Any &local){
@@ -169,7 +169,7 @@ inline bool number_testNormal(CharMngr &mngr, number_local &local){
 
 inline bool number_readable(CharMngr &mngr, Any &local){
     auto &load = std::any_cast<number_local&>(local);
-    return (number_testNormal(mngr, load)) || (number_testSign(mngr, load)) || (number_testHex(mngr, load)); 
+    return ( (number_testHex(mngr, load) || number_testNormal(mngr, load)) || (number_testSign(mngr, load)));  //hex需要首先检测，避免其前缀0x被识别为普通数字
 }
 
 inline void number_hex(CharMngr &mngr, number_local &local, TokenPair &pair){
