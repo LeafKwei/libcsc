@@ -189,7 +189,9 @@ inline void number_hex(CharMngr &mngr, number_local &local, TokenPair &pair){
 }
 
 inline void number_else(CharMngr &mngr, number_local &local, TokenPair &pair){
-    pair.second.str.push_back(mngr.forward());  //压入符号
+    if(local.sign){
+        pair.second.str.push_back(mngr.forward());  //压入符号
+    }
 
     while(mngr.valid()){
         auto ch = mngr.getch();
