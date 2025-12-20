@@ -4,10 +4,14 @@
 #include "csc/syntax/CmdDriver.hpp"
 #include "csc/syntax/commands.hpp"
 CSC_BEGIN
+CmdDriver::CmdDriver(){
+    
+}
 
-void CmdDriver::drive(const String &script, Context &context){
+int CmdDriver::drive(const String &script, Context &context){
     Lexer lexer(script);
     TokenPool pool;
+    auto cnt = 0;
     auto err = LxErrno::OK;
 
     while((err = lexer.readToken(pool)) == LxErrno::OK);
@@ -23,6 +27,7 @@ void CmdDriver::drive(const String &script, Context &context){
         executor_.pushHolder(pool.nextHolder());
         if(executor_.executable()){
             auto ok = executor_.execute(context, mngr_);
+            cnt = (ok) ? cnt + 1 : cnt;
         }
     }
 
@@ -30,6 +35,8 @@ void CmdDriver::drive(const String &script, Context &context){
     if(!executor_.empty()){
         throw CommandExcept("Unused tokens in executor.");
     }
+
+    return cnt;
 }
 
 String CmdDriver::makeExceptMessage(const String &script, const Locator &locator){

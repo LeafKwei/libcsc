@@ -2,13 +2,13 @@
 #include "csc/action/ActionMngr.hpp"
 CSC_BEGIN
 
-void ActionMngr::notifyActionBefore(CommandType type, const OperandList &operands, Context &context){
+void ActionMngr::notifyActionBefore(CommandType type, OperandList &operands, Context &context){
     do_notifyScopedAction(beforeActions_, type, operands, context);
     do_notifyGlobalAction(beforeActions_, type, operands, context);
     checkAndRemoveAction(beforeActions_, type, context.scopeMetaData().id);
 }
 
-void ActionMngr::notifyActionAfter(CommandType type, const OperandList &operands, Context &context){
+void ActionMngr::notifyActionAfter(CommandType type, OperandList &operands, Context &context){
     do_notifyScopedAction(afterActions_, type, operands, context);
     do_notifyGlobalAction(afterActions_, type, operands, context);
     checkAndRemoveAction(afterActions_, type, context.scopeMetaData().id);
@@ -28,15 +28,15 @@ void ActionMngr::addActionAfter(int scopeid, Action::ActRunnable runnable, Actio
     do_addAction(afterActions_, scopeid, runnable, run);
 }
 
-void ActionMngr::do_notifyScopedAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context){
+void ActionMngr::do_notifyScopedAction(ScopedActionMap &map, CommandType type, OperandList &operands, Context &context){
     do_notifyAction(map, context.scopeMetaData().id, type, operands, context);
 }
 
-void ActionMngr::do_notifyGlobalAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context){
+void ActionMngr::do_notifyGlobalAction(ScopedActionMap &map, CommandType type, OperandList &operands, Context &context){
     do_notifyAction(map, 0, type, operands, context);
 }
 
-void ActionMngr::do_notifyAction(ScopedActionMap &map, int scopeid, CommandType type, const OperandList &operands, Context &context){
+void ActionMngr::do_notifyAction(ScopedActionMap &map, int scopeid, CommandType type, OperandList &operands, Context &context){
     /* 根据Scope的id找到对应的Action队列*/
     auto actions = map.find(scopeid);
     if(actions == map.end()){
@@ -52,7 +52,7 @@ void ActionMngr::do_notifyAction(ScopedActionMap &map, int scopeid, CommandType 
     }
 }
 
-void ActionMngr::do_addAction(ScopedActionMap &map, int scopeid, const Action::ActRunnable &runnable, const Action::ActRun &run){
+void ActionMngr::do_addAction(ScopedActionMap &map, int scopeid, Action::ActRunnable &runnable, Action::ActRun &run){
     auto actions = map.find(scopeid);
     if(actions == map.end()){         //如果scope id在action map中没有对应的Action队列，则创建一个空队列
         map.insert({scopeid, ActionQueue()});

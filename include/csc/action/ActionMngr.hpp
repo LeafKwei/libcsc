@@ -13,8 +13,8 @@ public:
     using OperandList           = std::vector<Operand>;
 
 public:
-    void notifyActionBefore(CommandType type, const OperandList &operands, Context &context);
-    void notifyActionAfter(CommandType type, const OperandList &operands, Context &context);
+    void notifyActionBefore(CommandType type, OperandList &operands, Context &context);
+    void notifyActionAfter(CommandType type, OperandList &operands, Context &context);
     void addActionBefore(int scopeid, Action::ActRunnable runnable, Action::ActRun run) override; /* 添加Action到beforeActions队列 */
     void addActionAfter(int scopeid, Action::ActRunnable runnable, Action::ActRun run) override;   /* 添加Action到afterAction队列 */
 
@@ -22,10 +22,10 @@ private:
     ScopedActionMap beforeActions_;
     ScopedActionMap afterActions_;
 
-    void do_notifyScopedAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context);
-    void do_notifyGlobalAction(ScopedActionMap &map, CommandType type, const OperandList &operands, Context &context);
-    void do_notifyAction(ScopedActionMap &map, int scopeid, CommandType type, const OperandList &operands, Context &context);
-    void do_addAction(ScopedActionMap &map, int scopeid, const Action::ActRunnable &runnable, const Action::ActRun &run);
+    void do_notifyScopedAction(ScopedActionMap &map, CommandType type, OperandList &operands, Context &context);
+    void do_notifyGlobalAction(ScopedActionMap &map, CommandType type, OperandList &operands, Context &context);
+    void do_notifyAction(ScopedActionMap &map, int scopeid, CommandType type, OperandList &operands, Context &context);
+    void do_addAction(ScopedActionMap &map, int scopeid, Action::ActRunnable &runnable, Action::ActRun &run);
     void checkAndRemoveAction(ScopedActionMap &map, CommandType type, int scopeid);
 };
 

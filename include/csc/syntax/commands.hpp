@@ -68,16 +68,6 @@ inline void assginplural_run(OperandList &operands, Context &context, ActionCtl 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////ActionStr
-inline void actionstr_run(OperandList &operands, Context &context, ActionCtl &ctl){
-    const auto &str = operands.at(1).holder().token().str;
-    if(str == "genidx"){
-        actionstr_genidx(context, ctl);
-    }
-    else if(str == "detail"){
-        actionstr_detail(context, ctl);
-    }
-}
-
 inline void actionstr_genidx(Context &context, ActionCtl &ctl){
     ctl.addActionAfter(
         context.scopeMetaData().id,
@@ -132,6 +122,16 @@ inline void actionstr_detail(Context &context, ActionCtl &ctl){
             return true;
         }
     );
+}
+
+inline void actionstr_run(OperandList &operands, Context &context, ActionCtl &ctl){
+    const auto &str = operands.at(1).holder().token().str;
+    if(str == "genidx"){
+        actionstr_genidx(context, ctl);
+    }
+    else if(str == "detail"){
+        actionstr_detail(context, ctl);
+    }
 }
 
 CSC_END

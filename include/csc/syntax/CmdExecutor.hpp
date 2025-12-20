@@ -7,6 +7,7 @@
 #include "csc/csc.hpp"
 #include "csc/lex/types.hpp"
 #include "csc/syntax/types.hpp"
+#include "csc/syntax/Command.hpp"
 #include "csc/syntax/Operand.hpp"
 #include "csc/syntax/Keyseq.hpp"
 #include "csc/context/Context.hpp"

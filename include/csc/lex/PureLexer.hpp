@@ -15,7 +15,8 @@ enum class LxErrno{
 class PureLexer{
 public:
     using ReaderList      = std::vector<TokenReader>;
-    using CharMapping = std::map<Char, std::vector<int>>;
+    using IntegerList      = std::vector<int>;
+    using CharMapping = std::map<Char, IntegerList>;
 
 public:
     PureLexer();

@@ -59,7 +59,7 @@ void PureLexer::installReaders(){
     ////////////////////////////////////////////////////////////////////////////////////////Number
     id = addReader(number_initor, number_readable, number_read);
     addCharMapping("+-", id);
-    addCharMapping('0-9', id);
+    addCharMapping("0-9", id);
 
     ////////////////////////////////////////////////////////////////////////////////////////String
     id = addReader(string_readable, string_read);
@@ -88,7 +88,7 @@ int PureLexer::findReader(CharMngr &mngr){
 void PureLexer::addCharMapping(Char ch, int id){
     auto pos = chmapping_.find(ch);
     if(pos == chmapping_.end()){
-        chmapping_.emplace(ch);
+        chmapping_.insert({ch, IntegerList{}});
     }
 
     chmapping_.at(ch).push_back(id);
@@ -114,19 +114,19 @@ void PureLexer::addCharMapping(const String &chs, int id){
 }
 
 int PureLexer::addReader(ReaderReadable readable, ReaderRead read){
-    addReader(default_initor, readable, read, default_fintor, 0);
+    return addReader(default_initor, readable, read, default_fintor, 0);
 }
 
 int PureLexer::addReader(ReaderReadable readable, ReaderRead read, ReaderFlag flag){
-    addReader(default_initor, readable, read, default_fintor, flag);
+    return addReader(default_initor, readable, read, default_fintor, flag);
 }
 
 int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read){
-    addReader(initor, readable, read, default_fintor, 0);
+    return addReader(initor, readable, read, default_fintor, 0);
 }
 
 int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFlag flag){
-    addReader(initor, readable, read, default_fintor, flag);
+    return addReader(initor, readable, read, default_fintor, flag);
 }
 
 int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRead read, ReaderFintor fintor, ReaderFlag flag){
@@ -138,6 +138,8 @@ int PureLexer::addReader(ReaderInitor initor, ReaderReadable readable, ReaderRea
         read,
         default_fintor
     });
+
+    return readers_.size() - 1;
 }
 
 CSC_END

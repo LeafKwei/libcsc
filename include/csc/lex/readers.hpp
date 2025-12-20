@@ -61,6 +61,8 @@ inline TokenPair limitor_read(CharMngr &mngr, Any &local){
         pair.second.str.push_back(ch);
         mngr.forward();
     }
+
+    return pair;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////Separator
@@ -81,6 +83,8 @@ inline TokenPair separator_read(CharMngr &mngr, Any &local){
         pair.second.str.push_back(ch);
         mngr.forward();
     }
+
+    return pair;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////Identifier
