@@ -13,7 +13,7 @@ enum class OperandType{
 
 enum class CommandType{
     Unknwon,
-    EnterScope, ExitScope, Assign, ArrayAssign, Action
+    EnterScope, ExitScope, Assign, AssignPlural, ActionStr
 };
 
 CSC_END

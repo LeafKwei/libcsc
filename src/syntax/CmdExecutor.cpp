@@ -1,5 +1,6 @@
 #include <cassert>
 #include "csc/types.hpp"
+#include "csc/syntax/opr.hpp"
 #include "csc/syntax/Command.hpp"
 #include "csc/syntax/commands.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
@@ -10,8 +11,8 @@ CmdExecutor::CmdExecutor() : maxKeySize_(0){
     installCmd();
 }
 
-bool CmdExecutor::hasOperand() const noexcept{
-    return operands_.size() > 0;
+bool CmdExecutor::empty() const noexcept{
+    return operands_.empty();
 }
 
 bool CmdExecutor::reached() const noexcept{
@@ -62,8 +63,46 @@ bool CmdExecutor::execute(Context &context, ActionMngr &mngr){
     return false;
 }
 
+String CmdExecutor::keyseq() const noexcept{
+    return keyseq_.seq();
+}
+
 void CmdExecutor::installCmd(){
-    
+    ////////////////////////////////////////////////////////////////////////////////////////EnterScope 1_::
+    addCommand(
+        Keyseq().start(genKeyFrom(OperandType::Identifier, "")).append(genKeyFrom(OperandType::Operator, "::")).seq(),
+        CommandType::EnterScope,
+        enterscope_run
+    );
+
+    ////////////////////////////////////////////////////////////////////////////////////////ExitScope ::_1
+    addCommand(
+        Keyseq().start(genKeyFrom(OperandType::Operator, "::")).append(genKeyFrom(OperandType::Identifier, "")).seq(),
+        CommandType::ExitScope,
+        exitscope_run
+    );
+
+    ////////////////////////////////////////////////////////////////////////////////////////Assgin 1_=_4
+    addCommand(
+        Keyseq().start(genKeyFrom(OperandType::Identifier, "")).append(genKeyFrom(OperandType::Operator, "=")).append(genKeyFrom(OperandType::Value, "")).seq(),
+        CommandType::Assign,
+        assign_run
+    );
+
+    ////////////////////////////////////////////////////////////////////////////////////////AssginPlural 1_=_5
+    addCommand(
+        Keyseq().start(genKeyFrom(OperandType::Identifier, "")).append(genKeyFrom(OperandType::Operator, "=")).append(genKeyFrom(OperandType::Values, "")).seq(),
+        CommandType::AssignPlural,
+        assginplural_run
+    );
+
+    ////////////////////////////////////////////////////////////////////////////////////////ActionStr action_4
+    addCommand(
+        Keyseq().start(genKeyFrom(OperandType::Keyword, "action")).append(genKeyFrom(OperandType::Value, "")).seq(),
+        CommandType::ActionStr,
+        [](OperandList &operands) -> bool { return valueTypeof(operands.at(1).holder().token()) == ValueType::String; },
+        actionstr_run
+    );
 }
 
 void CmdExecutor::addCommand(const String &key, CommandType type, CmdRun run){

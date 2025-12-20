@@ -10,8 +10,8 @@ CSC_BEGIN
 struct Action{
 public:
     using OperandList   = std::vector<Operand>;
-    using ActRunnable = std::function<bool(CommandType type, const OperandList &operands, Context &context)>;
-    using ActRun          = std::function<bool(CommandType type, const OperandList &operands, Context &context)>;
+    using ActRunnable = std::function<bool(CommandType type, OperandList &operands, Context &context)>;
+    using ActRun          = std::function<bool(CommandType type, OperandList &operands, Context &context)>;
 
 public:
     ActRunnable runnable;

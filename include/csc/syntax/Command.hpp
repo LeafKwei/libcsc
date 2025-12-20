@@ -12,8 +12,8 @@
 CSC_BEGIN
 
 using OperandList    = std::vector<Operand>;
-using CmdRunnable = std::function<bool(const OperandList &operands)>;
-using CmdRun          = std::function<void(const OperandList &operands, Context &context, ActionCtl &ctl)>;
+using CmdRunnable = std::function<bool(OperandList &operands)>;
+using CmdRun          = std::function<void(OperandList &operands, Context &context, ActionCtl &ctl)>;
 
 struct Command{
     String                key;

@@ -85,7 +85,7 @@ int main(void){
     CscHandler handler(str);
     handler.enter("/");      //进入根作用域
     std::cout << "name: " << handler.getValue<String>("name") << std::endl;     //获取name变量值
-    handler.enter("/Dummy"); //进入根目录下的Scope作用域
+    handler.enter("/Dummy"); //进入根作用域下的Dummy作用域
     std::cout << "Dummy.switch: " << handler.getValue<bool>("switch") << std::endl;//获取Dummy::switch
     
     //也可以使用enterAndGet函数直接获取变量值
