@@ -14,10 +14,10 @@ public:
         std::cout << "leave: " << name << ", ID = " << id << std::endl;
     }
 
-    void values(const String &name, const ValueAccessor &accessor){
+    void values(const String &name, const Querier &querier){
         std::cout << name <<" = ";
-        for(int i = 0; i < accessor.size(); i++){
-            std::cout << valueToString(accessor.value(), accessor.type()) << ",";
+        for(int i = 0; i < querier.querySize(); i++){
+            std::cout << valueToString(querier.queryValue(0).value, querier.queryType()) << ",";
         }
         std::cout << std::endl;
     }

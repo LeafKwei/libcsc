@@ -1,3 +1,7 @@
+**0.7.0**
+
+
+
 **0.6.9**
 
 1. 重构了action模块，将原本的发送Action+处理Action的事件处理模式改变为了通过检测Command及Operand触发的模式

@@ -11,7 +11,7 @@ public:
     Querier(ScopePos spos);
     Querier(ScopePtr scope);
 
-    bool tryEnter(const String &name);                    /* 尝试进入name指定的Scope内，进入失败是返回fasle */
+    bool tryEnter(const String &name);                    /* 尝试进入name指定的Scope内，进入失败时返回fasle */
     bool hasScope(const String &name) const;       /* 检查当前Scope下是否存在name指定的Scope */
     bool hasVariable(const String &name) const;    /* 检查当前Scope下是否存在name指定的Variable */
     ValueUnit directValue(const String &name) const;     /* 获取name指定的变量的首个值 */
