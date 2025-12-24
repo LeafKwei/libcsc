@@ -34,7 +34,7 @@ public:
     Context&  enterScope(const String &name, bool created=false);   /* 进入当前作用域中的一个子作用域，如果created为true，那么在该作用域不存在时将创建 */ 
     Context&  leaveScope();                                                                   /* 离开当前作用域，返回到它的父作用域中 */
     Context&  cleanScope(const String &name);                                   /* 删除当前作用域的一个子作用域，同时也删除其中的所有变量及该子作用域的子作用域 */
-    bool          probeScope(const String &name) const;                        /* 如果当前作用域中存在指定名称的子作用域，则返回true */
+    bool          hasScope(const String &name) const;                        /* 如果当前作用域中存在指定名称的子作用域，则返回true */
     bool          isRootScope() const;                                                         /* 如果当前作用域是根作用域，返回true */
     Pos            postion() const;                                                                 /* 获取当前作用域的Pos对象(对指针的包装) */
     void           setPostion(const Pos &pos);                                             /* 将当前作用域设置为pos所指定的作用域 */
@@ -46,7 +46,7 @@ public:
     Context&   makeVariable(const String &name, ValueType type, InitValues values); /* 在当前作用域创建变量时一次性设置多个值 */
     Context&   cleanVariable(const String &name);                               /* 删除一个当前作用域中的变量 */  
     Unit            getValueUnit(const String &name) const;                       /* 获取一个当前作用域的变量的首个值及类型 */
-    bool           probeVariable(const String &name) const;                     /* 如果当前作用域存在指定名称的变量，则返回true */
+    bool           hasVariable(const String &name) const;                     /* 如果当前作用域存在指定名称的变量，则返回true */
     Context&   extendValue(const String &name, const Value &value);          /* 向指定名称的变量中追加值 */    
     Context&   extendValues(const String &name, InitValues values);   /* 向指定名称的变量中追加多个值 */                                                       
     Context&   restart();                                                                /* 返回到根作用域，即设置当前作用域为根作用域 */

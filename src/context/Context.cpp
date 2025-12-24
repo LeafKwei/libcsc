@@ -7,7 +7,7 @@ Context::Context() : idCounter_(1){           //作用域ID从1开始，0作为�
 }
 
 Context& Context::makeScope(const String &name, bool entered){
-    if(probeScope(name)){
+    if(hasScope(name)){
         throw ContextExcept("Can't make repetitive scope.");
     }
 
@@ -21,7 +21,7 @@ Context& Context::makeScope(const String &name, bool entered){
 }
 
 Context& Context::enterScope(const String &name, bool created){
-    if(!probeScope(name)){
+    if(!hasScope(name)){
         if(!created){
             throw ContextExcept(std::string("No such scope: ") + name);
         }
@@ -43,7 +43,7 @@ Context& Context::leaveScope(){
 }
 
 Context& Context::cleanScope(const String &name){
-    if(!probeScope(name)){
+    if(!hasScope(name)){
         throw ContextExcept(std::string("No such scope: ") + name);
     }
 
@@ -51,7 +51,7 @@ Context& Context::cleanScope(const String &name){
     return *this;
 }   
 
-bool Context::probeScope(const String &name) const{
+bool Context::hasScope(const String &name) const{
     return (current_ -> scopes.find(name)) != (current_ -> scopes.end());
 }   
 
@@ -112,7 +112,7 @@ Context& Context::makeVariable(const String &name, ValueType type, InitValues va
 }
 
 Context& Context::cleanVariable(const String &name){
-    if(!probeVariable(name)){
+    if(!hasVariable(name)){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
 
@@ -130,7 +130,7 @@ Context::Unit Context::getValueUnit(const String &name) const{
     return querier.directValue(name);
 }
 
-bool Context::probeVariable(const String &name) const{
+bool Context::hasVariable(const String &name) const{
     return (current_ -> variables.find(name)) != (current_ -> variables.end());
 }
 

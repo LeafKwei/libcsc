@@ -9,7 +9,7 @@ Keyseq& Keyseq::start(const String &str){
 
 Keyseq& Keyseq::append(const String &str){
     seq_.push_back('_');
-    seq_ = seq_.append(str);
+    seq_.append(str);
     return *this;
 }
 

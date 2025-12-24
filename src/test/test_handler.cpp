@@ -28,8 +28,11 @@ int main(int argc, char *argv[]){
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
     AnySeeker seeker;
-    CscHandler handler(str);
+    CscHandler handler;
 
+    handler.handle(str);
+    handler.enter("/custom/tom/");
+    std::cout << handler.enterAndGet<int>("age") << std::endl;
     std::cout << handler.enterAndGet<int>("/custom/tom/age") << std::endl;
     std::cout << handler.enterAndGet<String>("/player") << std::endl;
     std::cout << handler.enterAndGet<double>("/custom/tom/height") << std::endl;

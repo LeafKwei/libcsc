@@ -1,20 +1,19 @@
 #include<iostream>
-#include "csc/lex/NumSect.hpp"
+#include "csc/utility/PathHelper.hpp"
 
 using namespace csc;
 
 int main(int argc, char *argv[]){
-    NumSect sect1(100, 200);
-    NumSect sect2(300, 400);
+    PathHelper helper;
 
-    std::cout << sect1.contain(156) << std::endl;
-    std::cout << sect1.lessThan(sect2) << std::endl;
-    
-    NumSect sect3(150, 300);
-    std::cout << sect1.intersect(sect3) << std::endl;
-    std::cout << sect1.intersect(sect2) << std::endl;
-
-    sect2.setNum(500, 1000);
-    auto newSect = sect1.merge(sect2);
-    std::cout << newSect.left() << ", " << newSect.right() << std::endl;
+    helper.decompose(argv[1]);
+    std::cout << "absolute: " << helper.absolute() << std::endl;
+    std::cout << "rootonly: " << helper.rootonly() << std::endl;
+    std::cout << "valid: " << helper.valid() << std::endl;
+    std::cout << "complex: " << helper.complex() << std::endl;
+    std::cout << "size: " << helper.size() << std::endl;
+    std::cout << "dirname: " << helper.dirname() << std::endl;
+    std::cout << "basename: " << helper.basename() << std::endl;
+    std::cout << "compose10: " << helper.compose(10) << std::endl;
+    std::cout << "compose2: " << helper.compose(2) << std::endl;
 }

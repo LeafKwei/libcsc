@@ -21,6 +21,7 @@ public:
     CscHandler() =default;
     CscHandler(const String &script);
 
+    int                  handle(const String &script);                          /* 处理指定的csc文件内容，返回执行的命令数量 */
     bool               accessible(const String &path, bool v=false); /* 检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称 */
     String             absolutePath();                                       /* 返回从根作用域到当前作用域的绝对路径 */
     CscHandler& enter(const String &path);                              /* 进入给定路径对应的作用域，如果路径为“/”，则进入根作用域 */
@@ -203,10 +204,17 @@ inline Tp CscHandler::enterAndGet(const String &path){
         throw CscExcept("Invalid path: " + path);
     }
 
-    auto endidx = (helper.size() > 0) ? helper.size() - 1 : 0;
-    enter(helper.buildPath(endidx));
+    /* 如果path仅是一个根路径，则视为错误 */
+    if(helper.rootonly()){
+        throw CscExcept("No variable name provided.");
+    }
 
-    return getValue<Tp>(helper.lastItem());
+    /* 如果path存在dirname部分，则先进入对应路径下 */
+    if(helper.complex()){
+        enter(helper.dirname());
+    }
+    
+    return getValue<Tp>(helper.basename());
 }
 
 CSC_END

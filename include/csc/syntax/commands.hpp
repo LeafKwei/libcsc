@@ -78,8 +78,8 @@ inline void actionstr_genidx(Context &context, ActionCtl &ctl){
 
         [](CommandType type, OperandList &operands, Context &context) -> bool {
             /* 当首次进入一个作用域并且该作用域不存在时，再生成该作用域的索引 */
-            if(type == CommandType::EnterScope && !context.probeScope(operands.at(0).holder().token().str)){
-                if(!context.probeVariable("_sidx_")){
+            if(type == CommandType::EnterScope && !context.hasScope(operands.at(0).holder().token().str)){
+                if(!context.hasVariable("_sidx_")){
                     context.makeVariable("_sidx_", ValueType::String, {});
                 }
                 context.extendValue("_sidx_", operands.at(0).holder().token().str);
@@ -87,8 +87,8 @@ inline void actionstr_genidx(Context &context, ActionCtl &ctl){
             }
 
             /* 生成变量的索引 */
-            if(!context.probeVariable(operands.at(0).holder().token().str)){
-                if(!context.probeVariable("_vidx_")){
+            if(!context.hasVariable(operands.at(0).holder().token().str)){
+                if(!context.hasVariable("_vidx_")){
                     context.makeVariable("_vidx_", ValueType::String, {});
                 }
                 context.extendValue("_vidx_", operands.at(0).holder().token().str);
