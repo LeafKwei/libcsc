@@ -42,7 +42,7 @@ private:
 
 //============= Templates =============
 template<typename Tp>
-inline Tp getValue(const String &name){
+inline Tp CscHandler::getValue(const String &name){
     throw CscExcept("Unsupported type.");
 }
 
