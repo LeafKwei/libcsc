@@ -1,16 +1,12 @@
-#include "csc/core/CscHandler.hpp"
+#include "csc/core/CscReader.hpp"
 #include "csc/core/CscStrSeeker.hpp"
 CSC_BEGIN
 
-CscHandler::CscHandler(const String &script){
-    driver_.drive(script, context_);
+CscReader::CscReader(Context &context) : context_(context){
+    
 }
 
-int CscHandler::handle(const String &script){
-    return driver_.drive(script, context_);
-}
-
-bool CscHandler::accessible(const String &path, bool v){
+bool CscReader::accessible(const String &path, bool v) const{
     PathHelper helper(path);
     if(!helper.valid()) return false;
     if(helper.rootonly()) return !(v);                                      //对于根路径'/'的特别处理，当参数v为true时，由于根目录不是变量，所以要返回false
@@ -27,11 +23,7 @@ bool CscHandler::accessible(const String &path, bool v){
     return (v) ? querier.hasVariable(helper.basename()) : querier.hasScope(helper.basename());
 }
 
-String CscHandler::absolutePath(){
-    return String("/") + context_.relation("/");
-}
-
-CscHandler& CscHandler::enter(const String &path){
+void CscReader::enter(const String &path) const{
     PathHelper helper(path);
 
     if(!helper.valid()) throw CscExcept("Invalid path: " + path);
@@ -42,22 +34,16 @@ CscHandler& CscHandler::enter(const String &path){
     for(Size_t idx = 0; idx < helper.size(); idx++){
         context_.enterScope(helper.element(idx));
     }
-
-    return *this;
 }
 
-CscHandler& CscHandler::iterate(ContextSeeker &seeker){
+void CscReader::iterate(ContextSeeker &seeker) const{
     context_.iterate(seeker);
-    return *this;
 }
 
-String CscHandler::toString(){
+String CscReader::toString() const{
     CscStrSeeker seeker;
     context_.iterate(seeker);
     return seeker.toString();
 }
 
-CscEditor CscHandler::editor(){
-    return CscEditor(context_);
-}
 CSC_END

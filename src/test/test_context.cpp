@@ -1,9 +1,9 @@
 #include <iostream>
-#include "csc/context/Context.hpp"
+#include "csc/context/ctximpl/MapContext.hpp"
 using namespace csc;
 
 int main(void){
-    Context context;
+    MapContext context;
 
     context.makeVariable("what", ValueType::String, String("Hello World!"));
     context.makeScope("users", true)
@@ -28,9 +28,7 @@ int main(void){
 
     auto pos = context.postion();
     context.restart();
-    std::cout << "Relation after restart: " << context.relation() << std::endl;
     context.setPostion(pos);
-    std::cout << "Relation after setPostion: " << context.relation() << std::endl;
     std::cout << "Kunkun::music: " <<  std::any_cast<String>(context.getValueUnit("music").value) << std::endl;
 
     std::cout << "----------------------------" << std::endl;

@@ -3,7 +3,7 @@ set(CSC_SRC
     context/Context.cpp
 	context/Querier.cpp
 	context/val.cpp
-    core/CscEditor.cpp
+    core/CscWriter.cpp
     core/CscHandler.cpp
     core/CscStrSeeker.cpp
     lex/CharMngr.cpp

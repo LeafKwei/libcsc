@@ -1,12 +1,12 @@
 #include "csc/types.hpp"
-#include "csc/context/Context.hpp"
+#include "csc/context/ctximpl/MapContext.hpp"
 CSC_BEGIN
 
-Context::Context() : idCounter_(1){           //作用域ID从1开始，0作为保留ID，为将来的全局Action做准备
+MapContext::MapContext() : idCounter_(1){           //作用域ID从1开始，0作为保留ID，为将来的全局Action做准备
     clean();
 }
 
-Context& Context::makeScope(const String &name, bool entered){
+MapContext& MapContext::makeScope(const String &name, bool entered){
     if(hasScope(name)){
         throw ContextExcept("Can't make repetitive scope.");
     }
@@ -20,7 +20,7 @@ Context& Context::makeScope(const String &name, bool entered){
     return *this;
 }
 
-Context& Context::enterScope(const String &name, bool created){
+MapContext& MapContext::enterScope(const String &name, bool created){
     if(!hasScope(name)){
         if(!created){
             throw ContextExcept(std::string("No such scope: ") + name);
@@ -33,7 +33,7 @@ Context& Context::enterScope(const String &name, bool created){
     return *this;
 }
 
-Context& Context::leaveScope(){
+MapContext& MapContext::leaveScope(){
     if(current_ -> parent.expired()){
         throw ContextExcept(std::string("Can't leave from root scope."));
     }
@@ -42,7 +42,7 @@ Context& Context::leaveScope(){
     return *this;
 }
 
-Context& Context::cleanScope(const String &name){
+MapContext& MapContext::cleanScope(const String &name){
     if(!hasScope(name)){
         throw ContextExcept(std::string("No such scope: ") + name);
     }
@@ -51,23 +51,23 @@ Context& Context::cleanScope(const String &name){
     return *this;
 }   
 
-bool Context::hasScope(const String &name) const{
+bool MapContext::hasScope(const String &name) const{
     return (current_ -> scopes.find(name)) != (current_ -> scopes.end());
 }   
 
-bool Context::isRootScope() const{
+bool MapContext::isRootScope() const{
     return !(current_ -> parent.expired());
 }
 
-const ScopeMetaData& Context::scopeMetaData() const noexcept{
+const ScopeMetaData& MapContext::scopeMetaData() const noexcept{
     return current_ -> meta;
 }
 
-Context::Pos Context::postion() const{
+MapContext::Pos MapContext::postion() const{
     return Pos{current_};
 }
 
-void Context::setPostion(const Pos &pos){
+void MapContext::setPostion(const Pos &pos){
     if(pos.scope.expired()){
         throw ContextExcept(std::string("Expired scope postion."));
     }
@@ -75,17 +75,11 @@ void Context::setPostion(const Pos &pos){
     current_ = pos.scope.lock();
 }
 
-String Context::relation(const String &separator) const{
-    std::stringstream stream;
-    do_relation(current_, stream, separator);
-    return stream.str();
-}
-
-Querier Context::querier(bool absolute) const{
+Querier MapContext::querier(bool absolute) const{
     return (absolute) ? Querier{root_} : Querier{current_};
 }
 
-Querier Context::querier(const String &name) const{
+Querier MapContext::querier(const String &name) const{
     auto pos = current_ -> scopes.find(name);
     if(pos == current_ -> scopes.end()){
         throw ContextExcept(std::string("No such scope: ") + name);
@@ -94,11 +88,11 @@ Querier Context::querier(const String &name) const{
     return Querier(pos -> second);
 }
 
-Context& Context::makeVariable(const String &name, ValueType type, const Value &value){
+MapContext& MapContext::makeVariable(const String &name, ValueType type, const Value &value){
     return makeVariable(name, type, {value});
 }
 
-Context& Context::makeVariable(const String &name, ValueType type, InitValues values){
+MapContext& MapContext::makeVariable(const String &name, ValueType type, InitValues values){
     /* 变量存在时，替换原变量值和类型 */
     auto iterator = current_ -> variables.find(name);
     if(iterator != current_ -> variables.end()){
@@ -111,7 +105,7 @@ Context& Context::makeVariable(const String &name, ValueType type, InitValues va
     return *this;
 }
 
-Context& Context::cleanVariable(const String &name){
+MapContext& MapContext::cleanVariable(const String &name){
     if(!hasVariable(name)){
         throw ContextExcept(std::string("No such variable: ") + name);
     }
@@ -120,7 +114,7 @@ Context& Context::cleanVariable(const String &name){
     return *this;
 }
 
-Context::Unit Context::getValueUnit(const String &name) const{
+MapContext::Unit MapContext::getValueUnit(const String &name) const{
     Querier querier(current_);
 
     if(!querier.hasVariable(name)){
@@ -130,15 +124,15 @@ Context::Unit Context::getValueUnit(const String &name) const{
     return querier.directValue(name);
 }
 
-bool Context::hasVariable(const String &name) const{
+bool MapContext::hasVariable(const String &name) const{
     return (current_ -> variables.find(name)) != (current_ -> variables.end());
 }
 
-Context& Context::extendValue(const String &name, const Value &value){
+MapContext& MapContext::extendValue(const String &name, const Value &value){
     return extendValues(name, {value});
 }
 
-Context& Context::extendValues(const String &name, InitValues values){
+MapContext& MapContext::extendValues(const String &name, InitValues values){
     auto iterator = current_ -> variables.find(name);
     if(iterator == current_ -> variables.end()){
         throw ContextExcept(std::string("No such variable: ") + name);
@@ -152,12 +146,12 @@ Context& Context::extendValues(const String &name, InitValues values){
     return *this;
 }
                                                         
-Context& Context::restart(){
+MapContext& MapContext::restart(){
     current_ = root_;
     return *this;
 }
 
-void Context::clean(){
+void MapContext::clean(){
     root_ = nullptr;
     current_ = nullptr;
     idCounter_ = 1;
@@ -167,34 +161,34 @@ void Context::clean(){
     current_ = root_;
 }
 
-void Context::iterate(ContextSeeker &seeker) const{
+void MapContext::iterate(ContextSeeker &seeker) const{
     do_iterate(current_, seeker);
 }
 
-void Context::do_makeScope(const String &name){
+void MapContext::do_makeScope(const String &name){
     auto scope = std::make_shared<Scope>();
     scope -> meta = {nextID(), name, scope};
     scope -> parent = current_;
     current_ -> scopes.insert({name, scope});
 }
 
-void Context::do_enterScope(const String &name){
+void MapContext::do_enterScope(const String &name){
     current_ = (current_ -> scopes.find(name)) -> second;
 }
 
-void Context::do_leaveScope(){
+void MapContext::do_leaveScope(){
     current_ = current_ -> parent.lock();
 }
 
-void Context::do_cleanScope(const String &name){
+void MapContext::do_cleanScope(const String &name){
     current_ -> scopes.erase(name);
 }
 
-void Context::do_cleanVariable(const String &name){
+void MapContext::do_cleanVariable(const String &name){
     current_ -> variables.erase(name);
 }
 
-void Context::do_makeVariable(const String &name, InitValues values, ValueType type){
+void MapContext::do_makeVariable(const String &name, InitValues values, ValueType type){
     auto variable = std::make_shared<Variable>();
     variable -> name = name;
     variable -> type = type;
@@ -206,7 +200,7 @@ void Context::do_makeVariable(const String &name, InitValues values, ValueType t
     current_ -> variables.insert({name, variable});
 }
 
-void Context::do_setVariable(VariablePtr variable, InitValues values, ValueType type){
+void MapContext::do_setVariable(VariablePtr variable, InitValues values, ValueType type){
     variable -> values.clear();
     variable -> type = type;
 
@@ -222,7 +216,7 @@ void Context::do_setVariable(VariablePtr variable, InitValues values, ValueType 
  * 3.检查当前作用域是否有子作用域，如有则将子作用域传递给do_iterate递归
  * 4.迭代所有子作用域后，再将当前作用域的名称和id传递给leaveScope函数
  */
-void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
+void MapContext::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     if(scope != root_){                                 //不传递根作用域的名称
         seeker.enterScope(scope -> meta.id, scope -> meta.name);
     }
@@ -247,19 +241,6 @@ void Context::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
 
     if(scope != root_){
         seeker.leaveScope(scope -> meta.id, scope -> meta.name);
-    }
-}
-
-void Context::do_relation(ScopePtr scope, std::stringstream &stream, const String &separator) const{
-    if(scope -> parent.expired()){   //忽略根作用域的名称
-        return;
-    }
-
-    do_relation(scope -> parent.lock(), stream, separator);
-    stream << scope -> meta.name;
-
-    if(scope != current_){
-        stream << separator;
     }
 }
 

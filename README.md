@@ -141,37 +141,37 @@ CscHandler& iterate(ContextSeeker &seeker)
     按DFS算法迭代当前作用域的所有变量以及其中的子作用域，用户需要提供一个ContextSeeker的派生类对象
 String toString()
     从当前作用域开始，将其中的所有内容字符串化后返回。如果需要从根作用域字符串化，请先调用enter("/")进入根作用域
-CscEditor editor()
-    返回一个CscEditor对象，可用于编辑CscHandler中的内容
+CscWriter editor()
+    返回一个CscWriter对象，可用于编辑CscHandler中的内容
 Tp getValue<Tp>(const String &name)
     获取当前作用域下指定名称的变量值，需要指定该变量值所需转换的类型
 Tp enterAndGet<Tp>(const String &path)
     获取指定路径下的变量值，需要指定该变量值所需转换的类型
 ```
 
-### CscEditor
+### CscWriter
 
-CscEditor提供了对CscHandler内容的编辑功能。
+CscWriter提供了对CscHandler内容的编辑功能。
 
 ```C++
-CscEditor& autoEnterOn()
+CscWriter& autoEnterOn()
 	开启autoEnter功能，当使用makeScope函数创建作用域后，自动进入该作用域而无需调用enterScope函数
-CscEditor& autoEnterOff()
+CscWriter& autoEnterOff()
 	关闭autoEnter功能
-CscEditor& makeScope(const String &name)
+CscWriter& makeScope(const String &name)
 	在当前作用域下创建一个指定名称的作用域
-CscEditor& enterScope(const String &name)
+CscWriter& enterScope(const String &name)
 	进入当前作用域下指定名称的子作用域
-CscEditor& leaveScope()
+CscWriter& leaveScope()
 	离开当前作用域，回到它的父作用域。当位于根作用域时，调用此函数将引发异常
-CscEditor& cleanScope(const String &name)
+CscWriter& cleanScope(const String &name)
 	清除当前作用域下指定名称的作用域
-CscEditor& makeVariable(const String &name, ValueType type, T &&...values)
+CscWriter& makeVariable(const String &name, ValueType type, T &&...values)
 	在当前作用域中创建指定名称的变量，type指定变量的类型，values是一组指定变量值的可变参数，请确保其都为同一类型
     当创建一个已存在的变量时，将会直接使用values替代该变量中的变量值
-CscEditor& extendValues(const String &name, T &&...values)
+CscWriter& extendValues(const String &name, T &&...values)
 	追加当前作用域中指定名称的变量的变量值
-CscEditor& cleanVariable(const String &name)
+CscWriter& cleanVariable(const String &name)
 	清除当前作用域中指定名称的变量
 ```
 

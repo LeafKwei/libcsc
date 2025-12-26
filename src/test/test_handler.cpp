@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include "csc/context/ctximpl/MapContext.hpp"
 #include "csc/core/CscHandler.hpp"
 #include "csc/utility/utility.hpp"
 using namespace csc;
@@ -28,17 +29,22 @@ int main(int argc, char *argv[]){
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
     AnySeeker seeker;
-    CscHandler handler;
+    CscHandler<MapContext> handler;
 
     handler.handle(str);
-    handler.enter("/custom/tom/");
-    std::cout << handler.enterAndGet<int>("age") << std::endl;
-    std::cout << handler.enterAndGet<int>("/custom/tom/age") << std::endl;
-    std::cout << handler.enterAndGet<String>("/player") << std::endl;
-    std::cout << handler.enterAndGet<double>("/custom/tom/height") << std::endl;
-    std::cout << handler.enterAndGet<int>("/custom/tom/weight") << std::endl;
-    std::cout << handler.enter("/").enter("custom").enter("tom").getValue<bool>("isHappy") << std::endl;
-    std::cout << handler.enter("/").toString() << std::endl;
+    CscReader reader = handler.reader();
+    reader.enter("/custom/tom/");
+    std::cout << reader.enterAndGet<int>("age") << std::endl;
+    std::cout << reader.enterAndGet<int>("/custom/tom/age") << std::endl;
+    std::cout << reader.enterAndGet<String>("/player") << std::endl;
+    std::cout << reader.enterAndGet<double>("/custom/tom/height") << std::endl;
+    std::cout << reader.enterAndGet<int>("/custom/tom/weight") << std::endl;
+    reader.enter("/");
+    reader.enter("custom");
+    reader.enter("tom");
+    std::cout << reader.getValue<bool>("isHappy") << std::endl;
+    std::cout << reader.toString() << std::endl;
     std::cout << "========================" << std::endl;
-    handler.enter("/").iterate(seeker);
+    reader.enter("/");;
+    reader.iterate(seeker);
 }
