@@ -137,6 +137,8 @@ int handle(const String &script)
 	按csc语法解析script中的内容到CscHandler对象中
 CscReader reader()
     获取一个用于读取csc配置内容的CscReader对象，与CscHandler共享一个Context
+CscWriter writer()
+    获取一个用于写入csc配置内容的CscWriter对象，与CscHandler共享一个Context
 ```
 
 ### CscReader
