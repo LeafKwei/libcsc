@@ -72,8 +72,10 @@ cmake -DBUILD_SHARED_LIBS=YES -G "Unix Makefiles" ../libcsc
 #include <iostream>
 #include <fstream>
 #include "csc/core/CscHandler.hpp"
+#include "csc/context/ctximpl/MapContext.hpp"
 
 using csc::String;
+using csc::MapContext;
 using csc::CscReader;
 using csc::CscHandler;
 
@@ -83,11 +85,12 @@ int main(void){
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
     
     //创建CscHandler对象，解析文件内容，随后通过reader函数获取到reader对象，开始读取文件内容
-    CscHandler handler(str);
-    CscReader reader = handler.reader();
-    reader.enter("/");      //进入根作用域
-    std::cout << "name: " << reader.getValue<String>("name") << std::endl;     //获取name变量值
-    reader.enter("/Dummy"); //进入根作用域下的Dummy作用域
+    //通过指定不同的Context实现作为模板参数，可以定制CscHandler对于csc配置内容的存储组织
+    CscHandler<MapContext> handler(str);
+    CscReader reader = handler.reader();  //获取一个reader对象用于读取配置内容
+    reader.enter("/");                    //进入根作用域
+    std::cout << "name: " << reader.getValue<String>("name") << std::endl;        //获取name变量值
+    reader.enter("/Dummy");              //进入根作用域下的Dummy作用域
     std::cout << "Dummy.switch: " << reader.getValue<bool>("switch") << std::endl;//获取Dummy::switch
     
     //也可以使用enterAndGet函数直接获取变量值
