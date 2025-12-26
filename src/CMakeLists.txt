@@ -1,10 +1,10 @@
 set(CSC_SRC
 	action/ActionMngr.cpp
-    context/Context.cpp
+    context/ctximpl/MapContext.cpp
 	context/Querier.cpp
 	context/val.cpp
+	core/CscReader.cpp
     core/CscWriter.cpp
-    core/CscHandler.cpp
     core/CscStrSeeker.cpp
     lex/CharMngr.cpp
     lex/Lexer.cpp

@@ -1,3 +1,9 @@
+**0.7.3**
+
+1. 为了能通过模板来定制CscHandler中Context的具体实现类型，将原CscHandler的功能拆分到了CscReader和CscWriter(原CscEditor)中，避免特例化getValue系列函数模板时，必须要同时特例化CscHandler和getValue函数的问题。
+
+2. 添加了Context接口，以便后续可以扩展为各类存储组织不同的Context。原Context被重命名为MapContext，保存于csc/context/ctximpl中。
+
 **0.7.0**
 
 1. 由于0.6.9及之前的版本存在一个无法忽视的问题——Lexer解析数组时，如果数组的元素是字符串，并且字符串中含有`}`时，相关的Reader将无法获取到正确的数组边界，从而导致token读取出错，因此在0.7.0版本中，重构了包括Lexer、TokenReader在内的诸多内容。因为Token属于底层组件，因此重构时也影响到了诸多上层组件，主要包括command目录下的commands、CmdExecutor。相应的，添加了TokenHolder作为中间层，并以此提供了对数组等由多个token组成的复杂token的访问能力。

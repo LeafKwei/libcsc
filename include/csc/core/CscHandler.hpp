@@ -39,22 +39,22 @@ private:
 };
 
 template<typename Ctx, typename Eab>
-CscHandler<Ctx, Eab>::CscHandler(const String &script){
+inline CscHandler<Ctx, Eab>::CscHandler(const String &script){
     driver_.drive(script, context_);
 }
 
 template<typename Ctx, typename Eab>
-int CscHandler<Ctx, Eab>::handle(const String &script){
+inline int CscHandler<Ctx, Eab>::handle(const String &script){
     return driver_.drive(script, context_);
 }
 
 template<typename Ctx, typename Eab>
-CscReader CscHandler<Ctx, Eab>::reader(){
+inline CscReader CscHandler<Ctx, Eab>::reader(){
     return CscReader(context_);
 }
 
 template<typename Ctx, typename Eab>
-CscWriter CscHandler<Ctx, Eab>::writer(){
+inline CscWriter CscHandler<Ctx, Eab>::writer(){
     return CscWriter(context_);
 }
 

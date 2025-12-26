@@ -10,7 +10,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.6.9"
+version = "0.7.3"
 
 ;This is a scope
 Dummy::
@@ -74,6 +74,7 @@ cmake -DBUILD_SHARED_LIBS=YES -G "Unix Makefiles" ../libcsc
 #include "csc/core/CscHandler.hpp"
 
 using csc::String;
+using csc::CscReader;
 using csc::CscHandler;
 
 int main(void){
@@ -81,15 +82,16 @@ int main(void){
 	std::ifstream ifs("sample.csc");
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
     
-    //创建CscHandler对象，解析文件内容
+    //创建CscHandler对象，解析文件内容，随后通过reader函数获取到reader对象，开始读取文件内容
     CscHandler handler(str);
-    handler.enter("/");      //进入根作用域
-    std::cout << "name: " << handler.getValue<String>("name") << std::endl;     //获取name变量值
-    handler.enter("/Dummy"); //进入根作用域下的Dummy作用域
-    std::cout << "Dummy.switch: " << handler.getValue<bool>("switch") << std::endl;//获取Dummy::switch
+    CscReader reader = handler.reader();
+    reader.enter("/");      //进入根作用域
+    std::cout << "name: " << reader.getValue<String>("name") << std::endl;     //获取name变量值
+    reader.enter("/Dummy"); //进入根作用域下的Dummy作用域
+    std::cout << "Dummy.switch: " << reader.getValue<bool>("switch") << std::endl;//获取Dummy::switch
     
     //也可以使用enterAndGet函数直接获取变量值
-	std::cout << handler.enterAndGet<bool>("/Dummy/switch") << std::endl; //路径的最后一部分将被视为变量名称
+	std::cout << reader.enterAndGet<bool>("/Dummy/switch") << std::endl; //路径的最后一部分将被视为变量名称
 }
 ```
 
@@ -131,22 +133,29 @@ CscHandler()
     默认构造函数，创建一个带有根作用域的空CscHandler对象，通常结合editor函数和toString函数来创建csc文件的内容
 CscHandler(const String &script)
     按csc语法解析script中的内容到CscHandler对象中
+int handle(const String &script)
+	按csc语法解析script中的内容到CscHandler对象中
+CscReader reader()
+    获取一个用于读取csc配置内容的CscReader对象，与CscHandler共享一个Context
+```
+
+### CscReader
+
+```c++
 bool accessible(const String &path, bool v=false)
-    检查给定的路径是否存在，默认将path视为作用域路径，当v为true时，将path视为变量路径
-String absolutePath()
-    获取从根作用域到当前作用域的绝对路径
-CscHandler& enter(const String &path)
-    进入path对应的作用域，当path为"/"时，进入根作用域
-CscHandler& iterate(ContextSeeker &seeker)
-    按DFS算法迭代当前作用域的所有变量以及其中的子作用域，用户需要提供一个ContextSeeker的派生类对象
+    检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称检查
+void enter(const String &path)
+	进入给定路径对应的作用域，如果路径为“/”，则进入根作用域
+void iterate(ContextSeeker &seeker)      
+	从当前作用域开始，迭代其及所有子作用域的所有变量
 String toString()
-    从当前作用域开始，将其中的所有内容字符串化后返回。如果需要从根作用域字符串化，请先调用enter("/")进入根作用域
-CscWriter editor()
-    返回一个CscWriter对象，可用于编辑CscHandler中的内容
-Tp getValue<Tp>(const String &name)
-    获取当前作用域下指定名称的变量值，需要指定该变量值所需转换的类型
-Tp enterAndGet<Tp>(const String &path)
-    获取指定路径下的变量值，需要指定该变量值所需转换的类型
+    从当前作用域开始，将其及子作用域、变量转换为字符串
+template<typename Tp>                                  
+Tp getValue(const String &name)
+    获取当前作用域中给定名称的变量值，类型参数Tp所支持的类型参见文档4.2节
+template<typename Tp>
+Tp enterAndGet(const String &path)
+    获取给定路径下的变量值，路径的最后一部分将被视为变量名称
 ```
 
 ### CscWriter
