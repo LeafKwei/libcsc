@@ -29,16 +29,20 @@ Dummy::
 在该文件中，形如`name = "CSC Sample"`声明了一个变量，`name`是变量名称，`"CSC Sample"`是变量值，csc文件支持以下类型的变量：
 
 * 布尔值：true、false
-* 整型：255、0xFF
+* 整型：255、0xFF、+1、-1
 * 浮点型：1.15
 * 字符串："CSC Sample"
 * 数组：{"A", "B", "C"}、{1, 2, 3}
 
-对于数组而言，其中的所有元素都应该是相同的类型。当字符串中需要出现引号`"`这类特殊字符时，可以使用`\`进行转义。
+对于数组而言，其中的所有元素都需要是相同的类型。当字符串中需要出现引号`"`这类特殊字符时，可以使用`\`进行转义。
 
 然后，`Dummy::`声明了一个作用域，`Dummy`是作用域名称，不同作用域内的同名变量相互独立，如果在同一个作用域内声明相同的变量，那么后者将覆盖前者。作用域内允许声明另一个作用域，就像`Bar::`一样。在作用域中完成所有变量的声明后，需要使用`::Dummy`和`::Bar`表示退出该作用域。在本例中，像`name = "CSC Sample"`这类没有声明于用户定义的作用域内的变量，将默认处于根作用域中。
 
-csc文件支持注释，注释以分号`;`开始，在分号之后的内容都被视为注释内容而被忽略。
+csc文件支持注释，注释以分号`;`开始，在分号之后的内容都被视为注释内容而被忽略。此外，csc的语法较为宽松，只要使用合适的分隔符(例如空白)，csc文件的内容甚至可以压缩到一行：
+
+```
+name = "CSC Sample" version = "0.7.3" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
+```
 
 
 
@@ -129,7 +133,7 @@ g++ -I ../include -L ../lib -o main main.cpp -lcsc
 
 ### CscHandler
 
-CscHandler可用于解析csc文件内容并获取其中的变量值，用户需要将保存有csc文件内容的字符串作为构造函数参数交给CscHandler进行解析。CscHandler亦可用于创建csc文件的内容，用户通过默认构造函数创建一个空的CscHandler，然后通过editor函数获取到编辑器对象，随后就可根据自身需要创建作用域及相应的变量，最后调用toString函数获取结果。
+CscHandler可用于解析csc文件内容并获取其中的变量值，用户需要将保存有csc文件内容的字符串作为构造函数参数交给CscHandler进行解析(在创建CscHandler对象后也可以使用handle函数解析)。CscHandler亦可用于创建csc文件的内容，用户通过默认构造函数创建一个空的CscHandler对象，然后通过writer函数获取到writer对象，随后就可根据自身需要创建作用域及相应的变量，最后调用toString函数获取结果。
 
 ```C++
 CscHandler()
@@ -137,7 +141,7 @@ CscHandler()
 CscHandler(const String &script)
     按csc语法解析script中的内容到CscHandler对象中
 int handle(const String &script)
-	按csc语法解析script中的内容到CscHandler对象中
+	按csc语法解析script中的内容到CscHandler对象中，返回执行的命令数量
 CscReader reader()
     获取一个用于读取csc配置内容的CscReader对象，与CscHandler共享一个Context
 CscWriter writer()
@@ -146,13 +150,15 @@ CscWriter writer()
 
 ### CscReader
 
+CscReader提供了对csc配置内容的读取功能。
+
 ```c++
 bool accessible(const String &path, bool v=false)
     检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称检查
 void enter(const String &path)
 	进入给定路径对应的作用域，如果路径为“/”，则进入根作用域
 void iterate(ContextSeeker &seeker)      
-	从当前作用域开始，迭代其及所有子作用域的所有变量
+	从当前作用域开始，迭代该作用域及所有子作用域的所有变量
 String toString()
     从当前作用域开始，将其及子作用域、变量转换为字符串
 template<typename Tp>                                  
@@ -165,7 +171,7 @@ Tp enterAndGet(const String &path)
 
 ### CscWriter
 
-CscWriter提供了对CscHandler内容的编辑功能。
+CscWriter提供了对csc配置内容的编辑功能。
 
 ```C++
 CscWriter& autoEnterOn()
@@ -191,7 +197,7 @@ CscWriter& cleanVariable(const String &name)
 
 ### ContextSeeker
 
-ContextSeeker定义了用于迭代CscHandler内容的相关接口。用户可参考*csc/core/CscStrSeeker*实现自己的迭代功能：
+ContextSeeker定义了用于迭代CscHandler内容的相关接口。用户可参考*csc/core/CscStrSeeker*实现自己的迭代功能。
 
 ```C++
 void enterScope(UID id, const String &name)
