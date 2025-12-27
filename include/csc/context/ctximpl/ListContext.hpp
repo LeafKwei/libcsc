@@ -38,7 +38,6 @@ public:
     ListContext&   restart() override;                                                                
     void            clean() override;                                                                  
     void            iterate(ContextSeeker &seeker) const override;                 
-    const ScopeMetaData&  scopeMetaData() const noexcept override;          
 
 private:
     UID         idCounter_;

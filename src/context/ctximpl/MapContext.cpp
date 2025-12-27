@@ -59,10 +59,6 @@ bool MapContext::isRootScope() const{
     return !(current_ -> parent.expired());
 }
 
-const ScopeMetaData& MapContext::scopeMetaData() const noexcept{
-    return current_ -> meta;
-}
-
 MapContext::Pos MapContext::postion() const{
     return Pos{current_};
 }
@@ -157,7 +153,8 @@ void MapContext::clean(){
     idCounter_ = 1;
 
     root_ = std::make_shared<Scope>();
-    root_ -> meta = {nextID(), "/", root_};
+    root_ -> name = "/";
+    root_ -> id = nextID();
     current_ = root_;
 }
 
@@ -167,7 +164,8 @@ void MapContext::iterate(ContextSeeker &seeker) const{
 
 void MapContext::do_makeScope(const String &name){
     auto scope = std::make_shared<Scope>();
-    scope -> meta = {nextID(), name, scope};
+    scope -> name = name;
+    scope -> id = nextID();
     scope -> parent = current_;
     current_ -> scopes.insert({name, scope});
 }
@@ -218,7 +216,7 @@ void MapContext::do_setVariable(VariablePtr variable, InitValues values, ValueTy
  */
 void MapContext::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     if(scope != root_){                                 //不传递根作用域的名称
-        seeker.enterScope(scope -> meta.id, scope -> meta.name);
+        seeker.enterScope(scope -> id, scope -> name);
     }
 
     /* 迭代作用域中的每个变量，将变量名称、值列表、类型传递给values函数 */
@@ -240,7 +238,7 @@ void MapContext::do_iterate(ScopePtr scope, ContextSeeker &seeker) const{
     }
 
     if(scope != root_){
-        seeker.leaveScope(scope -> meta.id, scope -> meta.name);
+        seeker.leaveScope(scope -> id, scope -> name);
     }
 }
 

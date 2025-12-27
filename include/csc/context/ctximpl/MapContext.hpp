@@ -37,8 +37,7 @@ public:
     MapContext&   extendValues(const String &name, InitValues values) override;                                                          
     MapContext&   restart() override;                                                                
     void            clean() override;                                                                  
-    void            iterate(ContextSeeker &seeker) const override;                 
-    const ScopeMetaData&  scopeMetaData() const noexcept override;          
+    void            iterate(ContextSeeker &seeker) const override;                      
 
 private:
     UID         idCounter_;

@@ -39,7 +39,6 @@ public:
     virtual Context&   restart() =0;                                                                /* 返回到根作用域，即设置当前作用域为根作用域 */
     virtual void            clean() =0;                                                                  /* 清除所有的作用域和变量，随后重新创建一个新的根作用域 */
     virtual void            iterate(ContextSeeker &seeker) const =0;                 /* 从当前作用域开始，按DFS迭代其中的每个变量及每个子作用域 */
-    virtual const ScopeMetaData&  scopeMetaData() const noexcept =0;   /* 获取当前作用域的元数据 */
 };
 
 CSC_END

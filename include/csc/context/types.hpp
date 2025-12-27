@@ -61,14 +61,9 @@ struct ScopePos{
     ScopeWkr scope;
 };
 
-struct ScopeMetaData{
-    UID id;
-    String name;
-    ScopeWkr ptr;
-};
-
 struct Scope{
-    ScopeMetaData meta;
+    int                      id;
+    String                 name;
     ScopeWkr          parent;
     VariableKeeper  variables;
     ScopeKeeper     scopes;
