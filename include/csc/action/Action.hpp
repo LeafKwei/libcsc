@@ -7,11 +7,12 @@
 #include "csc/syntax/Operand.hpp"
 CSC_BEGIN
 
+template<typename Scp>
 struct Action{
 public:
     using OperandList   = std::vector<Operand>;
-    using ActRunnable = std::function<bool(CommandType type, OperandList &operands, Context &context)>;
-    using ActRun          = std::function<bool(CommandType type, OperandList &operands, Context &context)>;
+    using ActRunnable = std::function<bool(CommandType type, OperandList &operands, Context<Scp> &context)>;
+    using ActRun          = std::function<bool(CommandType type, OperandList &operands, Context<Scp> &context)>;
 
 public:
     ActRunnable runnable;

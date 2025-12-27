@@ -7,10 +7,11 @@
 #include "csc/action/Action.hpp"
 CSC_BEGIN
 
+template<typename Scp>
 class ActionCtl{
 public:
-    virtual void addActionBefore(int scopeid, Action::ActRunnable runnable, Action::ActRun run) =0; /* 添加Action到beforeActions队列 */
-    virtual void addActionAfter(int scopeid, Action::ActRunnable runnable, Action::ActRun run) =0;   /* 添加Action到afterAction队列 */
+    virtual void addActionBefore(int scopeid, Action<Scp>::ActRunnable runnable, Action<Scp>::ActRun run) =0; /* 添加Action到beforeActions队列 */
+    virtual void addActionAfter(int scopeid, Action<Scp>::ActRunnable runnable, Action<Scp>::ActRun run) =0;   /* 添加Action到afterAction队列 */
 };
 
 CSC_END

@@ -4,6 +4,7 @@
 #include <map>
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
+#include "csc/context/Scope.hpp"
 CSC_BEGIN
 
 class Querier{

@@ -13,18 +13,14 @@
 #include "csc/utility/PathHelper.hpp"
 
 CSC_BEGIN
-
-template<typename Ctx>
-using IsCtxType = std::enable_if_t<std::is_base_of_v<Context, Ctx> && (!std::is_abstract_v<Ctx>)>;
-
 /**
  * CscHandler是提供给用户使用的顶层接口，通过reader和writer接口，向用户提供对Context中保存的csc配置文件内容更简便地访问功能。 
  * 用户可根据自身需求，通过传递不同的Context实现类型作为模板参数以定制化CscHandler对于csc配置内容的存储与组织
  */
-template<typename Ctx, typename = IsCtxType<Ctx>>
+template<typename Scp>
 class CscHandler{
 public:
-    using ContextType = Ctx;
+    using ScopeType = Scp;
 
 public:
     CscHandler() =default;
@@ -34,8 +30,8 @@ public:
     CscWriter       writer();                                                  /* 获取一个writer对象，可以编辑Context中的内容 */
 
 private:
-    ContextType context_;
-    CmdDriver    driver_;
+    Context<ScopeType> context_;
+    CmdDriver                   driver_;
 };
 
 template<typename Ctx, typename Eab>
