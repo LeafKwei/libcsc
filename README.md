@@ -322,7 +322,7 @@ Command type: 2; Operands: ::, custom; Scope id: 2
 * doc: 存放libcsc文档使用到的相关资源
 * src：存放libcsc的源码文件
 * README.md：项目的介绍以及使用方式
-* Releaselogs.md：项目的发布信息、版本信息、特性
+* Releasenotes.md：项目的发布信息、版本信息、特性
 
 
 

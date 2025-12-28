@@ -10,9 +10,9 @@ template<typename... T>
 inline ScopePtr factory_makeSharedScope(ScopeType type, T &&...args){
     switch(type){
         case ScopeType::MapScope:
-            return std::make_shared<MapScope>(std::forward(args)...);
+            return std::make_shared<MapScope>(std::forward<T>(args)...);
         case ScopeType::ListScope:
-            return std::make_shared<ListScope>(std::forward(args)...);
+            return std::make_shared<ListScope>(std::forward<T>(args)...);
         default:
             return nullptr;
     }
