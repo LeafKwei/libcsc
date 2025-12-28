@@ -11,7 +11,7 @@ inline ScopePtr factory_makeSharedScope(ScopeType type, T &&...args){
         case ScopeType::MapScope:
             return std::make_shared<MapScope>(args...);
         case ScopeType::ListScope:
-            return nullptr;
+            return std::make_shared<ListScope>(args...);
         default:
             return nullptr;
     }

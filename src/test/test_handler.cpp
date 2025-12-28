@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
     AnySeeker seeker;
-    CscHandler<ScopeType::MapScope> handler;
+    CscHandler<ScopeType::ListScope> handler;
 
     handler.handle(str);
     CscReader reader = handler.reader();
@@ -43,6 +43,8 @@ int main(int argc, char *argv[]){
     reader.enter("custom");
     reader.enter("tom");
     std::cout << reader.getValue<bool>("isHappy") << std::endl;
+	std::cout << "========================" << std::endl;
+	reader.enter("/");
     std::cout << reader.toString() << std::endl;
     std::cout << "========================" << std::endl;
     reader.enter("/");;

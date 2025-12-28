@@ -1,6 +1,7 @@
 set(CSC_SRC
 	action/ActionMngr.cpp
     context/impl/MapScope.cpp
+    context/impl/ListScope.cpp
 	context/Context.cpp
 	context/Querier.cpp
 	context/val.cpp
