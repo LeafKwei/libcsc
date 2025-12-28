@@ -1,3 +1,7 @@
+**0.7.6**
+
+1.实现了ListScope，对应的枚举为ScopeType::ListScope。现在CscHandler的非类型模板参数可以选择ScopeType::MapScope和ScopeType::ListScope两种，前者基于std::map实现，拥有更快的查找速度，但是对于Scope和Variable的存储顺序是乱序的，这将导致通过toString或iterate等函数遍历Context的内容时无法保证对Scope和Variable遍历顺序与保存它们时的顺序一致；后者基于std::list实现，查找速度较慢，但可以最大程度的保证遍历时顺序与保存时的顺序的一致
+
 **0.7.5**
 
 1.  为了降低Context的复杂度，将Context回滚到了0.7.0版本的实现，同时将对于存储组织的抽象下降到了Scope中，相应的将Scope从纯结构体的实现转换为了一个接口，并添加了MapScope作为基于std::map的Scope实现。添加了factory_makeSharedScope工厂函数根据ScopeType创建对应类型的Scope。

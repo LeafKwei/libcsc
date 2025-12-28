@@ -10,7 +10,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.7.5"
+version = "0.7.6"
 
 ;This is a scope
 Dummy::

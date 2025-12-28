@@ -5,7 +5,7 @@
 
 #define CSC_BEGIN namespace csc{
 #define CSC_END }
-#define CSC_VERSION_STR "Version: 0.7.5"
+#define CSC_VERSION_STR "Version: 0.7.6"
 
 struct Token;
 
