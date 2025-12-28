@@ -3,7 +3,7 @@
 #include "csc/context/Querier.hpp"
 CSC_BEGIN
 
-Querier::Querier(ScopePos spos) : scope_(spos.scope){
+Querier::Querier(ScopePos spos) : scope_(spos.ptr){
 
 }
 
@@ -13,31 +13,32 @@ Querier::Querier(ScopePtr scope) : scope_(scope){
 
 bool Querier::tryEnter(const String &name){
     auto scopeptr = lockScopePtr();
-    auto pos = scopeptr -> scopes.find(name);
-    if(pos == scopeptr -> scopes.end()){
+    auto scope = scopeptr -> findScope(name);
+    if(scope == nullptr){
         return false;
     }
 
-    scope_ = pos -> second;
+    scope_ = scope;
     return true;
 }
 
 bool Querier::hasScope(const String &name) const{
     auto scopeptr = lockScopePtr();
-    auto pos = scopeptr -> scopes.find(name);
-    return pos != scopeptr -> scopes.end();
+    return (scopeptr -> findScope(name) != nullptr);
 }
 
 bool Querier::hasVariable(const String &name) const{
     auto scopeptr = lockScopePtr();
-    auto pos = scopeptr -> variables.find(name);
-    return pos != scopeptr -> variables.end();
+    return (scopeptr -> findVariable(name) != nullptr);
 }
 
 ValueUnit Querier::directValue(const String &name) const{
     auto scopeptr = lockScopePtr();
-    auto pos = scopeptr -> variables.find(name);
-    auto varptr = pos -> second;
+    auto varptr = scopeptr -> findVariable(name);
+
+    if(varptr == nullptr){
+        throw ContextExcept("No such variable:" + name);
+    }
 
     /* 如果变量中存在值，则返回首个值，否则返回一个该变量类型的零值 */
     return (varptr -> values.size() > 0) ? 
@@ -47,8 +48,13 @@ ValueUnit Querier::directValue(const String &name) const{
 
 Querier& Querier::captureVariable(const String &name){
     auto scopeptr = lockScopePtr();
-    auto pos = scopeptr -> variables.find(name);
-    var_ = pos -> second;
+    auto varptr = scopeptr -> findVariable(name);
+
+    if(varptr == nullptr){
+        throw ContextExcept("No such variable:" + name);
+    }
+
+    var_ = varptr;
     return *this;
 }
 

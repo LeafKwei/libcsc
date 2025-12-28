@@ -5,13 +5,13 @@ CSC_BEGIN
 void ActionMngr::notifyActionBefore(CommandType type, OperandList &operands, Context &context){
     do_notifyScopedAction(beforeActions_, type, operands, context);
     do_notifyGlobalAction(beforeActions_, type, operands, context);
-    checkAndRemoveAction(beforeActions_, type, context.scopeMetaData().id);
+    checkAndRemoveAction(beforeActions_, type, context.scopeinf().id);
 }
 
 void ActionMngr::notifyActionAfter(CommandType type, OperandList &operands, Context &context){
     do_notifyScopedAction(afterActions_, type, operands, context);
     do_notifyGlobalAction(afterActions_, type, operands, context);
-    checkAndRemoveAction(afterActions_, type, context.scopeMetaData().id);
+    checkAndRemoveAction(afterActions_, type, context.scopeinf().id);
 }
 
 /**
@@ -29,7 +29,7 @@ void ActionMngr::addActionAfter(int scopeid, Action::ActRunnable runnable, Actio
 }
 
 void ActionMngr::do_notifyScopedAction(ScopedActionMap &map, CommandType type, OperandList &operands, Context &context){
-    do_notifyAction(map, context.scopeMetaData().id, type, operands, context);
+    do_notifyAction(map, context.scopeinf().id, type, operands, context);
 }
 
 void ActionMngr::do_notifyGlobalAction(ScopedActionMap &map, CommandType type, OperandList &operands, Context &context){

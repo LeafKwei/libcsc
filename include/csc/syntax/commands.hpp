@@ -18,7 +18,7 @@ inline void enterscope_run(OperandList &operands, Context &context, ActionCtl &c
 ////////////////////////////////////////////////////////////////////////////////////////ExitScope
 inline void exitscope_run(OperandList &operands, Context &context, ActionCtl &ctl){
     const auto &name = operands.at(1).holder().token().str;
-    if(context.scopeMetaData().name != name){
+    if(context.scopeinf().name != name){
         throw CommandExcept("Can't exit from a scope, which name is different from current scope.");
     }
 
@@ -70,7 +70,7 @@ inline void assginplural_run(OperandList &operands, Context &context, ActionCtl 
 ////////////////////////////////////////////////////////////////////////////////////////ActionStr
 inline void actionstr_genidx(Context &context, ActionCtl &ctl){
     ctl.addActionAfter(
-        context.scopeMetaData().id,
+        context.scopeinf().id,
         
         [](CommandType type, OperandList &operands, Context &context) -> bool {
             return (type == CommandType::EnterScope || type == CommandType::Assign || type == CommandType::AssignPlural);
@@ -118,7 +118,7 @@ inline void actionstr_detail(Context &context, ActionCtl &ctl){
 
                 if(idx < operands.size() - 1) std::cout << ", ";
             }
-            std::cout << "; Scope id: " << context.scopeMetaData().id << std::endl;
+            std::cout << "; Scope id: " << context.scopeinf().id << std::endl;
             return true;
         }
     );

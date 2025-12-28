@@ -1,3 +1,9 @@
+**0.7.5**
+
+1.  为了降低Context的复杂度，将Context回滚到了0.7.0版本的实现，同时将对于存储组织的抽象下降到了Scope中，相应的将Scope从纯结构体的实现转换为了一个接口，并添加了MapScope作为基于std::map的Scope实现。添加了factory_makeSharedScope工厂函数根据ScopeType创建对应类型的Scope。
+2. 将Context的构造函数改为Context(ScopeType type)，以便可以指定Context创建的Scope种类
+3. 将CscHandler的模板参数从`template<typename Ctx, typename =xxx>`改为了`tempalte<ScopeType>`，以便可以在创建CscHandler对象时可以指定其内部的Context的ScopeType
+
 **0.7.3**
 
 1. 为了能通过模板来定制CscHandler中Context的具体实现类型，将原CscHandler的功能拆分到了CscReader和CscWriter(原CscEditor)中，避免特例化getValue系列函数模板时，必须要同时特例化CscHandler和getValue函数的问题。

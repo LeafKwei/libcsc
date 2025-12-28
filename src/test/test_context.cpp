@@ -1,9 +1,9 @@
 #include <iostream>
-#include "csc/context/ctximpl/MapContext.hpp"
+#include "csc/context/Context.hpp"
 using namespace csc;
 
 int main(void){
-    MapContext context;
+    Context context(ScopeType::MapScope);
 
     context.makeVariable("what", ValueType::String, String("Hello World!"));
     context.makeScope("users", true)

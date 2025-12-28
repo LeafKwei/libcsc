@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "csc/context/ctximpl/MapContext.hpp"
+#include "csc/context/Context.hpp"
 #include "csc/core/CscHandler.hpp"
 #include "csc/utility/utility.hpp"
 using namespace csc;
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
     AnySeeker seeker;
-    CscHandler<MapContext> handler;
+    CscHandler<ScopeType::MapScope> handler;
 
     handler.handle(str);
     CscReader reader = handler.reader();

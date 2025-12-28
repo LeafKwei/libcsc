@@ -10,7 +10,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.7.3"
+version = "0.7.5"
 
 ;This is a scope
 Dummy::
@@ -76,10 +76,11 @@ cmake -DBUILD_SHARED_LIBS=YES -G "Unix Makefiles" ../libcsc
 #include <iostream>
 #include <fstream>
 #include "csc/core/CscHandler.hpp"
-#include "csc/context/ctximpl/MapContext.hpp"
+#include "csc/context/Context.hpp"
 
 using csc::String;
-using csc::MapContext;
+using csc::Context;
+using csc::ScopeType;
 using csc::CscReader;
 using csc::CscHandler;
 
@@ -89,8 +90,8 @@ int main(void){
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
     
     //创建CscHandler对象，解析文件内容，随后通过reader函数获取到reader对象，开始读取文件内容
-    //通过指定不同的Context实现作为模板参数，可以定制CscHandler对于csc配置内容的存储组织
-    CscHandler<MapContext> handler(str);
+    //通过指定不同的ScopeType作为模板参数，可以定制CscHandler对于csc配置内容的存储组织
+    CscHandler<ScopeType::MapScope> handler(str);
     CscReader reader = handler.reader();  //获取一个reader对象用于读取配置内容
     reader.enter("/");                    //进入根作用域
     std::cout << "name: " << reader.getValue<String>("name") << std::endl;        //获取name变量值
