@@ -1,6 +1,10 @@
+**0.7.7**
+
+1. 添加了关键字`void`，现在可以在配置文件中通过`varname = void`为变量varname进行占位。为了实现占位功能，在commands中添加了voidcmd_runnable和voidcmd_run命令并应用到了CmdExecutor中，该命令可以以`1_=_void`的序列匹配到变量占位命令，然后忽略掉该命令
+
 **0.7.6**
 
-1.实现了ListScope，对应的枚举为ScopeType::ListScope。现在CscHandler的非类型模板参数可以选择ScopeType::MapScope和ScopeType::ListScope两种，前者基于std::map实现，拥有更快的查找速度，但是对于Scope和Variable的存储顺序是乱序的，这将导致通过toString或iterate等函数遍历Context的内容时无法保证对Scope和Variable遍历顺序与保存它们时的顺序一致；后者基于std::list实现，查找速度较慢，但可以最大程度的保证遍历时顺序与保存时的顺序的一致
+1. 实现了ListScope，对应的枚举为ScopeType::ListScope。现在CscHandler的非类型模板参数可以选择ScopeType::MapScope和ScopeType::ListScope两种，前者基于std::map实现，拥有更快的查找速度，但是对于Scope和Variable的存储顺序是乱序的，这将导致通过toString或iterate等函数遍历Context的内容时无法保证对Scope和Variable遍历顺序与保存它们时的顺序一致；后者基于std::list实现，查找速度较慢，但可以最大程度的保证遍历时顺序与保存时的顺序的一致
 
 **0.7.5**
 

@@ -30,11 +30,11 @@ TokenHolder TokenPool::nextHolder(){
 
     switch(tokens_.front() -> type){
         case TokenType::Limitor:              //如果当前token是一个定界符，那么则以多token模式填充TokenHolder
-            holder.plural_ = true;
+            holder.setPlural(true);
             fillHolderAsPlural(holder);
             break;
         default:                                        //默认以单token模式填充TokenHolder
-            holder.plural_ = false;
+            holder.setPlural(false);
             fillHolderAsNonPlural(holder);
     }
 
@@ -56,9 +56,10 @@ void TokenPool::initIgnoredToken(){
 }
 
 void TokenPool::initConvToken(){
-    conv_.insert({"true", TokenType::Keyword});
-    conv_.insert({"false", TokenType::Keyword});
-    conv_.insert({"action", TokenType::Keyword});
+    conv_.insert({KW_TRUE, TokenType::Keyword});
+    conv_.insert({KW_FALSE, TokenType::Keyword});
+    conv_.insert({KW_ACTION, TokenType::Keyword});
+    conv_.insert({KW_VOID, TokenType::Keyword});
 }
 
 void TokenPool::initPluralRule(){

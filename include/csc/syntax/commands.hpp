@@ -8,6 +8,11 @@ CSC_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////
 inline bool default_runnable(OperandList &operands){ return true; }
+inline void default_run(OperandList &operands, Context &context, ActionCtl &ctl){}
+
+////////////////////////////////////////////////////////////////////////////////////////VoidCmd
+inline bool voidcmd_runnable(OperandList &operands){ return true; }
+inline void voidcmd_run(OperandList &operands, Context &context, ActionCtl &ctl){}
 
 ////////////////////////////////////////////////////////////////////////////////////////EnterScope
 inline void enterscope_run(OperandList &operands, Context &context, ActionCtl &ctl){

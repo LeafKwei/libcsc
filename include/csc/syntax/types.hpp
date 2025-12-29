@@ -12,7 +12,7 @@ enum class OperandType{
 };
 
 enum class CommandType{
-    Unknwon,
+    Unknwon, VoidCmd,
     EnterScope, ExitScope, Assign, AssignPlural, ActionStr
 };
 

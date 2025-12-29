@@ -68,6 +68,14 @@ String CmdExecutor::keyseq() const noexcept{
 }
 
 void CmdExecutor::installCmd(){
+    ////////////////////////////////////////////////////////////////////////////////////////1_=_void
+    addCommand(
+        Keyseq().start(genKeyFrom(OperandType::Identifier, "")).append(genKeyFrom(OperandType::Operator, "=")).append(genKeyFrom(OperandType::Keyword, KW_VOID)).seq(),
+        CommandType::VoidCmd,
+        voidcmd_runnable,
+        voidcmd_run
+    );  
+
     ////////////////////////////////////////////////////////////////////////////////////////EnterScope 1_::
     addCommand(
         Keyseq().start(genKeyFrom(OperandType::Identifier, "")).append(genKeyFrom(OperandType::Operator, "::")).seq(),
@@ -98,7 +106,7 @@ void CmdExecutor::installCmd(){
 
     ////////////////////////////////////////////////////////////////////////////////////////ActionStr action_4
     addCommand(
-        Keyseq().start(genKeyFrom(OperandType::Keyword, "action")).append(genKeyFrom(OperandType::Value, "")).seq(),
+        Keyseq().start(genKeyFrom(OperandType::Keyword, KW_ACTION)).append(genKeyFrom(OperandType::Value, "")).seq(),
         CommandType::ActionStr,
         [](OperandList &operands) -> bool { return valueTypeof(operands.at(1).holder().token()) == ValueType::String; },
         actionstr_run

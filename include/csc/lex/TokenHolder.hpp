@@ -25,6 +25,7 @@ private:
     TokenList tokens_;
 
     void addToken(const TokenPtr &token);
+    void setPlural(bool plural);
 };
 
 CSC_END

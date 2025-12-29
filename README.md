@@ -6,11 +6,13 @@ libcsc是使用C++实现的一个工具库，用于解析后缀为`.csc`(Command
 
 # 2.csc文件语法
 
+## 2.1.基本语法
+
 csc文件的语法十分简单，在当前版本中，csc文件由两部分组成：作用域(Scope)和变量(Variable)。以下是一个csc文件*sample.csc*的示例：
 
 ```
 name = "CSC Sample"
-version = "0.7.6"
+version = "0.7.7"
 
 ;This is a scope
 Dummy::
@@ -43,6 +45,38 @@ csc文件支持注释，注释以分号`;`开始，在分号之后的内容都�
 ```
 name = "CSC Sample" version = "0.7.3" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
 ```
+
+
+
+## 2.2.数组
+
+在前一节我们已经提到过了数组，在libcsc中，数组被作为具有多个值的变量而实现，由于libcsc要求一个变量必须有值，因此，空数组是不被允许的：
+
+```
+array = {}  ;将导致断言失败
+```
+
+此外，如果数组仅具有一个元素，那么当使用toString函数时，对应的变量将被还原为单个值的变量：
+
+```
+;原内容
+array = {"Hello"}
+
+;toString生成的内容
+array = "Hello"
+```
+
+
+
+## 2.3.占位
+
+有时我们可能想要在配置文件的某个位置先用一个变量占位，然后在未来的某个时间段再设置变量的值，为此，libcsc提供了关键字`void`，它可用在变量的赋值中，例如：
+
+```
+holder = void
+```
+
+被赋予void的变量将在命令匹配与执行阶段被忽略，相应的，此类变量在toString函数返回的结果中也不会表现出来。
 
 
 
@@ -331,4 +365,17 @@ Command type: 2; Operands: ::, custom; Scope id: 2
 **整体架构图**
 
 ![libcsc_structure](doc/img/libcsc_structure.png)
+
+
+
+# 6.附录
+
+## 关键字
+
+| 关键字 | 作用                   |
+| ------ | ---------------------- |
+| true   | 变量赋值时作为布尔值   |
+| false  | 变量赋值时作为布尔值   |
+| action | 执行某个动作           |
+| void   | 作为变量赋值时的占位符 |
 

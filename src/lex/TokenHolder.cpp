@@ -2,10 +2,6 @@
 #include "csc/lex/TokenHolder.hpp"
 CSC_BEGIN
 
-void TokenHolder::addToken(const TokenPtr &token){
-    tokens_.push_back(token);
-}
-
 Token& TokenHolder::token(){
     assert(tokens_.size() > 0);
     return *(tokens_.at(0));
@@ -25,6 +21,14 @@ bool TokenHolder::empty() const noexcept{
 
 Size_t TokenHolder::size() const noexcept{
     return tokens_.size();
+}
+
+void TokenHolder::addToken(const TokenPtr &token){
+    tokens_.push_back(token);
+}
+
+void TokenHolder::setPlural(bool plural){
+    plural_ = plural;
 }
 
 CSC_END

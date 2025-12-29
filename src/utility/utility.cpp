@@ -8,6 +8,7 @@ CSC_BEGIN
 const String KW_TRUE("true");
 const String KW_FALSE("false");
 const String KW_ACTION("action");
+const String KW_VOID("void");
 
 //=================== 通用工具函数 ===================
 
