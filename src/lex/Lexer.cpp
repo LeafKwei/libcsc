@@ -5,7 +5,7 @@ Lexer::Lexer(const String &str) : mngr_(str){
     
 }
 
-int Lexer::index() const noexcept{
+Index_t Lexer::index() const noexcept{
     return mngr_.index();
 }
 

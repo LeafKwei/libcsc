@@ -10,7 +10,6 @@ set(CSC_SRC
     core/CscStrSeeker.cpp
     lex/CharMngr.cpp
     lex/Lexer.cpp
-    lex/Locator.cpp
     lex/PureLexer.cpp
     lex/TokenHolder.cpp
     lex/TokenPool.cpp

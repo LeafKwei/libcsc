@@ -16,7 +16,7 @@ int CmdDriver::drive(const String &script, Context &context){
 
     while((err = lexer.readToken(pool)) == LxErrno::OK);
     if(err == LxErrno::Bad){
-        throw CommandExcept("Bad Token: " + makeExceptMessage(script, Locator(script, lexer.index())));
+        throw CommandExcept("Bad Token: " + makeExceptMessage(script, lexer.index()));
     }
 
     while(!pool.empty()){
@@ -39,10 +39,11 @@ int CmdDriver::drive(const String &script, Context &context){
     return cnt;
 }
 
-String CmdDriver::makeExceptMessage(const String &script, const Locator &locator){
+String CmdDriver::makeExceptMessage(const String &script, Offset_t offset){
     std::stringstream sstream;
-    sstream << "row " << locator.row() << ", col " << locator.col() << ".";
-    sstream << "text: " << script.substr(locator.index(), 32);
+    Rowcol rc = locateFrom(script, offset);
+    sstream << "row " << rc.first<< ", col " << rc.second<< ".";
+    sstream << "text: " << script.substr(offset, 32);
     return sstream.str();
 }
 

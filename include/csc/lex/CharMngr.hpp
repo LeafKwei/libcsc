@@ -10,7 +10,7 @@ public:
     enum SeekOption{Set, Cur, End};
     CharMngr(const String &str, int index=0);
     
-    int         index() const noexcept;
+    Index_t  index() const noexcept;
     Size_t    length() const noexcept;
     Size_t    surplus() const noexcept;
     bool      valid() const noexcept;
@@ -23,8 +23,8 @@ public:
     const String &str() const;
 
 private:
-    String str_;
-    Size_t index_;
+    String  str_;
+    Index_t index_;
 };
 
 CSC_END

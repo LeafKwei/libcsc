@@ -7,7 +7,7 @@ CSC_BEGIN
 class Lexer{
 public:
     Lexer(const String &str);
-    int         index() const noexcept;
+    Index_t  index() const noexcept;
     LxErrno readToken(TokenPool &pool);
 
 private:

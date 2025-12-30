@@ -6,7 +6,7 @@ CharMngr::CharMngr(const String &str, int index) : str_(str), index_(index){
     else if(index_ > str_.size()) index_ = str_.size();
 }
 
-int CharMngr::index() const noexcept{
+Index_t CharMngr::index() const noexcept{
     return index_;
 }
 

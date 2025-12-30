@@ -17,6 +17,8 @@ inline bool blank_readable(CharMngr &mngr, Any &local){
 }
 
 inline TokenPair blank_read(CharMngr &mngr, Any &local){
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::Blank, mngr.index()}};
+
     while(mngr.valid()){
         if(!isBlank(mngr.getch())){
             break;
@@ -25,7 +27,7 @@ inline TokenPair blank_read(CharMngr &mngr, Any &local){
         mngr.forward();
     }
 
-    return TokenPair{RdErrno::OK, Token{"", TokenType::Blank}};
+    return pair;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////Description
@@ -34,13 +36,15 @@ inline bool description_readable(CharMngr &mngr, Any &local){
 }
 
 inline TokenPair description_read(CharMngr &mngr, Any &local){
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::Description, mngr.index()}};
+
     while(mngr.valid()){
         if(isNewLine(mngr.forward())){
             break;
         }
     }
 
-    return TokenPair{RdErrno::OK, Token{"", TokenType::Description}}; 
+    return pair;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////Limitor
@@ -49,7 +53,7 @@ inline bool limitor_readable(CharMngr &mngr, Any &local){
 }
 
 inline TokenPair limitor_read(CharMngr &mngr, Any &local){
-    TokenPair pair{RdErrno::OK, Token{"", TokenType::Limitor}};
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::Limitor, mngr.index()}};
 
     while(mngr.valid()){
         auto ch = mngr.getch();
@@ -71,7 +75,7 @@ inline bool separator_readable(CharMngr &mngr, Any &local){
 }
 
 inline TokenPair separator_read(CharMngr &mngr, Any &local){
-    TokenPair pair{RdErrno::OK, Token{"", TokenType::Separator}};
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::Separator, mngr.index()}};
 
     while(mngr.valid()){
         auto ch = mngr.getch();
@@ -93,7 +97,7 @@ inline bool identifier_readable(CharMngr &mngr, Any &local){
 }
 
 inline TokenPair identifier_read(CharMngr &mngr, Any &local){
-    TokenPair pair{RdErrno::OK, Token{"", TokenType::Identifer}};
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::Identifer, mngr.index()}};
 
     while(mngr.valid()){
         auto ch = mngr.getch();
@@ -114,7 +118,7 @@ inline bool operator_readable(CharMngr &mngr, Any &local){
 }
 
 inline TokenPair operator_read(CharMngr &mngr, Any &local){
-    TokenPair pair{RdErrno::OK, Token{"", TokenType::Operator}};
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::Operator, mngr.index()}};
 
     while(mngr.valid()){
         auto ch = mngr.getch();
@@ -218,7 +222,7 @@ inline void number_else(CharMngr &mngr, number_local &local, TokenPair &pair){
 }
 
 inline TokenPair number_read(CharMngr &mngr, Any &local){
-    TokenPair pair{RdErrno::OK, Token{"", TokenType::Integer}};
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::Integer, mngr.index()}};
     auto &load = std::any_cast<number_local&>(local);
 
     if(load.hex){
@@ -237,7 +241,7 @@ inline bool string_readable(CharMngr &mngr, Any &local){
 }
 
 inline TokenPair string_read(CharMngr &mngr, Any &local){
-    TokenPair pair{RdErrno::OK, Token{"", TokenType::String}};
+    TokenPair pair{RdErrno::OK, Token{"", TokenType::String, mngr.index()}};
     mngr.forward();     //跳过引号
 
     bool escape = false;

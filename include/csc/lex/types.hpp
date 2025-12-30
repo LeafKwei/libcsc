@@ -14,6 +14,7 @@ enum class TokenType{
 struct Token{
     String         str;
     TokenType type;
+    Offset_t      offset;
 };
 
 CSC_END

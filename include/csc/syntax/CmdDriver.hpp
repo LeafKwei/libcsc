@@ -2,7 +2,7 @@
 #define CSC_CMDDRIVER_HPP
 
 #include "csc/csc.hpp"
-#include "csc/lex/Locator.hpp"
+#include "csc/utility/utility.hpp"
 #include "csc/syntax/CmdExecutor.hpp"
 
 CSC_BEGIN
@@ -20,7 +20,7 @@ private:
     CmdExecutor executor_;
     ActionMngr   mngr_;
 
-    String makeExceptMessage(const String &script, const Locator &locator);
+    String makeExceptMessage(const String &script, Offset_t offset);
 };
 
 CSC_END
