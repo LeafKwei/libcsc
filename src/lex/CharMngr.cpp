@@ -1,9 +1,10 @@
 #include "csc/lex/CharMngr.hpp"
 CSC_BEGIN
 
-CharMngr::CharMngr(const String &str, int index) : str_(str), index_(index){
+CharMngr::CharMngr(const String &str, Index_t index) : str_(str), index_(index){
+    Index_t size = str_.size();
     if(index_ < 0) index_ = 0;
-    else if(index_ > str_.size()) index_ = str_.size();
+    else if(index_ > size) index_ = size;
 }
 
 Index_t CharMngr::index() const noexcept{
@@ -19,14 +20,15 @@ Size_t CharMngr::surplus() const noexcept{
 }
 
 bool CharMngr::valid() const noexcept{
-    return (index_ >= 0) && (index_ < str_.size());
+    Index_t size = str_.size();
+    return (index_ >= 0) && (index_ < size);
 }
 
-Char CharMngr::at(int index) const{
+Char CharMngr::at(Index_t index) const{
     return str_.at(index);
 }
 
-Char CharMngr::near(int offset) const{
+Char CharMngr::near(Offset_t offset) const{
     return str_.at(index_ + offset);
 }
 

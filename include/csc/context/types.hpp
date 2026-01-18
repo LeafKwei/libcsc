@@ -15,7 +15,8 @@ enum class ValueType{
     Bool, Integer, Double, String,        //bool、int/long、double、std::string
 };
 
-/* 通过下方的模板将ValueType的类型映射为C++内置类型，以此将枚举值与这些类型绑定 */
+////////////////////////////////////////////////////////////////////////////////////////类型映射
+/* 通过下方的模板将ValueType的类型映射为C++内建类型，以此将枚举值与这些类型绑定 */
 template<ValueType VTP>
 struct CppType{};
 
@@ -39,6 +40,37 @@ struct CppType<ValueType::String>{
     using type = String;
 };
 
+/* 通过下方的模板将C++内建类型映射为ValueType枚举值 */
+template<typename CTP>
+struct ValType{};
+
+template<>
+struct ValType<bool>{
+    static constexpr ValueType valtype = ValueType::Bool;
+};
+
+template<>
+struct ValType<int>{
+    static constexpr ValueType valtype = ValueType::Integer;
+};
+
+template<>
+struct ValType<long>{
+    static constexpr ValueType valtype = ValueType::Integer;
+};
+
+template<>
+struct ValType<double>{
+    static constexpr ValueType valtype = ValueType::Double;
+};
+
+template<>
+struct ValType<String>{
+    static constexpr ValueType valtype = ValueType::String;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////别名
 /* 声明一些常用的别名 */
 struct Variable;
 struct Scope;
@@ -47,6 +79,7 @@ using VariablePtr = std::shared_ptr<Variable>;
 using VariableWkr = std::weak_ptr<Variable>;
 using ValueKeeper = std::vector<Value>;
 
+////////////////////////////////////////////////////////////////////////////////////////结构体定义
 struct Variable{
     String name;
     ValueKeeper values;

@@ -8,14 +8,14 @@ CSC_BEGIN
 class CharMngr{
 public:
     enum SeekOption{Set, Cur, End};
-    CharMngr(const String &str, int index=0);
+    CharMngr(const String &str, Index_t index=0);
     
     Index_t  index() const noexcept;
     Size_t    length() const noexcept;
-    Size_t    surplus() const noexcept;
+    Size_t    surplus() const noexcept;            //获取从index位置到字符串末尾剩余的字符数
     bool      valid() const noexcept;
-    Char      at(int index) const;
-    Char      near(int offset) const;          //获取index附近的Char
+    Char      at(Index_t index) const;
+    Char      near(Offset_t offset) const;          //获取index附近的字符，例如near(1)可获取index+1处的字符
     Char      getch() const;
     Char      forward();
     Char      backward();

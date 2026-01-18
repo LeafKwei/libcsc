@@ -11,6 +11,7 @@ const String KW_ACTION("action");
 const String KW_VOID("void");
 
 ////////////////////////////////////////////////////////////////////////////////////////通用工具函数
+/* 如果字符串的内容包含引号，那么在每个引号前添加一个转义字符，返回转换后的字符串 */
 String toEscapingString(const String &str){
     String tmp(str);
 
@@ -23,11 +24,13 @@ String toEscapingString(const String &str){
     return tmp;
 }
 
+/* 计算从字符串开头到指定的offset位置之间的行数和列数 */
 Rowcol locateFrom(const String &str, Offset_t offset){
     Rowcol rc{0, 0};
 
-    auto endidx = (str.size() > offset) ? offset : str.size();
-    for(Size_t idx = 0; idx < endidx; idx++){
+    Offset_t size = str.size();
+    auto endidx = (size > offset) ? offset : size;
+    for(Offset_t idx = 0; idx < endidx; idx++){
         if(str.at(idx) == '\n'){
             ++rc.first;
             rc.second = 0;

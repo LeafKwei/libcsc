@@ -6,7 +6,6 @@
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
-#include "csc/context/Context.hpp"
 #include "csc/context/ContextSeeker.hpp"
 #include "csc/context/ScopeFactory.hpp"
 #include "csc/context/Querier.hpp"

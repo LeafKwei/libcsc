@@ -2,6 +2,7 @@
 #define CSC_WRITER_HPP
 
 #include <utility>
+#include "csc/utility/utility.hpp"
 #include "csc/context/Context.hpp"
 CSC_BEGIN
 
@@ -20,18 +21,21 @@ public:
     CscWriter& leaveScope();
     CscWriter& cleanScope(const String &name);
 
+    ////////////////////////////////////////////////////////////////////////////////////////创建变量/追加变量值
+    CscWriter& makeVariable(const String &name);                                                         //专门应对用户没有给定任何变量值的情况
     template<typename... T>
-    CscWriter& makeVariable(const String &name, ValueType type, T &&...values);
+    CscWriter& makeVariable(const String &name, T &&...values);
     template<typename... T>
-    CscWriter& makeVariable(const String &name, ValueType type, int value1, T &&...values);                //通过重载函数模板并将value1指定为int，从而让编译器优先选择此版本处理int类型的数据
+    CscWriter& makeVariable(const String &name, int value1, T &&...values);                //通过重载函数模板并将value1指定为int，从而让编译器优先选择此版本处理int类型的数据
     template<typename... T>
-    CscWriter& makeVariable(const String &name, ValueType type, const char *value1, T &&...values);  //通过重载函数模板并将value1指定为const char*，从而让编译器优先选择此版本处理char*类型的数据
+    CscWriter& makeVariable(const String &name, const char *value1, T &&...values);  //通过重载函数模板并将value1指定为const char*，从而让编译器优先选择此版本处理char*类型的数据
     template<typename... T>
     CscWriter& extendValues(const String &name, T &&...values);
     template<typename... T>
     CscWriter& extendValues(const String &name, int value1, T &&...values);
     template<typename... T>
     CscWriter& extendValues(const String &name, const char *value1, T &&...values);
+    ////////////////////////////////////////////////////////////////////////////////////////
 
     CscWriter& cleanVariable(const String &name);
 
@@ -40,17 +44,27 @@ private:
     Context &context_;
 };
 
-template<typename... T>
-inline CscWriter& CscWriter::makeVariable(const String &name, ValueType type, T &&...values){
-    context_.makeVariable(name, type, {std::forward<T>(values)...});
+inline CscWriter& CscWriter::makeVariable(const String &name){
+    //在没有给定任何变量值的情况下，什么操作也不做
     return *this;
 }
 
 template<typename... T>
-inline CscWriter& CscWriter::makeVariable(const String &name, ValueType type, int value1, T &&...values){
+inline CscWriter& CscWriter::makeVariable(const String &name, T &&...values){
+    context_.makeVariable(
+        name,
+        ValType<typename std::remove_cv<typename std::remove_reference<   //由于转发引用会保留const等属性，也可能会推断出引用类型，因此需要事先移除引用、const等属性，
+            typename TypePack<T...>::first>::type>::type>::valtype,                         //以确保ValType模板接收到的类型是无任何修饰的纯粹类型(由于remove_cv对引用类型无效，因此要确保先remove_reference)
+        {std::forward<T>(values)...}
+    );
+    return *this;
+}
+
+template<typename... T>
+inline CscWriter& CscWriter::makeVariable(const String &name,  int value1, T &&...values){
     context_.makeVariable(
         name, 
-        type,
+        ValType<int>::valtype,
         {CppType<ValueType::Integer>::type{value1}, CppType<ValueType::Integer>::type{std::forward<T>(values)}...}
     );
 
@@ -58,10 +72,10 @@ inline CscWriter& CscWriter::makeVariable(const String &name, ValueType type, in
 }
 
 template<typename... T>
-inline CscWriter& CscWriter::makeVariable(const String &name, ValueType type, const char *value1, T &&...values){
+inline CscWriter& CscWriter::makeVariable(const String &name, const char *value1, T &&...values){
     context_.makeVariable(
         name, 
-        type,
+        ValType<String>::valtype,
         {CppType<ValueType::String>::type{value1}, CppType<ValueType::String>::type{std::forward<T>(values)}...}
     );
 
