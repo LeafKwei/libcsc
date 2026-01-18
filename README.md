@@ -12,7 +12,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.7.7"
+version = "0.7.8"
 
 ;This is a scope
 Dummy::
@@ -43,7 +43,7 @@ Dummy::
 csc文件支持注释，注释以分号`;`开始，在分号之后的内容都被视为注释内容而被忽略。此外，csc的语法较为宽松，只要使用合适的分隔符(例如空白)，csc文件的内容甚至可以压缩到一行：
 
 ```
-name = "CSC Sample" version = "0.7.3" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
+name = "CSC Sample" version = "0.7.8" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
 ```
 
 
@@ -221,9 +221,10 @@ CscWriter& leaveScope()
 	离开当前作用域，回到它的父作用域。当位于根作用域时，调用此函数将引发异常
 CscWriter& cleanScope(const String &name)
 	清除当前作用域下指定名称的作用域
-CscWriter& makeVariable(const String &name, ValueType type, T &&...values)
-	在当前作用域中创建指定名称的变量，type指定变量的类型，values是一组指定变量值的可变参数，请确保其都为同一类型
+CscWriter& makeVariable(const String &name, T &&...values)
+	在当前作用域中创建指定名称的变量，values是一组指定变量值的可变参数，请确保其都为同一类型
     当创建一个已存在的变量时，将会直接使用values替代该变量中的变量值
+    makeVariable在0.7.8版本后可根据变量值自动推断变量的ValueType类型
 CscWriter& extendValues(const String &name, T &&...values)
 	追加当前作用域中指定名称的变量的变量值
 CscWriter& cleanVariable(const String &name)

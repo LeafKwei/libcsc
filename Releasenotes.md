@@ -1,3 +1,8 @@
+**0.7.8**
+
+1. 为CscWriter的makeVariable系列函数添加了类型自动推断功能，现在使用makeVariable函数创建变量可以无需指定ValueType，该函数可以从给定的变量值中推断出ValueType。相应的，调用makeVariable函数时必须指定变量值，否则该函数将不进行任何操作
+2. 添加了模板ValType，用于将C++内建类型映射为ValueType内的枚举
+
 **0.7.7**
 
 1. 添加了关键字`void`，现在可以在配置文件中通过`varname = void`为变量varname进行占位。为了实现占位功能，在commands中添加了voidcmd_runnable和voidcmd_run命令并应用到了CmdExecutor中，该命令可以以`1_=_void`的序列匹配到变量占位命令，然后忽略掉该命令
