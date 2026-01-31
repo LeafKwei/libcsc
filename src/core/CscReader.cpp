@@ -27,7 +27,7 @@ bool CscReader::accessible(const String &path, bool v) const{
     /* 最后一部分则根据参数v决定是作为scope名称还是variable名称检查 */
     return (v) 
         ? looker.lookvar(helper.basename()).done() 
-        : looker.lookvar(helper.basename()).done();
+        : looker.looksco(helper.basename()).done();
 }
 
 void CscReader::enter(const String &path) const{
