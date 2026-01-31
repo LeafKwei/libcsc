@@ -81,7 +81,7 @@ Querier Context::querier(const String &name) const{
     return Querier(currentFindVarp(name));
 }
 
-Looker Context::looker(bool fromroot=false) const{
+Looker Context::looker(bool fromroot) const{
     return (fromroot) ? Looker(root_) : Looker(current_);
 }
 
@@ -89,7 +89,7 @@ Looker Context::looker(const String &name) const{
     return Looker(currentFindScop(name));
 }
 
-Walker Context::walker(bool fromroot=false) const{
+Walker Context::walker(bool fromroot) const{
     return (fromroot) ? Walker(root_) : Walker(current_);
 }
 

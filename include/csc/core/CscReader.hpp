@@ -23,6 +23,7 @@ public:
 
 private:
     Context &context_;
+    String walkerToString(const Walker &walker, int nest, bool isroot) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////特例化
@@ -88,13 +89,13 @@ inline ArrBool CscReader::getValue<ArrBool>(const String &name) const{
     ArrBool array;
 
     auto querier = context_.querier(name);
-    if(querier.queryType() != ValueType::Bool){
+    if(querier.type() != ValueType::Bool){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>::type).name()));
     }
 
-    for(Size_t index = 0; index < querier.querySize(); index++){
+    for(Size_t index = 0; index < querier.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Bool>::type>(querier.queryValue(index))
+            std::any_cast<CppType<ValueType::Bool>::type>(querier.value(index))
         );
     }
 
@@ -106,14 +107,14 @@ inline ArrInt CscReader::getValue<ArrInt>(const String &name) const{
     ArrInt array;
 
     auto querier = context_.querier(name);
-    if(querier.queryType() != ValueType::Integer){
+    if(querier.type() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(int).name()));
     }
 
-    for(Size_t index = 0; index < querier.querySize(); index++){
+    for(Size_t index = 0; index < querier.size(); index++){
         array.push_back(
             static_cast<int>(
-                std::any_cast<CppType<ValueType::Integer>::type>(querier.queryValue(index))
+                std::any_cast<CppType<ValueType::Integer>::type>(querier.value(index))
             )
         );
     }
@@ -126,13 +127,13 @@ inline ArrLong CscReader::getValue<ArrLong>(const String &name) const{
     ArrLong array;
 
     auto querier = context_.querier(name);
-    if(querier.queryType() != ValueType::Integer){
+    if(querier.type() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>::type).name()));
     }
 
-    for(Size_t index = 0; index < querier.querySize(); index++){
+    for(Size_t index = 0; index < querier.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Integer>::type>(querier.queryValue(index))
+            std::any_cast<CppType<ValueType::Integer>::type>(querier.value(index))
         );
     }
 
@@ -144,13 +145,13 @@ inline ArrDouble CscReader::getValue<ArrDouble>(const String &name) const{
     ArrDouble array;
 
     auto querier = context_.querier(name);
-    if(querier.queryType() != ValueType::Double){
+    if(querier.type() != ValueType::Double){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>::type).name()));
     }
 
-    for(Size_t index = 0; index < querier.querySize(); index++){
+    for(Size_t index = 0; index < querier.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::Double>::type>(querier.queryValue(index))
+            std::any_cast<CppType<ValueType::Double>::type>(querier.value(index))
         );
     }
 
@@ -162,13 +163,13 @@ inline ArrString CscReader::getValue<ArrString>(const String &name) const{
     ArrString array;
 
     auto querier = context_.querier(name);
-    if(querier.queryType() != ValueType::String){
+    if(querier.type() != ValueType::String){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>::type).name()));
     }
 
-    for(Size_t index = 0; index < querier.querySize(); index++){
+    for(Size_t index = 0; index < querier.size(); index++){
         array.push_back(
-            std::any_cast<CppType<ValueType::String>::type>(querier.queryValue(index))
+            std::any_cast<CppType<ValueType::String>::type>(querier.value(index))
         );
     }
 

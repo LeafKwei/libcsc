@@ -7,17 +7,19 @@ Querier::Querier(VariablePtr varp) : var_(varp){
 
 }
 
-ValueType Querier::queryType() const{
-    auto varptr = lockVariablePtr();
-    return varptr -> type;
+String Querier::name() const{
+    return lockVariablePtr() -> name;
 }
 
-Size_t Querier::querySize() const{
-    auto varptr = lockVariablePtr();
-    return varptr -> values.size();
+ValueType Querier::type() const{
+    return lockVariablePtr() -> type;
 }
 
-Value Querier::queryValue(int index) const{
+Size_t Querier::size() const{
+    return lockVariablePtr() -> values.size();
+}
+
+Value Querier::value(int index) const{
     auto varptr = lockVariablePtr();
 
     /* 如果index在values的大小之内，返回对应位置的值，否则返回一个零值 */
@@ -25,6 +27,15 @@ Value Querier::queryValue(int index) const{
     return (uindex < varptr -> values.size()) 
         ? varptr -> values.at(index)
         : makeZeroValue(varptr -> type);
+}
+
+ValueUnit Querier::valueunit(int index) const{
+    auto varptr = lockVariablePtr();
+    
+    auto uindex = static_cast<Size_t>(index);
+    return (uindex < varptr -> values.size()) 
+        ? ValueUnit{varptr -> values.at(index), varptr -> type}
+        : ValueUnit{makeZeroValue(varptr -> type), varptr -> type};
 }
 
 VariablePtr Querier::lockVariablePtr() const{

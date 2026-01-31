@@ -33,11 +33,8 @@ int main(void){
 
     std::cout << "----------------------------" << std::endl;
     context.makeVariable("names", ValueType::String, {String("Tom"), String("Jerry"), String("Jimi"), String("Smith"), String("Amili")});
-    Querier querier = context.querier();
-    if(querier.hasVariable("names")){
-        querier.captureVariable("names");
-        for(auto i = 0; i < querier.querySize(); i++){
-            std::cout << std::any_cast<String>(querier.queryValue(i).value) << std::endl;
-        }
+    Querier querier = context.querier("names");
+    for(auto i = 0; i < querier.size(); i++){
+        std::cout << std::any_cast<String>(querier.valueunit(i).value) << std::endl;
     }
 }

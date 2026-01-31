@@ -4,7 +4,6 @@
 #include "csc/csc.hpp"
 #include "csc/context/Scope.hpp"
 #include "csc/context/Context.hpp"
-#include "csc/context/ContextSeeker.hpp"
 #include "csc/core/types.hpp"
 #include "csc/core/CscReader.hpp"
 #include "csc/core/CscWriter.hpp"

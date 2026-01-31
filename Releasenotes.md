@@ -1,3 +1,9 @@
+**0.7.9**
+
+1. 移除了ContextSeeker和CscStrSeeker，以及Context、CscReader中的iteratre函数。添加了CscWalkerString用于将csc数据转换为字符串，同时也为CscReader添加了walker函数以便获取Walker对象来遍历csc文件内容，并以此替代iterate函数
+2. 添加了Looker类，用于快速验证指定名称的作用域或变量是否存在
+3. 重写了Querier类，使之功能更加简洁和特化
+
 **0.7.8**
 
 1. 为CscWriter的makeVariable系列函数添加了类型自动推断功能，现在使用makeVariable函数创建变量可以无需指定ValueType，该函数可以从给定的变量值中推断出ValueType。相应的，调用makeVariable函数时必须指定变量值，否则该函数将不进行任何操作

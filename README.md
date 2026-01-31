@@ -12,7 +12,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.7.8"
+version = "0.7.9"
 
 ;This is a scope
 Dummy::
@@ -43,7 +43,7 @@ Dummy::
 csc文件支持注释，注释以分号`;`开始，在分号之后的内容都被视为注释内容而被忽略。此外，csc的语法较为宽松，只要使用合适的分隔符(例如空白)，csc文件的内容甚至可以压缩到一行：
 
 ```
-name = "CSC Sample" version = "0.7.8" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
+name = "CSC Sample" version = "0.7.9" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
 ```
 
 
@@ -192,8 +192,8 @@ bool accessible(const String &path, bool v=false)
     检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称检查
 void enter(const String &path)
 	进入给定路径对应的作用域，如果路径为“/”，则进入根作用域
-void iterate(ContextSeeker &seeker)      
-	从当前作用域开始，迭代该作用域及所有子作用域的所有变量
+Walker walker()
+    为当前作用域生成一个Walker对象以遍历其中的内容
 String toString()
     从当前作用域开始，将其及子作用域、变量转换为字符串
 template<typename Tp>                                  
@@ -231,17 +231,69 @@ CscWriter& cleanVariable(const String &name)
 	清除当前作用域中指定名称的变量
 ```
 
-### ContextSeeker
+### CscWalkerString
 
-ContextSeeker定义了用于迭代CscHandler内容的相关接口。用户可参考*csc/core/CscStrSeeker*实现自己的迭代功能。
+借助Walker对象(即漫步器对象)递归遍历作用域，将其中的内容转换为字符串
+
+```c++
+CscWalkerString()
+	默认构造函数，创建一个内容为空的CscWalkerString对象
+CscWalkerString(Walker walker, bool isroot)
+    遍历指定的walker并生成字符串，如果isroot参数为true，则代表walker对象来自根作用域，这会使得该作用域的名称不会出现在字
+    符串中
+String localstr()
+    获取上一次生成字符串时缓存的的字符串对象
+String strfrom(Walker walker, bool isroot)
+    遍历指定的walker并生成字符串，如果isroot参数为true，则代表walker对象来自根作用域，这会使得该作用域的名称不会出现在字
+    符串中
+```
+
+### Querier
+
+查询变量的相关信息，常用于遍历拥有多个值的变量的每个值
 
 ```C++
-void enterScope(UID id, const String &name)
-    当进入一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
-void leaveScope(UID id, const String &name)
-    当离开一个作用域时，将调用此函数。id是作用域的唯一标识，name是作用域的名称
-void values(const String &name, const Querier &querier)
-    当获取到该作用域中的一个变量时，将调用此函数。name是变量名称，querier可用于依次查询变量中的每个值
+Querier(VariablePtr varp)
+    以给定的变量指针创建一个查询器对象
+String name()
+    获取变量名称
+ValueType type()
+    获取变量类型
+Size_t size()
+    获取变量的值的数量
+Value value(int index=0)
+    获取指定位置的变量值
+ValueUnit valueunit(int index=0)
+    获取指定位置的变量值和类型构成的变量单元
+```
+
+### Walker
+
+遍历作用域的内容
+
+```c++
+Walker(ScopePtr scop)
+    以给定的作用域指针创建一个漫步器对象
+Walker(ScopePos pos)
+    以给定的作用域位置创建一个漫步器对象
+bool noscopes()
+    此作用域中是否不存在子作用域
+bool novariables()
+    此作用域中是否不存在变量
+String currentName()
+    获取此作用域名称
+void startScopeWalk()
+    开启子作用域的迭代
+void startVariableWalk()
+    开启作用域中变量的迭代
+bool hasNextScope()
+    是否存在下一个可迭代的子作用域
+bool hasNextVariable()
+    是否存在下一个可迭代的变量
+Walker nextScope()
+    获取下一个可迭代的作用域的漫步器对象
+Querier nextVariable()
+    获取下一个可迭代的变量的查询器对象
 ```
 
 

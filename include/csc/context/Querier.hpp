@@ -11,9 +11,11 @@ CSC_BEGIN
 class Querier{
 public:
     Querier(VariablePtr varp);
-    ValueType queryType() const;                                      /* 获取var_中保存的变量的值的类型 */
-    Size_t        querySize() const;                                       /* 获取var_中保存的变量的值的数量 */
-    Value        queryValue(int index=0) const;                   /* var_中保存的变量在index位置的值 */
+    String        name() const;                                     /* 获取var_的变量名称 */
+    ValueType type() const;                                      /* 获取var_中保存的变量的值的类型 */
+    Size_t        size() const;                                       /* 获取var_中保存的变量的值的数量 */
+    Value        value(int index=0) const;                   /* 获取var_中保存的变量在index位置的值 */
+    ValueUnit valueunit(int index=0) const;           /* 获取var_中保存的变量在index位置的值及类型 */
 
 private:
     VariableWkr  var_;

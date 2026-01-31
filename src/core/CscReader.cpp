@@ -1,4 +1,5 @@
 #include "csc/core/CscReader.hpp"
+#include "csc/core/CscWalkerString.hpp"
 CSC_BEGIN
 
 CscReader::CscReader(Context &context) : context_(context){
@@ -15,16 +16,18 @@ bool CscReader::accessible(const String &path, bool v) const{
 
     /* 对于路径的前面部分，都视作scope名称检查 */
     for(Size_t i = 0; i < end; i++){
-        looker.look(helper.element(i));
+        looker.looksco(helper.element(i));
     }
 
     /* 如果路径部分已经出错，则直接返回 */
-    if(!looker.result()){
+    if(!looker.done()){
         return false;
     }
 
     /* 最后一部分则根据参数v决定是作为scope名称还是variable名称检查 */
-    return looker.look(helper.basename(), v).result();
+    return (v) 
+        ? looker.lookvar(helper.basename()).done() 
+        : looker.lookvar(helper.basename()).done();
 }
 
 void CscReader::enter(const String &path) const{
@@ -45,7 +48,8 @@ Walker CscReader::walker() const{
 }
 
 String CscReader::toString() const{
-
+    CscWalkerString cws(context_.walker(), context_.isRootScope());
+    return cws.localstr();
 }
 
 CSC_END

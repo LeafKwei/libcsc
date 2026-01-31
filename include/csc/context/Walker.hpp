@@ -9,20 +9,26 @@ CSC_BEGIN
 /* Walker用于迭代指定Scope下的所有变量和子Scope  */
 class Walker{
 public:
-    using StringList = std::vector<String>;
-
-public:
     Walker(ScopePtr scop);
     Walker(ScopePos pos);
 
-    String       currentName() const;       /* 获取Walker当前所在的Scope名称 */
-    StringList scopeNames() const;        /* 获取当前Scope下的所有直接子Scope的名称 */
-    StringList variableNames() const;     /* 获取当前Scope中的所有变量名称 */
-    Querier    querier(const String &name) const;      /* 获取指定名称的变量的查询器 */
-    Walker     subwalker(const String &name) const; /* 获取指定名称的子Scope的漫步器 */
+    bool         noscopes() const;              /* 此Scope不存在子Scope */
+    bool         novariables() const;           /* 此Scope不存在变量 */
+    String       currentName() const;        /* 获取Walker当前所在的Scope名称 */
+    void          startScopeWalk();              /* 开启Scope的迭代 */
+    void          startVariableWalk();          /* 开启变量的迭代 */
+    bool          hasNextScope() const;       /* 是否存在下一个Scope可迭代 */
+    bool          hasNextVariable() const;    /* 是否存在下一个变量可迭代 */
+    Walker      nextScope();                       /* 获取下一个Scope的漫步器 */
+    Querier     nextVariable();                    /* 获取下一个变量的查询器 */
 
 private:
+    Size_t scoindex_;
+    Size_t varindex_;
+    Size_t scosize_;
+    Size_t varsize_;
     ScopeWptr scope_;
+    
     ScopePtr lockScopePtr() const;
 };
 

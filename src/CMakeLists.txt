@@ -4,10 +4,12 @@ set(CSC_SRC
     context/impl/ListScope.cpp
 	context/Context.cpp
 	context/Querier.cpp
+    context/Looker.cpp
+    context/Walker.cpp
 	context/val.cpp
 	core/CscReader.cpp
     core/CscWriter.cpp
-    core/CscStrSeeker.cpp
+    core/CscWalkerString.cpp
     lex/CharMngr.cpp
     lex/Lexer.cpp
     lex/PureLexer.cpp

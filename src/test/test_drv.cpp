@@ -9,7 +9,7 @@ int main(void){
     std::ifstream ifs("myconfig.csc");
     String str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 
-    Context context;
+    Context context(ScopeType::ListScope);
     CmdDriver drv;
     drv.drive(str, context);
     context.enterScope("custom").enterScope("tom");
