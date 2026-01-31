@@ -34,7 +34,7 @@ public:
 
 private:
     ScopeInf         inf_;
-    ScopeWkr       parent_;
+    ScopeWptr       parent_;
     ScopeList        scopes_;
     VariableList     variables_;
 

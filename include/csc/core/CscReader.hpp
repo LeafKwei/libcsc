@@ -10,10 +10,10 @@ CSC_BEGIN
 class CscReader{
 public:
     CscReader(Context &context);
-    bool   accessible(const String &path, bool v=false) const; /* 检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称 */
-    void    enter(const String &path) const;                               /* 进入给定路径对应的作用域，如果路径为“/”，则进入根作用域 */
-    void    iterate(ContextSeeker &seeker) const;            /* 从当前作用域开始，迭代其及所有子作用域的所有变量 */
-    String toString() const;                                               /* 从当前作用域开始，将其及子作用域、变量转换为字符串 */
+    bool     accessible(const String &path, bool v=false) const; /* 检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称 */
+    void     enter(const String &path) const;                               /* 进入给定路径对应的作用域，如果路径为“/”，则进入根作用域 */
+    Walker walker() const;                                                             /* 获取当前作用域的漫步器以迭代其中的内容 */
+    String  toString() const;                                                         /* 从当前作用域开始，将其及子作用域、变量转换为字符串 */
 
     template<typename Tp>                                            /* 获取当前作用域中给定名称的变量值，类型参数Tp所支持的类型参见文档 */
     Tp getValue(const String &name) const;
@@ -87,8 +87,7 @@ template<>
 inline ArrBool CscReader::getValue<ArrBool>(const String &name) const{
     ArrBool array;
 
-    auto querier = context_.querier();
-    querier.captureVariable(name);
+    auto querier = context_.querier(name);
     if(querier.queryType() != ValueType::Bool){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Bool>::type).name()));
     }
@@ -106,8 +105,7 @@ template<>
 inline ArrInt CscReader::getValue<ArrInt>(const String &name) const{
     ArrInt array;
 
-    auto querier = context_.querier();
-    querier.captureVariable(name);
+    auto querier = context_.querier(name);
     if(querier.queryType() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(int).name()));
     }
@@ -127,8 +125,7 @@ template<>
 inline ArrLong CscReader::getValue<ArrLong>(const String &name) const{
     ArrLong array;
 
-    auto querier = context_.querier();
-    querier.captureVariable(name);
+    auto querier = context_.querier(name);
     if(querier.queryType() != ValueType::Integer){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Integer>::type).name()));
     }
@@ -146,8 +143,7 @@ template<>
 inline ArrDouble CscReader::getValue<ArrDouble>(const String &name) const{
     ArrDouble array;
 
-    auto querier = context_.querier();
-    querier.captureVariable(name);
+    auto querier = context_.querier(name);
     if(querier.queryType() != ValueType::Double){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::Double>::type).name()));
     }
@@ -165,8 +161,7 @@ template<>
 inline ArrString CscReader::getValue<ArrString>(const String &name) const{
     ArrString array;
 
-    auto querier = context_.querier();
-    querier.captureVariable(name);
+    auto querier = context_.querier(name);
     if(querier.queryType() != ValueType::String){
         throw CscExcept("Incompatible type to " + String(typeid(CppType<ValueType::String>::type).name()));
     }

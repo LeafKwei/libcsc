@@ -6,9 +6,10 @@
 #include "csc/csc.hpp"
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
-#include "csc/context/ContextSeeker.hpp"
 #include "csc/context/ScopeFactory.hpp"
 #include "csc/context/Querier.hpp"
+#include "csc/context/Looker.hpp"
+#include "csc/context/Walker.hpp"
 CSC_BEGIN
 
 class Context{
@@ -30,8 +31,11 @@ public:
     bool          isRootScope() const;                                                         /* 如果当前作用域是根作用域，返回true */
     Pos            postion() const;                                                                 /* 获取当前作用域的Pos对象(对指针的包装) */
     void           setPostion(const Pos &pos);                                             /* 将当前作用域设置为pos所指定的作用域 */
-    Querier      querier(bool absolute=false) const;                                /* 获取一个以当前作用域为起点的查询器，可查询作用域、变量的存在情况和获取多变量值 */
-    Querier      querier(const String &name) const;                                /* 获取指定名称的Scope的查询器 */
+    Querier      querier(const String &name) const;                                /* 获取当前作用域下指定名称的变量的查询器，通过查询器可获取多值变量的每个值 */
+    Looker       looker(bool fromroot=false) const;                                 /* 获取当前作用域的搜寻器，如果fromroot为true，则获取根作用域的 */
+    Looker       looker(const String &name) const;                                  /* 获取指定名称的作用域的搜寻器 */
+    Walker       walker(bool fromroot=false) const;                                /* 获取当前作用域的漫步器，如果fromroot为true，则获取根作用域的 */
+    Walker       walker(const String &name) const;                                 /* 获取指定名称的作用域的漫步器 */
 
     Context&   makeVariable(const String &name, ValueType type, const Value &value);      /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
     Context&   makeVariable(const String &name, ValueType type, InitValues values);          /* 在当前作用域创建变量时一次性设置多个值 */
@@ -42,7 +46,6 @@ public:
     Context&   extendValues(const String &name, InitValues values);               /* 向指定名称的变量中追加多个值 */                                                       
     Context&   restart();                                                                /* 返回到根作用域，即设置当前作用域为根作用域 */
     void            clean();                                                                  /* 清除所有的作用域和变量，随后重新创建一个新的根作用域 */
-    void            iterate(ContextSeeker &seeker) const;                 /* 从当前作用域开始，按DFS迭代其中的每个变量及每个子作用域 */
     ScopeInf    scopeinf() const noexcept;                                    /* 获取当前作用域的信息 */     
 
 private:
@@ -52,6 +55,8 @@ private:
     ScopeType  scopetype_;
 
     inline UID nextID() noexcept;
+    VariablePtr currentFindVarp(const String &name) const;
+    ScopePtr    currentFindScop(const String &name) const;
     void do_makeScope(const String &name);
     void do_enterScope(const String &name);
     void do_leaveScope();
@@ -59,7 +64,6 @@ private:
     void do_makeVariable(const String &name, InitValues values, ValueType type);
     void do_cleanVariable(const String &name);
     void do_setVariable(VariablePtr variable, InitValues values, ValueType type);
-    void do_iterate(ScopePtr scope, ContextSeeker &seeker) const;
 };
 
 inline UID Context::nextID() noexcept{

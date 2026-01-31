@@ -31,7 +31,7 @@ public:
 
 private:
     ScopeInf           inf_;
-    ScopeWkr         parent_;
+    ScopeWptr         parent_;
     ScopeMap        scopes_;
     VariableMap     variables_;
 };
