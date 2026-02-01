@@ -19,16 +19,10 @@ bool CmdExecutor::reached() const noexcept{
     return (keyseq_.seq().size() > maxKeySize_);
 }
 
-void CmdExecutor::pushHolder(const TokenHolder &holder){
+void CmdExecutor::pushHolder(TokenHolder &holder){
     Operand operand(holder);
     updateKeyseq(operand);
     operands_.push_back(holder);
-}
-
-void CmdExecutor::pushHolder(TokenHolder &&holder){
-    Operand operand(std::move(holder));
-    updateKeyseq(operand);
-    operands_.push_back(std::move(operand));
 }
 
 bool CmdExecutor::executable() const{
@@ -108,7 +102,7 @@ void CmdExecutor::installCmd(){
     addCommand(
         Keyseq().start(genKeyFrom(OperandType::Keyword, KW_GOTO)).append(genKeyFrom(OperandType::Value, "")).seq(),
         CommandType::Gotostr,
-        [](OperandList &operands) -> bool{ return valueTypeof(operands.at(1).holder().token()) == ValueType::String; },
+        [](OperandList &operands) -> bool { return (operands.at(1).refervalue().type) == ValueType::String; },
         gotostr_run
     );
 
@@ -116,7 +110,7 @@ void CmdExecutor::installCmd(){
     addCommand(
         Keyseq().start(genKeyFrom(OperandType::Keyword, KW_ACTION)).append(genKeyFrom(OperandType::Value, "")).seq(),
         CommandType::ActionStr,
-        [](OperandList &operands) -> bool { return valueTypeof(operands.at(1).holder().token()) == ValueType::String; },
+        [](OperandList &operands) -> bool { return (operands.at(1).refervalue().type) == ValueType::String; },
         actionstr_run
     );
 }

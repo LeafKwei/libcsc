@@ -7,7 +7,7 @@ item1::
 
 item2::
     name = "item2"
-    count = 1
+    count = 2
     inner::
     ::inner
 ::item2

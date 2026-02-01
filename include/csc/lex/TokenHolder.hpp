@@ -13,8 +13,7 @@ public:
     using TokenList = std::vector<TokenPtr>;
 
 public:
-    Token& token();
-    Token& tokenAt(int index);
+    Token& token(int index=0);
     bool      plural() const noexcept;
     bool      empty() const noexcept;
     Size_t    size() const noexcept;

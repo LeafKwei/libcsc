@@ -33,7 +33,6 @@ private:
     PluralTokenRule rule_;
 
     void addToken(const Token &token);
-    void addToken(Token &&token);
     void initIgnoredToken();
     void initConvToken();
     void initPluralRule();

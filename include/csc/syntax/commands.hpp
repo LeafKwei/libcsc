@@ -17,13 +17,13 @@ inline void voidcmd_run(OperandList &operands, Context &context, ActionCtl &ctl)
 
 ////////////////////////////////////////////////////////////////////////////////////////EnterScope
 inline void enterscope_run(OperandList &operands, Context &context, ActionCtl &ctl){
-    const auto &name = operands.at(0).holder().token().str;
+    const auto &name = operands.at(0).stringvalue();
     context.enterScope(name, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////ExitScope
 inline void exitscope_run(OperandList &operands, Context &context, ActionCtl &ctl){
-    const auto &name = operands.at(1).holder().token().str;
+    const auto &name = operands.at(1).stringvalue();
     if(context.scopeinf().name != name){
         throw CommandExcept("Can't exit from a scope, which name is different from current scope.");
     }
@@ -33,50 +33,48 @@ inline void exitscope_run(OperandList &operands, Context &context, ActionCtl &ct
 
 ////////////////////////////////////////////////////////////////////////////////////////Assign
 inline void assign_run(OperandList &operands, Context &context, ActionCtl &ctl){
-    const auto &name = operands.at(0).holder().token().str;
-    const auto &token = operands.at(2).holder().token();
-    auto valtype = valueTypeof(token);
+    const auto &name = operands.at(0).stringvalue();
+    const auto &unit = operands.at(2).refervalue();
 
     context.makeVariable(
         name,
-        valtype,
-        makeValueFrom(token, valtype)
+        unit.type,
+        unit.value
     );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////AssignPlural
 inline void assginplural_run(OperandList &operands, Context &context, ActionCtl &ctl){
-    const auto &name = operands.at(0).holder().token().str;
-    auto &holder = operands.at(2).holder();
+    const auto &name = operands.at(0).stringvalue();
+    auto &operand = operands.at(2);
     auto typebak = ValueType::Unknown;
 
-    for(Size_t idx = 0; idx < holder.size(); idx++){
-        auto valtype = valueTypeof(holder.tokenAt(idx));
-
+    for(Size_t idx = 0; idx < operand.size(); idx++){
+        const auto &unit = operand.refervalue(idx);
         /* 处理首个元素时，将其类型赋值给typebak以备后续的类型检查；同时创建一个空的变量 */
         if(idx == 0){
-            typebak = valtype;
+            typebak = unit.type;
             context.makeVariable(
                 name,
-                valtype,
+                unit.type,
                 {}
             );
         }
 
         /* 数组中的元素类型不一致则抛出异常 */
-        if(valtype != typebak){
+        if(unit.type != typebak){
             throw CommandExcept("ValueType of element in array is not same");
         }
 
-        typebak = valtype;
-        context.extendValue(name, makeValueFrom(holder.tokenAt(idx), valtype));
+        typebak = unit.type;
+        context.extendValue(name, unit.value);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////GotoStr
 inline void gotostr_run(OperandList &operands, Context &context, ActionCtl &ctl){
     PathHelper helper;
-    helper.decompose(operands.at(1).holder().token().str);
+    helper.decompose(operands.at(1).stringvalue());
 
     /* 如果不是绝对路径或路径为空，则不执行任何操作 */
     if((!helper.valid()) || (!helper.absolute())){
@@ -102,20 +100,20 @@ inline void actionstr_genidx(Context &context, ActionCtl &ctl){
 
         [](CommandType type, OperandList &operands, Context &context) -> bool {
             /* 当首次进入一个作用域并且该作用域不存在时，再生成该作用域的索引 */
-            if(type == CommandType::EnterScope && !context.hasScope(operands.at(0).holder().token().str)){
+            if(type == CommandType::EnterScope && !context.hasScope(operands.at(0).stringvalue())){
                 if(!context.hasVariable("_sidx_")){
                     context.makeVariable("_sidx_", ValueType::String, {});
                 }
-                context.extendValue("_sidx_", operands.at(0).holder().token().str);
+                context.extendValue("_sidx_", operands.at(0).stringvalue());
                 return true;
             }
 
             /* 生成变量的索引 */
-            if(!context.hasVariable(operands.at(0).holder().token().str)){
+            if(!context.hasVariable(operands.at(0).stringvalue())){
                 if(!context.hasVariable("_vidx_")){
                     context.makeVariable("_vidx_", ValueType::String, {});
                 }
-                context.extendValue("_vidx_", operands.at(0).holder().token().str);
+                context.extendValue("_vidx_", operands.at(0).stringvalue());
                 return true;
             }
 
@@ -134,12 +132,7 @@ inline void actionstr_detail(Context &context, ActionCtl &ctl){
             std::cout << "Command type: " << static_cast<int>(type);
             std::cout << "; Operands: ";
             for(Size_t idx = 0; idx < operands.size(); idx++){
-                auto &holder = operands.at(idx).holder();
-
-                if(!holder.empty()){
-                    std::cout << operands.at(idx).holder().token().str;
-                }
-
+                std::cout << operands.at(idx).stringvalue();
                 if(idx < operands.size() - 1) std::cout << ", ";
             }
             std::cout << "; Scope id: " << context.scopeinf().id << std::endl;
@@ -149,7 +142,7 @@ inline void actionstr_detail(Context &context, ActionCtl &ctl){
 }
 
 inline void actionstr_run(OperandList &operands, Context &context, ActionCtl &ctl){
-    const auto &str = operands.at(1).holder().token().str;
+    const auto &str = operands.at(1).stringvalue();
     if(str == "genidx"){
         actionstr_genidx(context, ctl);
     }

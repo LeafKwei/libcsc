@@ -2,12 +2,8 @@
 #include "csc/lex/TokenHolder.hpp"
 CSC_BEGIN
 
-Token& TokenHolder::token(){
-    assert(tokens_.size() > 0);
-    return *(tokens_.at(0));
-}
-
-Token& TokenHolder::tokenAt(int index){
+Token& TokenHolder::token(int index){
+    assert(static_cast<Size_t>(index) < tokens_.size());
     return *(tokens_.at(index));
 }
 

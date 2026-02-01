@@ -10,25 +10,31 @@ CSC_BEGIN
 
 class Operand{
 public:
-    using Holder = TokenHolder;
-    using Type    = OperandType;
+    using ValueUnitList = std::vector<ValueUnit>;
+    using ValueUnitCR  = const ValueUnit &;
+    using Type              = OperandType;
 
 public:
-    Operand(const TokenHolder &holder);
-    Operand(TokenHolder &&holder);
+    Operand(TokenHolder &holder);
 
-    Holder& holder();
-    String     key() const noexcept;
-    Type       type() const noexcept;
+    String key() const noexcept;      /* 获取此操作数生成的key */
+    Type   type() const noexcept;    /* 获取此操作数的类型 */
+    Size_t size() const noexcept;     /* 获取此操作数中的值的数量 */
+    String           stringvalue(int index=0) const; /* 获取指定位置的值并转换为字符串(该值必须是ValueType::String类型) */
+    ValueUnit     value(int index=0) const;          /* 获取指定位置的值及其类型组成的ValueUnit */
+    ValueUnitCR refervalue(int index=0) const;  /* 获取指定位置的值及其类型组成的ValueUnit的const引用 */
 
 private:
     String                key_;
-    TokenHolder     holder_;
     OperandType    type_;
+    ValueUnitList     valueunits_;
 
-    void initOperand();
-    void initType();
-    void initKey();
+    void initOperand(TokenHolder &holder);
+    void initValue(TokenHolder &holder);
+    void initValidValue(TokenHolder &holder);
+    void initNonValidValue(TokenHolder&holder);
+    void initType(TokenHolder &holder);
+    void initKey(TokenHolder &holder);
 };
 
 CSC_END

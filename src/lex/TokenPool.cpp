@@ -16,14 +16,6 @@ void TokenPool::addToken(const Token &token){
     appendToken(tp);
 }
 
-void TokenPool::addToken(Token &&token){
-    if(isIgnoredToken(token.type)) return;
-    TokenPtr tp = std::make_shared<Token>();
-    (*tp) = std::move(token);
-    convertTokenType(*tp);
-    appendToken(tp);
-}
-
 TokenHolder TokenPool::nextHolder(){
     TokenHolder holder;
     if(tokens_.empty()) return holder;

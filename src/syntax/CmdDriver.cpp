@@ -20,11 +20,15 @@ int CmdDriver::drive(const String &script, Context &context){
     }
 
     while(!pool.empty()){
+        /* 如果已经达到最长的命令seq的长度，则视为异常 */
         if(executor_.reached()){
             throw CommandExcept("Unmatched command operands, keyseq: " + executor_.keyseq());
         }
 
-        executor_.pushHolder(pool.nextHolder());
+        /* 从Token池中获取一个TokenHolder，将其添加到CmdExecutor中并检查是否有可执行的命令，如有则执行  */
+        auto holder = pool.nextHolder();
+        executor_.pushHolder(holder);
+
         if(executor_.executable()){
             auto ok = executor_.execute(context, mngr_);
             cnt = (ok) ? cnt + 1 : cnt;
