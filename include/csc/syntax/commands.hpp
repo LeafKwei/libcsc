@@ -4,6 +4,7 @@
 #include "csc/types.hpp"
 #include "csc/context/val.hpp"
 #include "csc/syntax/Command.hpp"
+#include "csc/utility/PathHelper.hpp"
 CSC_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +70,24 @@ inline void assginplural_run(OperandList &operands, Context &context, ActionCtl 
 
         typebak = valtype;
         context.extendValue(name, makeValueFrom(holder.tokenAt(idx), valtype));
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////GotoStr
+inline void gotostr_run(OperandList &operands, Context &context, ActionCtl &ctl){
+    PathHelper helper;
+    helper.decompose(operands.at(1).holder().token().str);
+
+    /* 如果不是绝对路径或路径为空，则不执行任何操作 */
+    if((!helper.valid()) || (!helper.absolute())){
+        return;
+    }
+
+    /* 将Context切换到指定路径 */
+    context.restart();
+    auto size = helper.size();
+    for(decltype(size) i = 0; i < size; i++){
+        context.enterScope(helper.element(i));
     }
 }
 

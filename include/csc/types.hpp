@@ -38,6 +38,7 @@ extern const String KW_TRUE;        //true和false会在syntax和context被当�
 extern const String KW_FALSE;
 extern const String KW_ACTION;
 extern const String KW_VOID;
+extern const String KW_GOTO;
 
 CSC_END
 #endif

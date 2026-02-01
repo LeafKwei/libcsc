@@ -1,6 +1,12 @@
+**0.7.10**
+
+1. 新增关键字`goto`，提供跳转到指定路径下的作用域的功能
+2. 修改了某些用户接口函数的名称
+3. 完善了文档，同时更正了文档中的某些错误
+
 **0.7.9**
 
-1. 移除了ContextSeeker和CscStrSeeker，以及Context、CscReader中的iteratre函数。添加了CscWalkerString用于将csc数据转换为字符串，同时也为CscReader添加了walker函数以便获取Walker对象来遍历csc文件内容，并以此替代iterate函数
+1. 移除了ContextSeeker和CscStrSeeker，以及Context、CscReader中的iterate函数。添加了CscWalkerString用于将csc数据转换为字符串，同时也为CscReader添加了walker函数以便获取Walker对象来遍历csc文件内容，并以此替代iterate函数
 2. 添加了Looker类，用于快速验证指定名称的作用域或变量是否存在
 3. 重写了Querier类，使之功能更加简洁和特化
 

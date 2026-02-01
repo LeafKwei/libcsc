@@ -12,7 +12,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.7.9"
+version = "0.7.10"
 
 ;This is a scope
 Dummy::
@@ -43,7 +43,7 @@ Dummy::
 csc文件支持注释，注释以分号`;`开始，在分号之后的内容都被视为注释内容而被忽略。此外，csc的语法较为宽松，只要使用合适的分隔符(例如空白)，csc文件的内容甚至可以压缩到一行：
 
 ```
-name = "CSC Sample" version = "0.7.9" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
+name = "CSC Sample" version = "0.7.10" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
 ```
 
 
@@ -168,7 +168,9 @@ g++ -I ../include -L ../lib -o main main.cpp -lcsc
 
 ### CscHandler
 
-CscHandler可用于解析csc文件内容并获取其中的变量值，用户需要将保存有csc文件内容的字符串作为构造函数参数交给CscHandler进行解析(在创建CscHandler对象后也可以使用handle函数解析)。CscHandler亦可用于创建csc文件的内容，用户通过默认构造函数创建一个空的CscHandler对象，然后通过writer函数获取到writer对象，随后就可根据自身需要创建作用域及相应的变量，最后调用toString函数获取结果。
+CscHandler可用于解析csc文件内容并获取其中的变量值，用户需要将保存有csc文件内容的字符串作为构造函数参数交给CscHandler进行解析(在创建CscHandler对象后也可以使用handle函数解析)。CscHandler亦可用于创建csc文件的内容，用户通过默认构造函数创建一个空的CscHandler对象，然后通过writer函数获取到writer对象，随后就可根据自身需要创建作用域及相应的变量，最后调用reader函数获取CscReader，使用其中的toString函数将之前创建的作用域和变量转换为字符串，将字符串写入文件即可。
+
+自0.7.6版本后，创建CscHandler对象时需要指定一个ScopeType类型的枚举值作为模板参数，该枚举值将影响内部的Context对象使用的作用域(Scope)类型，不同类型的作用域会使用不同的方式组织和存储变量和子作用域，将会影响到toString时生成的字符串中变量和作用域的位置关系，ScopeType的可选值和作用域参见附录-作用域类型。
 
 ```C++
 CscHandler()
@@ -280,7 +282,7 @@ bool noscopes()
     此作用域中是否不存在子作用域
 bool novariables()
     此作用域中是否不存在变量
-String currentName()
+String name()
     获取此作用域名称
 void startScopeWalk()
     开启子作用域的迭代
@@ -317,7 +319,42 @@ ArrString   等同于std::vector<std::string>
 
 
 
-## 4.3.扩展功能
+## 4.3.命令
+
+### 跳转到指定作用域
+
+0.7.10版本添加了关键字`goto`，可以跳转到**绝对路径**对应的作用域中，例如对于下方的两个csc文件：
+
+```
+;a.csc
+custom::
+	a::
+	::a
+::custom
+
+;b.csc
+goto "/custom/a"
+b::
+
+::b
+```
+
+其配置内容等同于：
+
+```
+custom::
+	a::
+		b::
+		::b
+	::a
+::custom
+```
+
+此功能可以便于用户将csc文件内容拆分到多个`.csc`文件中，并通过goto命令配合`CscHandler::handle`函数实现分步解析，从而将这些文件内容合并到一个CscHandler对象中。
+
+
+
+## 4.4.辅助功能
 
 libcsc通过action模块提供了在Command对象之外操作Context的能力，该模块可用于实现那些仅依靠Command对象无法实现的功能，例如生成Scope和Variable的索引。下方是使用ActionMngr模块为libcsc增加的扩展功能的列举：
 
@@ -431,4 +468,14 @@ Command type: 2; Operands: ::, custom; Scope id: 2
 | false  | 变量赋值时作为布尔值   |
 | action | 执行某个动作           |
 | void   | 作为变量赋值时的占位符 |
+| goto   | 跳转到指定路径的作用域 |
+
+
+
+## 作用域类型
+
+| 作用域类型           | 功能                                                         |
+| -------------------- | ------------------------------------------------------------ |
+| ScopeType::MapScope  | 以std::map作为底层容器，查询效率更高，生成的字符串中变量与作用域的排列顺序会混杂 |
+| ScopeType::ListScope | 以std::list作为底层容器，查询效率较低，生成的字符串会尽力维持变量与作用域的原本顺序 |
 

@@ -23,7 +23,7 @@ String CscWalkerString::strfrom(Walker walker, bool isroot){
 /* 按深度优先算法遍历每个Scope */
 void CscWalkerString::make(Walker walker, bool isroot){
     if(!isroot){  //只有在非root scope的情况下，才写入scope的名称到字符串中
-        enterScope(walker.currentName());
+        enterScope(walker.name());
     }
 
     /* 首先遍历Scope中的每个变量 */
@@ -41,7 +41,7 @@ void CscWalkerString::make(Walker walker, bool isroot){
     }
 
     if(!isroot){
-        leaveScope(walker.currentName());
+        leaveScope(walker.name());
     }
 }
 

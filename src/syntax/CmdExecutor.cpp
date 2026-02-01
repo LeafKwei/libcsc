@@ -104,6 +104,14 @@ void CmdExecutor::installCmd(){
         assginplural_run
     );
 
+    ////////////////////////////////////////////////////////////////////////////////////////GotoStr goto_4
+    addCommand(
+        Keyseq().start(genKeyFrom(OperandType::Keyword, KW_GOTO)).append(genKeyFrom(OperandType::Value, "")).seq(),
+        CommandType::Gotostr,
+        [](OperandList &operands) -> bool{ return valueTypeof(operands.at(1).holder().token()) == ValueType::String; },
+        gotostr_run
+    );
+
     ////////////////////////////////////////////////////////////////////////////////////////ActionStr action_4
     addCommand(
         Keyseq().start(genKeyFrom(OperandType::Keyword, KW_ACTION)).append(genKeyFrom(OperandType::Value, "")).seq(),

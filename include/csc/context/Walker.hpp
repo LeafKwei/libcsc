@@ -14,7 +14,7 @@ public:
 
     bool         noscopes() const;              /* 此Scope不存在子Scope */
     bool         novariables() const;           /* 此Scope不存在变量 */
-    String       currentName() const;        /* 获取Walker当前所在的Scope名称 */
+    String       name() const;                   /* 获取Walker当前所在的Scope名称 */
     void          startScopeWalk();              /* 开启Scope的迭代 */
     void          startVariableWalk();          /* 开启变量的迭代 */
     bool          hasNextScope() const;       /* 是否存在下一个Scope可迭代 */

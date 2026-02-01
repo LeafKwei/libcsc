@@ -18,7 +18,7 @@ bool Walker::novariables() const{
     return lockScopePtr() -> novariables();
 }
 
-String Walker::currentName() const{
+String Walker::name() const{
     return lockScopePtr() -> scopeinf().name;
 }
 
