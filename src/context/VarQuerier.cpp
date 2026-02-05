@@ -1,25 +1,25 @@
 #include "csc/types.hpp"
 #include "csc/context/val.hpp"
-#include "csc/context/Querier.hpp"
+#include "csc/context/VarQuerier.hpp"
 CSC_BEGIN
 
-Querier::Querier(VariablePtr varp) : var_(varp){
+VarQuerier::VarQuerier(VariablePtr varp) : var_(varp){
 
 }
 
-String Querier::name() const{
+String VarQuerier::name() const{
     return lockVariablePtr() -> name;
 }
 
-ValueType Querier::type() const{
+ValueType VarQuerier::type() const{
     return lockVariablePtr() -> type;
 }
 
-Size_t Querier::size() const{
+Size_t VarQuerier::size() const{
     return lockVariablePtr() -> values.size();
 }
 
-Value Querier::value(int index) const{
+Value VarQuerier::value(int index) const{
     auto varptr = lockVariablePtr();
 
     /* 如果index在values的大小之内，返回对应位置的值，否则返回一个零值 */
@@ -29,7 +29,7 @@ Value Querier::value(int index) const{
         : makeZeroValue(varptr -> type);
 }
 
-ValueUnit Querier::valueunit(int index) const{
+ValueUnit VarQuerier::valueunit(int index) const{
     auto varptr = lockVariablePtr();
     
     auto uindex = static_cast<Size_t>(index);
@@ -38,7 +38,7 @@ ValueUnit Querier::valueunit(int index) const{
         : ValueUnit{makeZeroValue(varptr -> type), varptr -> type};
 }
 
-VariablePtr Querier::lockVariablePtr() const{
+VariablePtr VarQuerier::lockVariablePtr() const{
     if(var_.expired()){
         throw ContextExcept("Variable weakptr has expired.");
     }

@@ -52,7 +52,7 @@ void TokenPool::initConvToken(){
     conv_.insert({KW_FALSE, TokenType::Keyword});
     conv_.insert({KW_ACTION, TokenType::Keyword});
     conv_.insert({KW_VOID, TokenType::Keyword});
-    conv_.insert({KW_GOTO, TokenType::Keyword});
+    conv_.insert({KW_ENTER, TokenType::Keyword});
 }
 
 void TokenPool::initPluralRule(){

@@ -1,8 +1,8 @@
 #include  "csc/types.hpp"
-#include "csc/context/Looker.hpp"
+#include "csc/context/RouteLooker.hpp"
 CSC_BEGIN
 
-Looker::Looker(ScopePtr scop) 
+RouteLooker::RouteLooker(ScopePtr scop) 
     : result_(true)
     , scope_(scop)
     , current_(scope_)
@@ -10,7 +10,7 @@ Looker::Looker(ScopePtr scop)
 
 }
 
-Looker::Looker(ScopePos pos)
+RouteLooker::RouteLooker(ScopePos pos)
     : result_(true)
     , scope_(pos.ptr)
     , current_(scope_)
@@ -18,7 +18,7 @@ Looker::Looker(ScopePos pos)
 
 }
 
-Looker& Looker::looksco(const String &name){
+RouteLooker& RouteLooker::looksco(const String &name){
     if(!result_) return *this;      //如果查找过程中已经出现不存在的scope或变量，则停止后续动作
 
     auto scop = lockScopePtr();
@@ -32,7 +32,7 @@ Looker& Looker::looksco(const String &name){
     return *this;
 }
 
-Looker& Looker::lookvar(const String &name) {
+RouteLooker& RouteLooker::lookvar(const String &name) {
     if(!result_) return *this;
 
     auto scop = lockScopePtr();
@@ -45,16 +45,16 @@ Looker& Looker::lookvar(const String &name) {
     return *this;
 }
 
-bool Looker::done() const{
+bool RouteLooker::done() const{
     return result_;
 }
 
-void Looker::reset(){
+void RouteLooker::reset(){
     current_ = scope_;
     result_ = true;
 }
 
-ScopePtr Looker::lockScopePtr() const{
+ScopePtr RouteLooker::lockScopePtr() const{
     if(current_.expired()){
         throw ContextExcept("Scope weakptr has expired.");
     }

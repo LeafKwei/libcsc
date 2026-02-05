@@ -3,13 +3,13 @@ set(CSC_SRC
     context/impl/MapScope.cpp
     context/impl/ListScope.cpp
 	context/Context.cpp
-	context/Querier.cpp
-    context/Looker.cpp
-    context/Walker.cpp
+	context/VarQuerier.cpp
+    context/RouteLooker.cpp
+    context/ScoQuerier.cpp
 	context/val.cpp
 	core/CscReader.cpp
     core/CscWriter.cpp
-    core/CscWalkerString.cpp
+    core/CscString.cpp
     lex/CharMngr.cpp
     lex/Lexer.cpp
     lex/PureLexer.cpp

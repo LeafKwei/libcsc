@@ -100,7 +100,7 @@ void CmdExecutor::installCmd(){
 
     ////////////////////////////////////////////////////////////////////////////////////////GotoStr goto_4
     addCommand(
-        Keyseq().start(genKeyFrom(OperandType::Keyword, KW_GOTO)).append(genKeyFrom(OperandType::Value, "")).seq(),
+        Keyseq().start(genKeyFrom(OperandType::Keyword, KW_ENTER)).append(genKeyFrom(OperandType::Value, "")).seq(),
         CommandType::Gotostr,
         [](OperandList &operands) -> bool { return (operands.at(1).refervalue().type) == ValueType::String; },
         gotostr_run

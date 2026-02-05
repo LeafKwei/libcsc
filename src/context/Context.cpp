@@ -76,26 +76,26 @@ void Context::setPostion(const Pos &pos){
     current_ = pos.ptr.lock();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////Querier, Looker, Walker
-Querier Context::querier(const String &name) const{
-    return Querier(currentFindVarp(name));
-}
+////////////////////////////////////////////////////////////////////////////////////////VarQuerier, ScoQuerier, RouteLooker
+VarQuerier Context::varquerier(const String &name) const{
+    return VarQuerier(currentFindVarp(name));
+}   
 
-Looker Context::looker(bool fromroot) const{
-    return (fromroot) ? Looker(root_) : Looker(current_);
-}
+ScoQuerier Context::scoquerier(bool fromroot) const{
+    return (fromroot) ? ScoQuerier(root_) : ScoQuerier(current_);
+}   
 
-Looker Context::looker(const String &name) const{
-    return Looker(currentFindScop(name));
-}
+ScoQuerier Context::scoquerier(const String &name) const{
+    return ScoQuerier(currentFindScop(name));
+}   
 
-Walker Context::walker(bool fromroot) const{
-    return (fromroot) ? Walker(root_) : Walker(current_);
-}
+RouteLooker Context::routelooker(bool fromroot) const{
+    return (fromroot) ? RouteLooker(root_) : RouteLooker(current_);
+}   
 
-Walker Context::walker(const String &name) const{
-    return Walker(currentFindScop(name));
-}
+RouteLooker Context::routelooker(const String &name) const{
+    return RouteLooker(currentFindScop(name));
+}                          
 ////////////////////////////////////////////////////////////////////////////////////////
 
 Context& Context::makeVariable(const String &name, ValueType type, const Value &value){

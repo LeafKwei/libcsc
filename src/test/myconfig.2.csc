@@ -1,4 +1,4 @@
-goto "/another_custom/sth/"
+enter "/another_custom/sth/"
 
 item1::
     name = "item1"

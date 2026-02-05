@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "csc/core/CscWalkerString.hpp"
+#include "csc/core/CscString.hpp"
 #include "csc/context/Context.hpp"
 #include "csc/syntax/CmdDriver.hpp"
 using namespace csc;
@@ -14,11 +14,11 @@ int main(void){
     drv.drive(str, context);
 
     context.restart();
-    Walker root = context.walker();
-    CscWalkerString cws(root, true);
+    ScoQuerier root = context.scoquerier(true);
+    CscString cws(root, true);
     std::cout << cws.localstr() << std::endl;
 
     std::cout << "====================" << std::endl;
     context.enterScope("custom");
-    std::cout << cws.strfrom(context.walker(), false) << std::endl;
+    std::cout << cws.strfrom(context.scoquerier(), false) << std::endl;
 }

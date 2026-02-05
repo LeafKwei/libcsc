@@ -9,7 +9,7 @@ const String KW_TRUE("true");
 const String KW_FALSE("false");
 const String KW_ACTION("action");
 const String KW_VOID("void");
-const String KW_GOTO("goto");
+const String KW_ENTER("enter");
 
 ////////////////////////////////////////////////////////////////////////////////////////通用工具函数
 /* 如果字符串的内容包含引号，那么在每个引号前添加一个转义字符，返回转换后的字符串 */

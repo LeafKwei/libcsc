@@ -1,3 +1,12 @@
+**0.7.12(暂定)**
+
+1. 移除扩展功能中的`action "genidx"`(其功能已被ScoQuerier替代)
+
+2. 重命名Looker -> RouteLooker、Querier -> VarQuerier、Walker -> ScoQuerier，使得语义更加清晰
+
+3. 将关键字`goto`重命名为`enter`，使得语义更加清晰
+4. 重新设计了ScoQuerier中的函数，使之更加简洁
+
 **0.7.11**
 
 1. 重新调整了Operand的内部实现，将Token及TokenHolder完全隔离在了Operand的位置(在之前的版本中，Operand仅作为Token的包装类，没有对Token的内容进行实际的处理)，降低了其后的功能模块的复杂度和对Token的依赖

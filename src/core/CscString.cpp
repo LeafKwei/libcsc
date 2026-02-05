@@ -1,63 +1,65 @@
 #include "csc/context/val.hpp"
 #include "csc/utility/utility.hpp"
-#include "csc/core/CscWalkerString.hpp"
+#include "csc/core/CscString.hpp"
 CSC_BEGIN
 
-CscWalkerString::CscWalkerString(Walker walker, bool isroot){
-    strfrom(walker, isroot);
+CscString::CscString(ScoQuerier querier, bool isroot){
+    strfrom(querier, isroot);
 }
 
-String CscWalkerString::localstr(){
+String CscString::localstr(){
     return buffer_.str();
 }
 
-String CscWalkerString::strfrom(Walker walker, bool isroot){
+String CscString::strfrom(ScoQuerier querier, bool isroot){
     buffer_.str("");
     buffer_.clear();
     nest_ = 0;
 
-    make(walker,  isroot);
+    make(querier,  isroot);
     return buffer_.str();
 }
 
 /* 按深度优先算法遍历每个Scope */
-void CscWalkerString::make(Walker walker, bool isroot){
+void CscString::make(ScoQuerier querier, bool isroot){
     if(!isroot){  //只有在非root scope的情况下，才写入scope的名称到字符串中
-        enterScope(walker.name());
+        enterScope(querier.name());
     }
 
     /* 首先遍历Scope中的每个变量 */
-    walker.startVariableWalk();
-    while(walker.hasNextVariable()){
-        auto querier = walker.nextVariable();
-        values(querier.name(), querier);
+    auto varsize = querier.sizeofVariables();
+    decltype(varsize) varidx = 0;
+    while(varidx < varsize){
+        auto varq = querier.varquerier(varidx++);
+        values(varq.name(), varq);
     }
 
     /* 再变遍历其中的每个Scope */
-    walker.startScopeWalk();
-    while(walker.hasNextScope()){
-        auto subwalker = walker.nextScope();
-        make(subwalker, false);
+    auto scosize = querier.sizeofScopes();
+    decltype(scosize) scoidx = 0;
+    while(scoidx < scosize){
+        auto scoq = querier.scoquerier(scoidx++);
+        make(scoq, false);
     }
 
     if(!isroot){
-        leaveScope(walker.name());
+        leaveScope(querier.name());
     }
 }
 
-void CscWalkerString::enterScope(const String &name){
+void CscString::enterScope(const String &name){
     writeIndent();
     buffer_ << name << "::" << std::endl;
     ++nest_;
 }
 
-void CscWalkerString::leaveScope(const String &name){
+void CscString::leaveScope(const String &name){
     --nest_;
     writeIndent();
     buffer_ << "::" << name << std::endl;
 }
 
-void CscWalkerString::values(const String &name, const Querier &querier){
+void CscString::values(const String &name, const VarQuerier &querier){
     writeIndent();
 
     if(querier.size() == 1){                              //如果变量不是一个数组，则直接将变量名和变量值写入到buffer
@@ -86,13 +88,13 @@ void CscWalkerString::values(const String &name, const Querier &querier){
     }
 }
 
-void CscWalkerString::writeIndent(){
+void CscString::writeIndent(){
     for(int i = 0; i < nest_; i++){
         buffer_ << "\t";
     }
 }
 
-void CscWalkerString::writeValue(const String &value,  ValueType type){
+void CscString::writeValue(const String &value,  ValueType type){
     switch(type){
         case ValueType::Bool:
         case ValueType::Integer:

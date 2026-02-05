@@ -7,9 +7,9 @@
 #include "csc/alias.hpp"
 #include "csc/context/types.hpp"
 #include "csc/context/ScopeFactory.hpp"
-#include "csc/context/Querier.hpp"
-#include "csc/context/Looker.hpp"
-#include "csc/context/Walker.hpp"
+#include "csc/context/VarQuerier.hpp"
+#include "csc/context/ScoQuerier.hpp"
+#include "csc/context/RouteLooker.hpp"
 CSC_BEGIN
 
 class Context{
@@ -31,11 +31,11 @@ public:
     bool          isRootScope() const;                                                         /* 如果当前作用域是根作用域，返回true */
     Pos            postion() const;                                                                 /* 获取当前作用域的Pos对象(对指针的包装) */
     void           setPostion(const Pos &pos);                                             /* 将当前作用域设置为pos所指定的作用域 */
-    Querier      querier(const String &name) const;                                /* 获取当前作用域下指定名称的变量的查询器，通过查询器可获取多值变量的每个值 */
-    Looker       looker(bool fromroot=false) const;                                 /* 获取当前作用域的搜寻器，如果fromroot为true，则获取根作用域的 */
-    Looker       looker(const String &name) const;                                  /* 获取指定名称的作用域的搜寻器 */
-    Walker       walker(bool fromroot=false) const;                                /* 获取当前作用域的漫步器，如果fromroot为true，则获取根作用域的 */
-    Walker       walker(const String &name) const;                                 /* 获取指定名称的作用域的漫步器 */
+    VarQuerier    varquerier(const String &name) const;                                /* 获取当前作用域下指定名称的变量的查询器，通过查询器可获取多值变量的每个值 */
+    ScoQuerier   scoquerier(bool fromroot=false) const;                                /* 获取当前作用域的查询器，如果fromroot为true，则获取根作用域的 */
+    ScoQuerier   scoquerier(const String &name) const;                                 /* 获取指定名称的作用域的查询器 */
+    RouteLooker routelooker(bool fromroot=false) const;                              /* 获取当前作用域的搜寻器，如果fromroot为true，则获取根作用域的 */
+    RouteLooker routelooker(const String &name) const;                              /* 获取指定名称的作用域的搜寻器 */
 
     Context&   makeVariable(const String &name, ValueType type, const Value &value);      /* 在当前作用域创建一个变量，如果变量存在，则设置该变量的值和类型 */
     Context&   makeVariable(const String &name, ValueType type, InitValues values);          /* 在当前作用域创建变量时一次性设置多个值 */

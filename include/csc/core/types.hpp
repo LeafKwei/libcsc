@@ -15,10 +15,42 @@ CSC_BEGIN
  * 枚举ValueType，用于在Context中标记std::any中存储的是何种类型的数据
  */
 using ArrBool      = std::vector<CppType<ValueType::Bool>::type>;
-using ArrInt         = std::vector<int>;                                                          //当修改了这里时，也记得修改CscHandler.hpp中的getValue和getValues模板
+using ArrInt         = std::vector<int>;                                                          //当修改了这里时，也记得修改core/functions中的模板
 using ArrLong     = std::vector<CppType<ValueType::Integer>::type>;
 using ArrDouble = std::vector<CppType<ValueType::Double>::type>;
 using ArrString   = std::vector<CppType<ValueType::String>::type>;
+
+////////////////////////////////////////////////////////////////////////////////////////类型映射
+/* 通过下方的模板将Arr*类型映射为其元素类型 */
+template<typename ATP>
+struct ElemType{
+};
+
+template<>
+struct ElemType<ArrBool>{
+    using type = CppType<ValueType::Bool>::type;
+};
+
+template<>
+struct ElemType<ArrInt>{
+    using type = CppType<ValueType::Integer>::type;
+};
+
+template<>
+struct ElemType<ArrLong>{
+    using type = CppType<ValueType::Integer>::type;
+};
+
+template<>
+struct ElemType<ArrDouble>{
+    using type = CppType<ValueType::Double>::type;
+};
+
+template<>
+struct ElemType<ArrString>{
+    using type = CppType<ValueType::String>::type;
+};
+
 
 CSC_END
 #endif

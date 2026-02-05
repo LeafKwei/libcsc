@@ -194,8 +194,8 @@ bool accessible(const String &path, bool v=false)
     检查给定的路径是否可以访问。当v为true时，路径的最后一部分将被视为变量名称检查
 void enter(const String &path)
 	进入给定路径对应的作用域，如果路径为“/”，则进入根作用域
-Walker walker()
-    为当前作用域生成一个Walker对象以遍历其中的内容
+ScoQuerier scoquerier()
+    为当前作用域生成一个查询器对象以遍历其中的内容
 String toString()
     从当前作用域开始，将其及子作用域、变量转换为字符串
 template<typename Tp>                                  
@@ -233,29 +233,29 @@ CscWriter& cleanVariable(const String &name)
 	清除当前作用域中指定名称的变量
 ```
 
-### CscWalkerString
+### CscString
 
-借助Walker对象(即漫步器对象)递归遍历作用域，将其中的内容转换为字符串
+借助ScoQuerier对象(即作用域查询器对象)递归遍历作用域，将其中的内容转换为字符串
 
 ```c++
-CscWalkerString()
-	默认构造函数，创建一个内容为空的CscWalkerString对象
-CscWalkerString(Walker walker, bool isroot)
-    遍历指定的walker并生成字符串，如果isroot参数为true，则代表walker对象来自根作用域，这会使得该作用域的名称不会出现在字
-    符串中
+CscString()
+	默认构造函数，创建一个内容为空的CscString对象
+CscString(ScoQuerier querier, bool isroot)
+   	遍历指定的querier并生成字符串，如果isroot参数为true，则代表querier对象来自根作用域，这会使得该作用域的名称不会出现在
+    字符串中
 String localstr()
     获取上一次生成字符串时缓存的的字符串对象
-String strfrom(Walker walker, bool isroot)
-    遍历指定的walker并生成字符串，如果isroot参数为true，则代表walker对象来自根作用域，这会使得该作用域的名称不会出现在字
-    符串中
+String strfrom(ScoQuerier querier, bool isroot)
+    遍历指定的querier并生成字符串，如果isroot参数为true，则代表querier对象来自根作用域，这会使得该作用域的名称不会出现在
+    字符串中
 ```
 
-### Querier
+### VarQuerier
 
 查询变量的相关信息，常用于遍历拥有多个值的变量的每个值
 
 ```C++
-Querier(VariablePtr varp)
+VarQuerier(VariablePtr varp)
     以给定的变量指针创建一个查询器对象
 String name()
     获取变量名称
@@ -269,14 +269,14 @@ ValueUnit valueunit(int index=0)
     获取指定位置的变量值和类型构成的变量单元
 ```
 
-### Walker
+### ScoQuerier
 
 遍历作用域的内容
 
 ```c++
-Walker(ScopePtr scop)
+ScoQuerier(ScopePtr scop)
     以给定的作用域指针创建一个漫步器对象
-Walker(ScopePos pos)
+ScoQuerier(ScopePos pos)
     以给定的作用域位置创建一个漫步器对象
 bool noscopes()
     此作用域中是否不存在子作用域
@@ -284,18 +284,14 @@ bool novariables()
     此作用域中是否不存在变量
 String name()
     获取此作用域名称
-void startScopeWalk()
-    开启子作用域的迭代
-void startVariableWalk()
-    开启作用域中变量的迭代
-bool hasNextScope()
-    是否存在下一个可迭代的子作用域
-bool hasNextVariable()
-    是否存在下一个可迭代的变量
-Walker nextScope()
-    获取下一个可迭代的作用域的漫步器对象
-Querier nextVariable()
-    获取下一个可迭代的变量的查询器对象
+Size_t sizeofVariables()
+    获取此作用域中的变量数量
+Size_t sizeofScopes()
+    获取此作用域中的直接子作用域的数量
+VarQuerier varquerier(int index=0)
+    获取指定位置的变量的查询器
+ScoQuerier scoquerier(int index=0)
+    获取指定位置的作用域的查询器
 ```
 
 
@@ -323,7 +319,7 @@ ArrString   等同于std::vector<std::string>
 
 ### 跳转到指定作用域
 
-0.7.10版本添加了关键字`goto`，可以跳转到**绝对路径**对应的作用域中，例如对于下方的两个csc文件：
+通过关键字`enter`可以跳转到**绝对路径**对应的作用域中，例如对于下方的两个csc文件：
 
 ```
 ;a.csc
@@ -333,7 +329,7 @@ custom::
 ::custom
 
 ;b.csc
-goto "/custom/a"
+enter "/custom/a"
 b::
 
 ::b
@@ -356,56 +352,7 @@ custom::
 
 ## 4.4.辅助功能
 
-libcsc通过action模块提供了在Command对象之外操作Context的能力，该模块可用于实现那些仅依靠Command对象无法实现的功能，例如生成Scope和Variable的索引。下方是使用ActionMngr模块为libcsc增加的扩展功能的列举：
-
-### 索引生成
-
-**基本信息**
-
-* 引入版本：v0.6.1
-* 关键字：`action`
-* 作用域：Scoped(仅在当前作用域内有效)
-* 使用方式：`action "genidx"`
-* 作用：在当前Scope内创建两个strings类型的内置变量`_vidx_`和`_sidx_`，然后从插入位置开始，将后续添加进当前Scope的变量和下一级Scope的名称分别添加到`_vidx_`和`_sidx_`中
-
-**使用方式**
-
-在csc文件内插入
-
-```
-custom::
-	action "genidx"
-	
-	name = "Tom"
-	age = 18
-	
-	sub1::
-	::sub1
-	
-	sub2::
-	::sub2
-::custom
-```
-
-在经过CscHandler解析后，等同于以下内容
-
-```
-custom::
-	_vidx_ = {"name", "age"}
-	_sidx_ = {"sub1", "sub2"}
-	
-	name = "Tom"
-	age = 18
-	
-	sub1::
-	::sub1
-	
-	sub2::
-	::sub2
-::custom
-```
-
-
+libcsc通过action模块提供了在Command对象之外操作Context的能力，该模块可用于实现那些仅依靠Command对象无法实现的功能，下方是使用ActionMngr模块为libcsc增加的扩展功能的列举：
 
 ### 打印命令信息
 
@@ -468,7 +415,7 @@ Command type: 2; Operands: ::, custom; Scope id: 2
 | false  | 变量赋值时作为布尔值   |
 | action | 执行某个动作           |
 | void   | 作为变量赋值时的占位符 |
-| goto   | 跳转到指定路径的作用域 |
+| enter  | 进入到指定路径的作用域 |
 
 
 
