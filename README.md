@@ -12,7 +12,7 @@ csc文件的语法十分简单，在当前版本中，csc文件由两部分组�
 
 ```
 name = "CSC Sample"
-version = "0.7.11"
+version = "0.8.0"
 
 ;This is a scope
 Dummy::
@@ -43,7 +43,7 @@ Dummy::
 csc文件支持注释，注释以分号`;`开始，在分号之后的内容都被视为注释内容而被忽略。此外，csc的语法较为宽松，只要使用合适的分隔符(例如空白)，csc文件的内容甚至可以压缩到一行：
 
 ```
-name = "CSC Sample" version = "0.7.11" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
+name = "CSC Sample" version = "0.8.0" Dummy:: switch = true factor = 1.15 maxCount = 255 minCount = 0xF0 users = {"Tom", "Jerry", "Emily"} Bar:: content = "Anyting" ::Bar ::Dummy
 ```
 
 
@@ -132,8 +132,8 @@ int main(void){
     reader.enter("/Dummy");              //进入根作用域下的Dummy作用域
     std::cout << "Dummy.switch: " << reader.getValue<bool>("switch") << std::endl;//获取Dummy::switch
     
-    //也可以使用enterAndGet函数直接获取变量值
-	std::cout << reader.enterAndGet<bool>("/Dummy/switch") << std::endl; //路径的最后一部分将被视为变量名称
+    //也可以使用getValueDirectly函数直接进入/Dummy作用域并获取变量switch
+	std::cout << reader.getValueDirectly<bool>("/Dummy/switch") << std::endl;
 }
 ```
 
@@ -198,12 +198,21 @@ ScoQuerier scoquerier()
     为当前作用域生成一个查询器对象以遍历其中的内容
 String toString()
     从当前作用域开始，将其及子作用域、变量转换为字符串
-template<typename Tp>                                  
-Tp getValue(const String &name)
-    获取当前作用域中给定名称的变量值，类型参数Tp所支持的类型参见文档4.2节
+
 template<typename Tp>
-Tp enterAndGet(const String &path)
-    获取给定路径下的变量值，路径的最后一部分将被视为变量名称
+Tp getValue(const String &name)
+    获取当前作用域下名称为name的变量值，并将其转换为Tp类型，此函数适用于非数组变量，如果变量是具有多个值的数组，需要使用
+    getArray*族函数。模板参数Tp支持的类型参考附录-支持类型
+template<typename Tp>                            
+Tp getValueDirectly(const String &path)
+    进入指定的路径下获取对应的变量值，并将其转换为Tp类型，路径的最后一部分(basename)被作为变量名称使用(例如/a/b的b被视
+    为变量名称)
+template<typename Tp>                            
+ArrayTp<Tp> getArray(const String &name)
+    与getValue类似，用于获取具有多个值的数组变量
+template<typename Tp>
+ArrayTp<Tp> getArrayDirectly(const String &path)
+    与getValueDirectly类似，用于获取具有多个值的数组变量
 ```
 
 ### CscWriter
@@ -252,7 +261,7 @@ String strfrom(ScoQuerier querier, bool isroot)
 
 ### VarQuerier
 
-查询变量的相关信息，常用于遍历拥有多个值的变量的每个值
+查询变量的相关信息，用于遍历拥有多个值的变量(即数组变量)的每个值
 
 ```C++
 VarQuerier(VariablePtr varp)
@@ -294,32 +303,22 @@ ScoQuerier scoquerier(int index=0)
     获取指定位置的作用域的查询器
 ```
 
+### toCppValue函数模板
 
-
-## 4.2.支持类型
-
-getValue和enterAndGet函数支持如下类型：
-
-```C++
-bool
-int
-long
-double
-String      等同于std::string
-ArrBool     等同于std::vector<bool>
-ArrInt      等同于std::vector<int>
-ArrLong     等同于std::vector<long>
-ArrDouble   等同于std::vector<double>
-ArrString   等同于std::vector<std::string>
+```c++
+template<typename Tp>
+Tp toCppValue(Value val, ValueType type)
+	按照给定的ValueType将Value转换为C++ Tp类型的值，需要确保Tp、ValueType与Value三者兼容。如果Tp是不支持的类型，那么此
+	函数模板将返回Tp的零值
 ```
 
 
 
-## 4.3.命令
+## 4.2.命令
 
 ### 跳转到指定作用域
 
-通过关键字`enter`可以跳转到**绝对路径**对应的作用域中，例如对于下方的两个csc文件：
+通过关键字`enter`可以进入到**绝对路径**对应的作用域中，例如对于下方的两个csc文件：
 
 ```
 ;a.csc
@@ -350,7 +349,7 @@ custom::
 
 
 
-## 4.4.辅助功能
+## 4.3.辅助功能
 
 libcsc通过action模块提供了在Command对象之外操作Context的能力，该模块可用于实现那些仅依靠Command对象无法实现的功能，下方是使用ActionMngr模块为libcsc增加的扩展功能的列举：
 
@@ -406,6 +405,20 @@ Command type: 2; Operands: ::, custom; Scope id: 2
 
 
 # 6.附录
+
+## 支持类型
+
+getValue和getArray函数族的模板参数Tp支持下表中的C++类型，表的右侧内容是C++类型对应的ValueType类型：
+
+| C++类型 | ValueType类型      | 备注                                  |
+| ------- | ------------------ | ------------------------------------- |
+| bool    | ValueType::Bool    |                                       |
+| int     | ValueType::Integer |                                       |
+| long    | ValueType::Integer |                                       |
+| double  | ValueType::Double  |                                       |
+| String  | ValueType::String  | 在当前版本中，String等同于std::string |
+
+
 
 ## 关键字
 

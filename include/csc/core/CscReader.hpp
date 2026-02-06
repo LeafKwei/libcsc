@@ -16,45 +16,58 @@ public:
     ScoQuerier scoquerier() const;                                              /* 获取当前作用域的查询器以遍历其中的内容 */
     String  toString() const;                                                         /* 从当前作用域开始，将其及子作用域、变量转换为字符串 */
 
+    ////////////////////////////////////////////////////////////////////////////////////////获取变量值的函数模板
     template<typename Tp>
-    Tp getValue(const String &name) const;      /* 获取当前作用域下给定名称的非数组变量的值，Tp支持的类型参见文档 */
-
-    template<typename Ar>                             /* 获取当前作用域下给定名称的数组变量的值，Ar支持的类型参见文档 */
-    Ar getArray(const String &name) const;
-
+    Tp getValue(const String &name) const;            /* 获取当前作用域下给定名称的非数组变量的值，Tp支持的类型参见文档 */
     template<typename Tp>                            
     Tp getValueDirectly(const String &path) const;  /* 进入指定路径下并获取非数组变量的值(路径的最后一部分作为变量名称) */
 
-    template<typename Ar>
-    Ar getArrayDirectly(const String &path) const;  /* 进入指定路径下并获取数组变量的值(路径的最后一部分作为变量名称) */
+    template<typename Tp>                            
+    ArrayTp<Tp> getArray(const String &name) const;             /* 获取当前作用域下给定名称的数组变量的值，Ar支持的类型参见文档 */
+    template<typename Tp>
+    ArrayTp<Tp> getArrayDirectly(const String &path) const;  /* 进入指定路径下并获取数组变量的值(路径的最后一部分作为变量名称) */
+    ////////////////////////////////////////////////////////////////////////////////////////
 
 private:
     Context &context_;
+    void enterBeforeGet(PathHelper &helper) const;
 };
-                                                                TODO 将getValue等函数从Tp改为非类型参数ValueType vt
+
 ////////////////////////////////////////////////////////////////////////////////////////特例化
-/* 通用版本，对于单个值，直接调用toCppValue即可 */
+/* 通用版本，对于单个值的变量，直接调用toCppValue即可 */
 template<typename Tp>
 inline Tp CscReader::getValue(const String &name) const{
     const auto &unit = context_.getValueUnit(name);
     return toCppValue<Tp>(unit.value, unit.type);
 }
 
-template<typename Ar>                             
-inline Ar CscReader::getArray(const String &name) const{
-    Ar array;
-
-
-}
-
 template<typename Tp>                            
 inline Tp CscReader::getValueDirectly(const String &path) const{
-
+    PathHelper helper(path);
+    enterBeforeGet(helper);
+    return getValue<Tp>(helper.basename());
 }
 
-template<typename Ar>
-inline Ar CscReader::getArrayDirectly(const String &path) const{
+/* 对于多个值的变量，需调用getArray*函数 */
+template<typename Tp>                             
+inline ArrayTp<Tp> CscReader::getArray(const String &name) const{
+    ArrayTp<Tp> array;
 
+    auto querier = context_.varquerier(name);
+    for(Size_t index = 0; index < querier.size(); index++){
+        array.push_back(
+            toCppValue<Tp>(querier.value(index), querier.type())
+        );
+    }
+
+    return array;
+}
+
+template<typename Tp>
+inline ArrayTp<Tp> CscReader::getArrayDirectly(const String &path) const{
+    PathHelper helper(path);
+    enterBeforeGet(helper);
+    return getArray<Tp>(helper.basename());
 }
 
 CSC_END

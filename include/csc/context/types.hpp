@@ -69,7 +69,6 @@ struct ValType<String>{
     static constexpr ValueType valtype = ValueType::String;
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////////////别名
 /* 声明一些常用的别名 */
 struct Variable;

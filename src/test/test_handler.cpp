@@ -14,11 +14,11 @@ int main(int argc, char *argv[]){
     handler.handle(str);
     CscReader reader = handler.reader();
     reader.enter("/custom/tom/");
-    std::cout << reader.enterAndGet<int>("age") << std::endl;
-    std::cout << reader.enterAndGet<int>("/custom/tom/age") << std::endl;
-    std::cout << reader.enterAndGet<String>("/player") << std::endl;
-    std::cout << reader.enterAndGet<double>("/custom/tom/height") << std::endl;
-    std::cout << reader.enterAndGet<int>("/custom/tom/weight") << std::endl;
+    std::cout << reader.getValueDirectly<int>("age") << std::endl;
+    std::cout << reader.getValueDirectly<int>("/custom/tom/age") << std::endl;
+    std::cout << reader.getValueDirectly<String>("/player") << std::endl;
+    std::cout << reader.getValueDirectly<double>("/custom/tom/height") << std::endl;
+    std::cout << reader.getValueDirectly<int>("/custom/tom/weight") << std::endl;
     reader.enter("/");
     reader.enter("custom");
     reader.enter("tom");

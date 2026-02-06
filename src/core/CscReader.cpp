@@ -47,4 +47,20 @@ String CscReader::toString() const{
     return cscstr.localstr();
 }
 
+void CscReader::enterBeforeGet(PathHelper &helper) const{
+    if(!helper.valid()){
+        throw CscExcept("Invalid path: " + helper.compose(helper.size()));
+    }
+
+    /* 如果path仅是一个根路径，则视为错误 */
+    if(helper.rootonly()){
+        throw CscExcept("No variable name provided.");
+    }
+
+    /* 如果path存在dirname部分，进入对应路径下 */
+    if(helper.complex()){
+        enter(helper.dirname());
+    }
+}
+
 CSC_END

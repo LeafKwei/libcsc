@@ -1,9 +1,12 @@
-**0.7.12(暂定)**
+**0.8.0**
+
+1. 重新设计了CscReader，重写原有的getValue系列函数，将其拆分为getValue和getArray两簇函数，从而简化设计让功能更加专一
+2. 考虑到用户通过ScoQuerier遍历作用域和变量时，需要使用到将变量值转换为C++类型的值的功能，因此将原本的getValue中的类型转换功能独立到了core/functions.hpp头文件中，用户可使用其中的toCppValue函数进行类型转换
+
+**0.7.12**
 
 1. 移除扩展功能中的`action "genidx"`(其功能已被ScoQuerier替代)
-
 2. 重命名Looker -> RouteLooker、Querier -> VarQuerier、Walker -> ScoQuerier，使得语义更加清晰
-
 3. 将关键字`goto`重命名为`enter`，使得语义更加清晰
 4. 重新设计了ScoQuerier中的函数，使之更加简洁
 
